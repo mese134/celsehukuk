@@ -1,0 +1,9 @@
+{
+  "appId": "com.celsehukuk",
+  "appName": "Celse",
+  "webDir": "www",
+  "android": { "backgroundColor": "#8E1B30" },
+  "plugins": {
+    "SystemBars": { "insetsHandling": "css", "initialViewportFitValueHint": "cover" }
+  }
+}

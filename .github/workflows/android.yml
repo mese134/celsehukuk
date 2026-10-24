@@ -1,0 +1,59 @@
+name: Android derleme
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - uses: android-actions/setup-android@v3
+
+      - name: Bağımlılıkları kur ve oyunu derle
+        run: |
+          npm ci
+          python3 tools/build.py
+          npx cap sync android
+
+      - name: İmza anahtarlarını kontrol et
+        env:
+          KEYSTORE_B64: ${{ secrets.CELSE_KEYSTORE_B64 }}
+        run: |
+          if [ -z "$KEYSTORE_B64" ]; then
+            echo "::error::CELSE_KEYSTORE_B64 gizli değeri eksik. Settings > Secrets and variables > Actions bölümünden ekleyin."
+            exit 1
+          fi
+          echo "$KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/upload.jks"
+
+      - name: Play Store paketi (.aab) ve test APK'sı derle
+        working-directory: android
+        env:
+          CELSE_KEYSTORE_FILE: ${{ runner.temp }}/upload.jks
+          CELSE_KEYSTORE_PASSWORD: ${{ secrets.CELSE_KEYSTORE_PASSWORD }}
+          CELSE_KEY_ALIAS: ${{ secrets.CELSE_KEY_ALIAS }}
+          CELSE_KEY_PASSWORD: ${{ secrets.CELSE_KEY_PASSWORD }}
+        run: |
+          chmod +x gradlew
+          ./gradlew bundleRelease assembleRelease --no-daemon --stacktrace
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: celse-release
+          path: |
+            android/app/build/outputs/bundle/release/app-release.aab
+            android/app/build/outputs/apk/release/app-release.apk
+          if-no-files-found: error

@@ -1,0 +1,8 @@
+node_modules/
+*.jks
+*.keystore
+keystore*.txt
+android/app/src/main/assets/public/
+android/capacitor-cordova-android-plugins/
+site/
+.DS_Store

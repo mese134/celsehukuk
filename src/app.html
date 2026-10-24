@@ -1,0 +1,1093 @@
+<title>Celse Arenası</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap&subset=latin-ext">
+<style>
+/* Düzen: tek sütunlu oyun alanı; üstte yapışkan duruşma çubuğu, altında sekmeler ve dosya kartları */
+:root{
+  --bg:#eceff3; --surface:#ffffff; --sunk:#e2e6ec; --ink:#151b26; --muted:#5a6476; --line:#d3d9e2;
+  --accent:#8e1b30; --accent-ink:#ffffff; --accent-soft:#f5e3e6;
+  --brass:#9a6c12; --brass-soft:#f6ecd6;
+  --ok:#17784a; --ok-soft:#dff1e7; --bad:#b3262d; --bad-soft:#f8e0e1;
+  --f-display:"Zilla Slab", Rockwell, "Roboto Slab", Georgia, serif;
+  --f-body:"Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0e121a; --surface:#171d28; --sunk:#111621; --ink:#e7ebf1; --muted:#97a1b3; --line:#283141;
+  --accent:#e5627a; --accent-ink:#1a0a0e; --accent-soft:#3a1720;
+  --brass:#e3b553; --brass-soft:#33280f;
+  --ok:#4cc68b; --ok-soft:#12301f; --bad:#f06b6f; --bad-soft:#3a1517; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0e121a; --surface:#171d28; --sunk:#111621; --ink:#e7ebf1; --muted:#97a1b3; --line:#283141;
+  --accent:#e5627a; --accent-ink:#1a0a0e; --accent-soft:#3a1720;
+  --brass:#e3b553; --brass-soft:#33280f;
+  --ok:#4cc68b; --ok-soft:#12301f; --bad:#f06b6f; --bad-soft:#3a1517; color-scheme:dark}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{min-height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+h1,h2,h3{font-family:var(--f-display);font-weight:700;line-height:1.15;text-wrap:balance;margin:0}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.wrap{max-width:760px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* Üst çubuk */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);border-bottom:1px solid var(--line)}
+.bar .wrap{display:flex;align-items:center;gap:12px;padding-block:10px}
+.brand{display:flex;align-items:baseline;gap:8px;margin-right:auto;background:none;border:0;padding:0}
+.brand b{font-family:var(--f-display);font-size:24px;letter-spacing:-.01em}
+.brand b i{font-style:normal;color:var(--accent)}
+.brand small{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.online{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);white-space:nowrap}
+.online::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--ok)}
+.chip-me{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:4px 10px 4px 4px;min-width:0}
+.chip-me .av{width:26px;height:26px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-weight:700;font-size:12px;flex:none}
+.chip-me span{font-weight:600;font-size:13px;max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chip-me em{font-style:normal;font-family:var(--f-mono);font-size:12px;color:var(--brass)}
+
+.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+.tabs .wrap{display:flex;gap:2px;padding-block:0}
+.tab{background:none;border:0;border-bottom:2px solid transparent;padding:10px 12px;font-weight:600;font-size:14px;color:var(--muted);white-space:nowrap}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+@media (max-width:420px){.tab{padding:10px 8px;font-size:13px}.brand small{display:none}.chip-me span{max-width:90px}}
+.chip-me em{white-space:nowrap}
+
+main{padding-block:20px 48px}
+.stack{display:flex;flex-direction:column;gap:16px}
+.eyebrow{font-family:var(--f-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.muted{color:var(--muted)}
+.note{font-size:13px;color:var(--muted)}
+
+/* Profil şeridi */
+.profile{display:grid;grid-template-columns:1fr auto;gap:14px 18px;align-items:end;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px}
+.profile h2{font-size:26px}
+.tier{display:inline-flex;align-items:center;gap:6px;font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--brass);background:var(--brass-soft);padding:3px 8px;border-radius:4px}
+.pts{text-align:right}
+.pts b{display:block;font-family:var(--f-mono);font-size:28px;color:var(--brass);line-height:1}
+.pts span{font-size:12px;color:var(--muted)}
+.prog{grid-column:1/-1}
+.prog .track{height:6px;background:var(--sunk);border-radius:3px;overflow:hidden}
+.prog .fill{height:100%;background:var(--brass);border-radius:3px;transition:width .6s}
+.prog .lbl{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:6px}
+.stats{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13px;color:var(--muted)}
+.stats b{color:var(--ink);font-family:var(--f-mono);font-weight:700}
+
+/* Branş seçici */
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 14px;font-weight:600;font-size:13.5px}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+
+/* Dava kartları */
+.cases{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media (max-width:560px){.cases{grid-template-columns:1fr}}
+.case{display:flex;flex-direction:column;gap:8px;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;transition:border-color .15s, transform .15s}
+.case:hover{border-color:var(--accent);transform:translateY(-1px)}
+.case .court{font-family:var(--f-mono);font-size:11px;color:var(--muted);letter-spacing:.02em}
+.case h3{font-size:20px}
+.case .meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:auto;font-size:12.5px;color:var(--muted)}
+.pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:600;background:var(--accent-soft);color:var(--accent)}
+.pill.done{background:var(--ok-soft);color:var(--ok)}
+.dots{letter-spacing:2px;color:var(--brass)}
+
+/* Dosya ekranı */
+.docket{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.docket header{padding:18px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:6px}
+.docket header .tc{font-family:var(--f-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.docket header h2{font-size:28px}
+.docket .row{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--muted)}
+.docket .row b{color:var(--ink);font-weight:600}
+.docket .facts{padding:18px;max-width:68ch}
+.docket .facts p{margin:0}
+.ev{display:grid;gap:0;border-top:1px solid var(--line)}
+.ev div{display:grid;grid-template-columns:150px minmax(0,1fr);gap:12px;padding:12px 18px;border-bottom:1px solid var(--line);font-size:14px}
+.ev div:last-child{border-bottom:0}
+.ev dt{font-family:var(--f-mono);font-size:11.5px;color:var(--accent);text-transform:uppercase;letter-spacing:.04em;padding-top:2px}
+.ev dd{margin:0}
+@media (max-width:560px){.ev div{grid-template-columns:1fr;gap:2px}}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:8px;padding:12px 18px;font-weight:700;font-size:15px;background:var(--accent);color:var(--accent-ink)}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.wide{width:100%}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+
+/* Oyun ekranı */
+.hud{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.hud .step{font-family:var(--f-mono);font-size:12px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.hud .score{margin-left:auto;font-family:var(--f-mono);font-weight:700;color:var(--brass);font-size:18px}
+.hud .streak{font-family:var(--f-mono);font-size:12px;color:var(--accent);font-weight:700}
+.stage{display:grid;grid-template-columns:auto minmax(0,1fr);gap:18px;align-items:start;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px}
+@media (max-width:560px){.stage{grid-template-columns:1fr}}
+.clock{position:relative;width:84px;height:84px;flex:none}
+.clock svg{width:84px;height:84px;transform:rotate(-90deg)}
+.clock circle{fill:none;stroke-width:7}
+.clock .bgc{stroke:var(--sunk)}
+.clock .fg{stroke:var(--ink);stroke-linecap:round;transition:stroke .2s}
+.clock.warn .fg{stroke:var(--bad)}
+.clock b{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--f-mono);font-size:24px}
+.clock.warn b{color:var(--bad)}
+@media (max-width:560px){.clock{width:64px;height:64px}.clock svg{width:64px;height:64px}.clock b{font-size:19px}}
+.qhead{display:flex;flex-direction:column;gap:6px;min-width:0}
+.qhead h2{font-size:22px;font-weight:600}
+.opts{display:grid;gap:8px}
+.opt{display:grid;grid-template-columns:28px minmax(0,1fr);gap:10px;align-items:start;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px 14px;font-size:15px;transition:border-color .12s, background .12s}
+.opt:hover:not(:disabled){border-color:var(--ink)}
+.opt kbd{font-family:var(--f-mono);font-size:12px;width:24px;height:24px;display:grid;place-items:center;border:1px solid var(--line);border-radius:5px;color:var(--muted);background:var(--bg)}
+.opt:disabled{cursor:default}
+.opt.right{background:var(--ok-soft);border-color:var(--ok)}
+.opt.right kbd{border-color:var(--ok);color:var(--ok)}
+.opt.wrong{background:var(--bad-soft);border-color:var(--bad)}
+.opt.wrong kbd{border-color:var(--bad);color:var(--bad)}
+.verdict{border-radius:var(--r);padding:16px 18px;display:flex;flex-direction:column;gap:8px;border:1px solid}
+.verdict.ok{background:var(--ok-soft);border-color:var(--ok)}
+.verdict.no{background:var(--bad-soft);border-color:var(--bad)}
+.verdict h3{font-size:19px}
+.verdict.ok h3{color:var(--ok)} .verdict.no h3{color:var(--bad)}
+.verdict p{margin:0;max-width:68ch}
+.ref{align-self:flex-start;font-family:var(--f-mono);font-size:12px;background:var(--surface);border:1px solid var(--line);padding:3px 8px;border-radius:4px}
+details.file{background:var(--surface);border:1px solid var(--line);border-radius:var(--r)}
+details.file summary{padding:10px 14px;cursor:pointer;font-weight:600;font-size:13.5px}
+details.file .inner{padding:0 14px 14px;font-size:14px;display:flex;flex-direction:column;gap:6px}
+
+/* Sonuç */
+.result{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:24px;display:flex;flex-direction:column;gap:14px}
+.result .big{font-family:var(--f-mono);font-size:48px;font-weight:700;color:var(--brass);line-height:1}
+.result h2{font-size:30px}
+.kv{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.kv div{background:var(--bg);border-radius:8px;padding:10px 12px}
+.kv span{display:block;font-size:12px;color:var(--muted)}
+.kv b{font-family:var(--f-mono);font-size:18px}
+.recap{display:flex;flex-direction:column;gap:0;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.recap div{display:grid;grid-template-columns:22px minmax(0,1fr) auto;gap:10px;padding:9px 12px;border-bottom:1px solid var(--line);font-size:13.5px}
+.recap div:last-child{border-bottom:0}
+.recap .y{color:var(--ok);font-weight:700}.recap .n{color:var(--bad);font-weight:700}
+.promo{background:var(--brass-soft);color:var(--brass);border-radius:8px;padding:12px 14px;font-weight:700}
+
+/* Ligler */
+.ladder{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.ladder div{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.ladder div.me{border-color:var(--brass);background:var(--brass-soft)}
+.ladder b{font-family:var(--f-display);font-size:15px;line-height:1.15}
+.ladder span{font-family:var(--f-mono);font-size:11px;color:var(--muted)}
+@media (max-width:560px){.ladder{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.board{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.board table{width:100%;border-collapse:collapse;font-size:14px}
+.board th{font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-align:left;font-weight:500;padding:10px 14px;border-bottom:1px solid var(--line)}
+.board td{padding:10px 14px;border-bottom:1px solid var(--line)}
+.board tr:last-child td{border-bottom:0}
+.board td.n,.board th.n{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.board td.rk{font-family:var(--f-mono);color:var(--muted);width:44px}
+.board tr.me td{background:var(--accent-soft)}
+.board tr.me td:first-child{box-shadow:inset 3px 0 0 var(--accent)}
+.board .nm{font-weight:600;overflow-wrap:anywhere}
+.board .tt{font-size:12px;color:var(--muted)}
+.medal{color:var(--brass);font-weight:700}
+.empty{padding:28px 18px;text-align:center;color:var(--muted)}
+
+/* Düello */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:12px}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media (max-width:560px){.two{grid-template-columns:1fr}}
+.code{font-family:var(--f-mono);font-size:34px;letter-spacing:.2em;font-weight:700;color:var(--accent)}
+input.txt{font:inherit;font-size:16px;width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+input.code-in{font-family:var(--f-mono);text-transform:uppercase;letter-spacing:.2em;font-size:20px}
+.vs{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:12px;align-items:center;text-align:center}
+.vs .side{background:var(--bg);border-radius:8px;padding:14px;min-width:0}
+.vs .side b{display:block;font-family:var(--f-mono);font-size:28px;color:var(--brass)}
+.vs .side span{font-weight:600;overflow-wrap:anywhere}
+.vs .side.win{outline:2px solid var(--brass)}
+.vs i{font-family:var(--f-display);font-style:normal;font-weight:700;color:var(--muted)}
+.list{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.list button{display:flex;justify-content:space-between;gap:10px;text-align:left;background:var(--surface);border:0;border-bottom:1px solid var(--line);padding:10px 12px;font-size:14px}
+.list button:last-child{border-bottom:0}
+
+/* Giriş */
+.gate{max-width:440px;margin:6vh auto 0;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:26px;display:flex;flex-direction:column;gap:14px}
+.gate h1{font-size:40px;letter-spacing:-.01em}
+.gate h1 i{font-style:normal;color:var(--accent)}
+.err{color:var(--bad);font-size:13px;min-height:1.2em}
+.banner{background:var(--brass-soft);color:var(--ink);border-radius:8px;padding:10px 14px;font-size:13.5px}
+
+/* Yasal metinler, pencere, onay kutuları, yönetim */
+.legal{max-width:72ch;font-size:14.5px}
+.legal h3{font-size:20px;margin:18px 0 6px}
+.legal h4{font-family:var(--f-body);font-size:15px;font-weight:700;margin:16px 0 4px}
+.legal p{margin:0 0 10px}
+.legal ul,.legal ol{margin:0 0 10px;padding-left:22px}
+.legal li{margin:2px 0}
+.legal a{color:var(--accent)}
+.tblwrap{overflow-x:auto;margin:0 0 12px;border:1px solid var(--line);border-radius:8px}
+.tblwrap table{border-collapse:collapse;width:100%;font-size:13px;min-width:420px}
+.tblwrap th,.tblwrap td{border-bottom:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}
+.tblwrap th{background:var(--bg);font-weight:600}
+.tblwrap tr:last-child td{border-bottom:0}
+.modal{position:fixed;inset:0;z-index:20;background:rgba(10,14,20,.55);display:flex;align-items:flex-end;justify-content:center;padding:env(safe-area-inset-top,0px) 0 0}
+.modal .sheet{background:var(--surface);color:var(--ink);width:100%;max-width:780px;max-height:88vh;border-radius:14px 14px 0 0;display:flex;flex-direction:column;overflow:hidden}
+@media (min-width:700px){.modal{align-items:center}.modal .sheet{border-radius:14px}}
+.modal header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px max(16px,env(safe-area-inset-left,0px)) 12px;border-bottom:1px solid var(--line)}
+.modal header h2{font-size:20px}
+.modal .body{overflow-y:auto;padding:16px max(16px,env(safe-area-inset-right,0px)) calc(20px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.or{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:12px}
+.or::before,.or::after{content:"";flex:1;border-top:1px solid var(--line)}
+.checks{display:flex;flex-direction:column;gap:10px}
+.checks label{display:grid;grid-template-columns:20px minmax(0,1fr);gap:10px;align-items:start;font-size:14px;line-height:1.45}
+.checks input{width:18px;height:18px;margin:1px 0 0;accent-color:var(--accent)}
+.linkbtn{background:none;border:0;padding:0;color:var(--accent);font-weight:600;text-decoration:underline;text-underline-offset:2px;font-size:inherit}
+.timeset{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px}
+.timeset .note{flex:1 1 220px;margin:0}
+.flag{display:inline-block;font-family:var(--f-mono);font-size:11px;padding:2px 6px;border-radius:4px;background:var(--bad-soft);color:var(--bad);margin:2px 4px 2px 0}
+.flag.ok{background:var(--ok-soft);color:var(--ok)}
+.adm{display:flex;flex-direction:column;gap:10px}
+.adm .row{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.adm .row .top{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:baseline}
+.adm details{font-size:12.5px}
+.adm .glog{font-family:var(--f-mono);font-size:11.5px;color:var(--muted);overflow-x:auto;white-space:nowrap}
+.btn.sm{padding:7px 12px;font-size:13px}
+.btn.danger{background:var(--bad);color:#fff}
+textarea.txt{font:inherit;font-size:14px;width:100%;min-height:80px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink);resize:vertical}
+.report{display:flex;flex-direction:column;gap:8px;align-self:stretch}
+
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="bar" id="bar">
+  <div class="wrap">
+    <button class="brand" id="home-btn" aria-label="Ana sayfa"><b>Cel<i>se</i></b><small>Hukuk Arenası</small></button>
+    <span class="online" id="online" hidden></span>
+    <div class="chip-me" id="mechip" hidden><span class="av" id="me-av"></span><span id="me-name"></span><em id="me-pts"></em></div>
+  </div>
+  <nav class="tabs" id="tabs" hidden><div class="wrap" role="tablist">
+    <button class="tab" role="tab" data-tab="davalar">Davalar</button>
+    <button class="tab" role="tab" data-tab="hizli">Hızlı Duruşma</button>
+    <button class="tab" role="tab" data-tab="duello">Düello</button>
+    <button class="tab" role="tab" data-tab="ligler">Ligler</button>
+    <button class="tab" role="tab" data-tab="kaynaklar">Kaynaklar</button>
+    <button class="tab" role="tab" data-tab="yasal">Yasal</button>
+    <button class="tab" role="tab" data-tab="yonetim" hidden>Yönetim</button>
+  </div></nav>
+</div>
+<main class="wrap" id="app"><p class="muted" style="padding-top:20px">Arena hazırlanıyor…</p></main>
+
+<script>
+/*DATA*/
+</script>
+<script>
+(() => {
+const APP = !!window.CELSE_APP;   // Play Store sürümü: çevrimdışı, veriler cihazda
+const BR = { ceza: 'Ceza', is: 'İş', aile: 'Aile', idare: 'İdare', borclar: 'Borçlar', miras: 'Miras' };
+const BKEYS = Object.keys(BR);
+const TIERS = [
+  { ad: 'Stajyer', min: 0 }, { ad: 'Avukat', min: 1500 }, { ad: 'Kıdemli Avukat', min: 4000 },
+  { ad: 'Hâkim', min: 8000 }, { ad: 'Yargıtay Üyesi', min: 15000 }
+];
+const DEF_T = 15;
+const QUICK_N = 8, DUEL_N = 6;
+const TIME_MODES = { normal: { k: 1, ad: 'Normal' }, uzun: { k: 2, ad: 'Uzatılmış' }, genis: { k: 3, ad: 'Geniş' } };
+const DAY_CAP = 10000;      // günlük lig puanı sınırı
+const FAST_MS = 500;        // insan tepki süresinin altı
+const MAX_Q = 350;          // bir sorudan alınabilecek en yüksek puan (100 + 150 süre + 100 seri)
+const REPEAT_MS = 864e5;    // aynı hızlı soru 24 saat içinde tekrar gelirse yarım puan
+const S = { db: null, user: null, uid: null, me: null, players: [], tab: 'davalar', branch: 'ceza', qbranch: 'karisik',
+  board: 'lig', online: 0, room: null, local: false, canWrite: true, game: null, duelUnsub: null, isOwner: false, bans: {}, guest: false };
+const $ = s => document.querySelector(s);
+const app = $('#app');
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const fmt = n => Math.round(n || 0).toLocaleString('tr-TR');
+const ls = { get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} },
+  del(k) { try { localStorage.removeItem(k); } catch (e) {} } };
+const prefs = Object.assign({ time: 'normal' }, ls.get('celse.prefs', {}));
+const tMult = () => (TIME_MODES[prefs.time] || TIME_MODES.normal).k;
+const qSecs = t => (t || DEF_T) * tMult();
+const dayKey = (d = new Date()) => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+
+function weekKey(d = new Date()) {
+  const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  const day = t.getUTCDay() || 7; t.setUTCDate(t.getUTCDate() + 4 - day);
+  const y0 = new Date(Date.UTC(t.getUTCFullYear(), 0, 1));
+  return t.getUTCFullYear() + '-H' + String(Math.ceil(((t - y0) / 864e5 + 1) / 7)).padStart(2, '0');
+}
+const tierOf = pts => { let t = 0; TIERS.forEach((x, i) => { if (pts >= x.min) t = i; }); return t; };
+const blank = name => ({ name, total: 0, ceza: 0, is: 0, aile: 0, idare: 0, borclar: 0, miras: 0, games: 0, answered: 0, correct: 0, bestStreak: 0, week: weekKey(), weekPts: 0, cases: {} });
+const weekPts = p => (p && p.week === weekKey()) ? (p.weekPts || 0) : 0;
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+
+// ---------- Kurulum ----------
+async function boot() {
+  let db = null, user = null;
+  try { if (window.claude && claude.use) { [db, user] = await Promise.all([claude.use('db'), claude.use('user')]); } } catch (e) {}
+  S.db = db; S.user = user;
+  if (user) { try { S.uid = await user.id(); } catch (e) {} }
+  if (!db || !S.uid) { S.local = true; }
+  if (user) { try { const c = await user.can('data.write'); if (c === false) S.canWrite = false; } catch (e) {} }
+  if (user) { try { S.isOwner = await user.isOwner(); } catch (e) {} }
+
+  if (S.local) {
+    S.me = ls.get('celse.me', null);
+    S.players = S.me ? [{ id: 'local', ...S.me }] : [];
+    S.uid = 'local';
+    S.me ? enter() : renderGate();
+    return;
+  }
+  // Oyuncu tablosuna tek abonelik
+  let first = true;
+  db.collection('players').orderBy('total', 'desc').limit(500).onSnapshot(snap => {
+    S.players = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    const mine = S.players.find(p => p.id === S.uid);
+    if (mine && !S.guest) S.me = { ...blank(mine.name), ...mine };
+    if (first) { first = false; S.me ? enter() : renderGate(); }
+    else { paintChip(); if (!S.game && (S.tab === 'ligler' || S.tab === 'yonetim')) render(); }
+  }, () => { if (first) { first = false; S.local = true; S.me = ls.get('celse.me', null); S.me ? enter() : renderGate(); } });
+  // Yasaklı hesaplar
+  db.collection('bans').onSnapshot(snap => {
+    S.bans = Object.fromEntries(snap.docs.map(d => [d.id, d.data()]));
+    if (!S.game && S.me && (S.tab === 'ligler' || S.tab === 'yonetim')) render();
+  }, () => {});
+  // Çevrimiçi göstergesi
+  claude.use('room').then(room => {
+    if (!room) return; S.room = room;
+    room.onPeers(ch => { S.online = ch.peers.length; paintOnline(); });
+    if (S.me) room.presence({ n: S.me.name }).catch(() => {});
+  }).catch(() => {});
+}
+
+function paintOnline() {
+  const el = $('#online'); if (!S.online) { el.hidden = true; return; }
+  el.hidden = false; el.textContent = S.online + ' çevrimiçi';
+}
+function paintChip() {
+  if (!S.me) return;
+  $('#mechip').hidden = false;
+  $('#me-av').textContent = (S.me.name || '?').slice(0, 1).toLocaleUpperCase('tr-TR');
+  $('#me-name').textContent = S.me.name;
+  $('#me-pts').textContent = S.guest ? '' : fmt(S.me.total) + ' p';
+}
+
+// ---------- Giriş ----------
+function renderGate() {
+  $('#tabs').hidden = true;
+  app.innerHTML = `
+  <form class="gate" id="gate">
+    <span class="eyebrow">Türk mevzuatıyla süreli duruşma oyunu</span>
+    <h1>Cel<i>se</i>'ye hoş geldin</h1>
+    <p class="muted" style="margin:0">Ceza, iş, aile, idare, borçlar ve miras hukuku dosyalarında karar ver. Her karar için 15 saniyen var; istersen süreyi uzatabilirsin. Doğru ve hızlı kararlar puan getirir, puanın seni Stajyer liginden Yargıtay Üyesi ligine taşır.</p>
+    <label for="uname" class="eyebrow">Kullanıcı adı</label>
+    <input class="txt" id="uname" maxlength="18" autocomplete="off" placeholder="ör. av_deniz" required>
+    <div class="note">3–18 karakter: harf, rakam ve alt çizgi. Kullanıcı adın skor tablosunda görünür ve sonradan değiştirilemez.</div>
+    ${consentHTML()}
+    <div class="err" id="gerr"></div>
+    <button class="btn wide" id="gbtn">Kayıt ol ve başla</button>
+    <div class="or"><span>veya</span></div>
+    <button type="button" class="btn ghost wide" id="guestbtn">Misafir olarak oyna</button>
+    <p class="note" style="margin:0">Misafir modunda kullanıcı adı gerekmez; hiçbir puan veya kayıt saklanmaz, ligde yer almazsın. Yalnızca ilk iki kutu yeterlidir.</p>
+    <p class="note" style="margin:0">Celse eğitim ve eğlence amaçlıdır; hukuki danışmanlık yerine geçmez.</p>
+    ${S.local ? (APP ? '<div class="banner">Bu sürümde profilin ve puanların yalnızca bu cihazda saklanır. Ortak lig ve düello bir sonraki sürümde geliyor.</div>' : '<div class="banner">Bu görünümde ortak skor tablosuna bağlanılamadı. Oyun yerel modda çalışır; puanların yalnızca bu tarayıcıda tutulur.</div>') : ''}
+  </form>`;
+  $('#gate').addEventListener('submit', async ev => {
+    ev.preventDefault();
+    const raw = $('#uname').value.trim();
+    const err = $('#gerr');
+    if (!/^[\p{L}\p{N}_]{3,18}$/u.test(raw)) { err.textContent = 'Kullanıcı adı 3–18 karakter olmalı; yalnızca harf, rakam ve alt çizgi kullan.'; return; }
+    if (badName(raw)) { err.textContent = 'Bu kullanıcı adı Kullanım Koşulları\'na uygun değil. Başka bir ad seç.'; return; }
+    const cErr = consentError(); if (cErr) { err.textContent = cErr; return; }
+    $('#gbtn').disabled = true; err.textContent = '';
+    if (S.local) { S.me = { ...blank(raw), consent: consentRecord() }; ls.set('celse.me', S.me); S.players = [{ id: 'local', ...S.me }]; enter(); return; }
+    if (!S.canWrite) { err.textContent = 'Bu arenaya yalnızca görüntüleme erişimin var. Puan kaydetmek için sayfa sahibinden "Katkıda bulunan" erişimi iste.'; $('#gbtn').disabled = false; return; }
+    try {
+      const key = raw.toLocaleLowerCase('tr-TR');
+      const ref = S.db.doc('usernames/' + key);
+      const lease = await ref.acquire({ holder: S.uid, ttlMs: 5000 });
+      if (!lease.acquired) { err.textContent = 'Bu ad şu anda başka biri tarafından alınıyor. Başka bir ad dene.'; $('#gbtn').disabled = false; return; }
+      const cur = await ref.get();
+      const owner = cur.exists && cur.data().uid;
+      if (owner && owner !== S.uid) { err.textContent = 'Bu kullanıcı adı alınmış. Başka bir ad dene.'; $('#gbtn').disabled = false; return; }
+      if (!owner) await ref.set({ uid: S.uid });
+      S.me = { ...blank(raw), consent: consentRecord() };
+      await S.db.doc('players/' + S.uid).set(S.me);
+      if (S.room) S.room.presence({ n: raw }).catch(() => {});
+      enter();
+    } catch (e) {
+      err.textContent = 'Kayıt yapılamadı. Bağlantını kontrol edip tekrar dene.'; $('#gbtn').disabled = false;
+    }
+  });
+  $('#guestbtn').addEventListener('click', () => {
+    const err = $('#gerr');
+    if (!$('#c-notice').checked) { err.textContent = 'Misafir olarak oynamak için de Aydınlatma Metni\'ni okuduğunu ve anladığını işaretle.'; return; }
+    if (!$('#c-terms').checked) { err.textContent = 'Misafir olarak oynamak için de Kullanım Koşulları\'nı kabul etmelisin.'; return; }
+    startGuest();
+  });
+  bindLegalLinks();
+  setTimeout(() => $('#uname') && $('#uname').focus(), 50);
+}
+function startGuest() {
+  S.guest = true;
+  S.me = { ...blank('Misafir'), consent: { ...consentRecord(), age: false } };
+  enter();
+}
+function exitGuest() {
+  S.guest = false; S.me = null; leaveGame(); S.tab = 'davalar';
+  $('#mechip').hidden = true;
+  // Daha önce kayıtlı bir profil varsa ona dön
+  if (S.local) { const saved = ls.get('celse.me', null); if (saved) { S.me = saved; enter(); return; } }
+  else { const mine = S.players.find(p => p.id === S.uid); if (mine) { S.me = { ...blank(mine.name), ...mine }; enter(); return; } }
+  renderGate();
+}
+function guestBanner() {
+  if (!S.guest) return '';
+  return `<div class="banner" style="display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap"><span><b>Misafir modundasın.</b> Puanların kaydedilmez ve ligde yer almazsın; sayfa kapanınca her şey silinir.</span><button class="btn sm" data-exitguest>Kayıt ol</button></div>`;
+}
+function bindGuest() { document.querySelectorAll('[data-exitguest]').forEach(b => b.addEventListener('click', exitGuest)); }
+
+function enter() {
+  $('#tabs').hidden = false; paintChip();
+  document.querySelector('[data-tab=yonetim]').hidden = !S.isOwner || S.guest;
+  if (needsConsent()) { renderConsent(); return; }
+  render();
+}
+
+// ---------- Kaydetme ----------
+let saveChain = Promise.resolve();
+function persist() {
+  if (S.guest) return;
+  const doc = JSON.parse(JSON.stringify(S.me)); delete doc.id;
+  if (S.local) { ls.set('celse.me', doc); S.players = [{ id: 'local', ...doc }]; return; }
+  if (!S.canWrite || S.bans[S.uid]) return;
+  saveChain = saveChain.then(() => S.db.doc('players/' + S.uid).set(doc)).catch(() => {});
+}
+
+// ---------- Gezinme ----------
+document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => { if (leaveGame()) { S.tab = t.dataset.tab; render(); } }));
+$('#home-btn').addEventListener('click', () => { if (S.me && leaveGame()) { S.tab = 'davalar'; render(); } });
+function leaveGame() { stopTimer(); S.game = null; if (S.duelUnsub) { S.duelUnsub(); S.duelUnsub = null; } return true; }
+
+function render() {
+  S.sub = null;
+  document.querySelectorAll('.tab').forEach(t => t.setAttribute('aria-selected', String(t.dataset.tab === S.tab)));
+  window.scrollTo(0, 0);
+  ({ davalar: renderCases, hizli: renderQuick, duello: renderDuel, ligler: renderLeagues, kaynaklar: renderSources, yasal: renderLegal, yonetim: renderAdmin })[S.tab]();
+}
+
+function profileHTML() {
+  const m = S.me, ti = tierOf(m.total), next = TIERS[ti + 1];
+  const pct = next ? Math.min(100, (m.total - TIERS[ti].min) / (next.min - TIERS[ti].min) * 100) : 100;
+  const acc = m.answered ? Math.round(m.correct / m.answered * 100) : 0;
+  return `<section class="profile">
+    <div class="stack" style="gap:6px"><span class="tier">${esc(TIERS[ti].ad)} Ligi</span><h2>${esc(m.name)}</h2></div>
+    <div class="pts"><b>${fmt(m.total)}</b><span>toplam puan</span></div>
+    <div class="prog"><div class="track"><div class="fill" style="width:${pct}%"></div></div>
+      <div class="lbl"><span>${esc(TIERS[ti].ad)}</span><span>${next ? fmt(next.min - m.total) + ' puan sonra ' + esc(next.ad) : 'En üst lig'}</span></div></div>
+    <div class="stats"><span>Bu hafta <b>${fmt(weekPts(m))}</b></span><span>İsabet <b>%${acc}</b></span><span>En uzun seri <b>${m.bestStreak || 0}</b></span>
+      ${BKEYS.map(k => `<span>${BR[k]} <b>${fmt(m[k])}</b></span>`).join('')}</div>
+  </section>`;
+}
+function segHTML(id, cur, opts) {
+  return `<div class="seg" id="${id}">${opts.map(([k, v]) => `<button aria-pressed="${k === cur}" data-k="${k}">${esc(v)}</button>`).join('')}</div>`;
+}
+function bindSeg(id, fn) { document.querySelectorAll('#' + id + ' button').forEach(b => b.addEventListener('click', () => fn(b.dataset.k))); }
+
+// ---------- Davalar ----------
+function renderCases() {
+  const list = CASES.filter(c => c.b === S.branch);
+  const best = S.me.cases || {};
+  app.innerHTML = `<div class="stack">
+    ${S.local && !S.guest ? (APP ? '<div class="banner">Puanların bu cihazda saklanıyor. Ortak lig ve düello bir sonraki sürümde.</div>' : '<div class="banner">Yerel moddasın: puanların yalnızca bu tarayıcıda tutulur ve skor tablosuna gitmez.</div>') : ''}
+    ${!S.local && !S.canWrite ? '<div class="banner">Görüntüleme erişimin var; oynayabilirsin ama puanın kaydedilmez. Sayfa sahibinden "Katkıda bulunan" erişimi iste.</div>' : ''}
+    ${guestBanner()}
+    ${S.guest ? '' : banBanner()}
+    ${profileHTML()}
+    ${timeSetHTML()}
+    <div class="stack" style="gap:10px">
+      <div style="display:flex;justify-content:space-between;align-items:end;gap:10px;flex-wrap:wrap">
+        <div><span class="eyebrow">Dava dosyaları</span><h2 style="font-size:24px">Bir dosya seç, duruşmayı yönet</h2></div>
+        ${segHTML('br', S.branch, Object.entries(BR).map(([k, v]) => [k, v + ' Hukuku']))}
+      </div>
+      <div class="cases">${list.map(c => `
+        <button class="case" data-id="${c.id}">
+          <span class="court">${esc(c.court)} · ${esc(c.esas)}</span>
+          <h3>${esc(c.title)}</h3>
+          <span class="meta"><span class="pill">${esc(c.role)}</span><span>${c.steps.length} karar</span><span class="dots" title="Zorluk">${'●'.repeat(c.zorluk)}${'○'.repeat(3 - c.zorluk)}</span>
+          ${best[c.id] != null ? `<span class="pill done">En iyi ${fmt(best[c.id])}</span>` : ''}</span>
+        </button>`).join('')}</div>
+      <p class="note">Bir dosyayı tekrar oynayabilirsin; lige yalnızca önceki en iyi skorunu aşan kısım eklenir. Mevzuat ve içtihat son kontrolü: ${LAST_CHECK}.</p>
+    </div></div>`;
+  bindSeg('br', k => { S.branch = k; renderCases(); });
+  bindTimeSet(renderCases); bindGuest();
+  document.querySelectorAll('.case').forEach(b => b.addEventListener('click', () => renderBrief(CASES.find(c => c.id === b.dataset.id))));
+}
+
+function renderBrief(c) {
+  S.sub = 'brief';
+  app.innerHTML = `<div class="stack">
+    <button class="btn ghost" id="back" style="align-self:flex-start">← Dosyalar</button>
+    <article class="docket">
+      <header>
+        <span class="tc">T.C. ${esc(c.court)}</span>
+        <h2>${esc(c.title)}</h2>
+        <div class="row"><span>Esas No: <b class="mono">${esc(c.esas)}</b></span><span>Rolün: <b>${esc(c.role)}</b></span><span>Branş: <b>${BR[c.b]} Hukuku</b></span></div>
+      </header>
+      <div class="facts"><span class="eyebrow">Olay</span><p>${esc(c.intro)}</p></div>
+      <dl class="ev" style="margin:0">${c.evidence.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>
+    </article>
+    <div class="panel" style="flex-direction:row;align-items:center;justify-content:space-between;flex-wrap:wrap">
+      <span>Dosyayı oku, hazır olunca başla. <b>${c.steps.length} karar</b>, her biri için <b>${qSecs()} saniye</b>${tMult() > 1 ? ' (' + TIME_MODES[prefs.time].ad.toLocaleLowerCase('tr-TR') + ' süre)' : ''}. Duruşma sırasında dosyayı açabilirsin ama süre işlemeye devam eder.</span>
+      <button class="btn" id="go">Duruşmayı başlat</button>
+    </div></div>`;
+  $('#back').addEventListener('click', renderCases);
+  $('#go').addEventListener('click', () => startGame('case', c.steps.map((s, i) => ({ ...s, id: c.id + '-' + i, b: c.b })), { caseObj: c }));
+}
+
+// ---------- Hızlı duruşma ----------
+function renderQuick() {
+  app.innerHTML = `<div class="stack">
+    <div><span class="eyebrow">Hızlı duruşma</span><h2 style="font-size:28px">${QUICK_N} soru, her biri ${qSecs()} saniye</h2>
+    <p class="muted" style="margin:6px 0 0;max-width:62ch">Süreler, cezalar, dava şartları. Seri yaptıkça bonus büyür. Hızlı duruşma puanları her seferinde lige eklenir.</p></div>
+    ${guestBanner()}
+    ${segHTML('qb', S.qbranch, [['karisik', 'Karışık'], ...Object.entries(BR).map(([k, v]) => [k, v + ' Hukuku'])])}
+    <button class="btn" id="qgo" style="align-self:flex-start">Duruşmayı başlat</button>
+    <div class="panel"><span class="eyebrow">Puanlama</span>
+      <div class="kv"><div><span>Doğru karar</span><b>100</b></div><div><span>Hız bonusu</span><b>0…150</b></div><div><span>Seri bonusu</span><b>+20…100</b></div></div>
+      <p class="note" style="margin:0">Hız bonusu kalan sürenin oranına göre hesaplanır; uzatılmış sürede de en fazla 150'dir. Süre dolarsa karar verilmemiş sayılır ve seri sıfırlanır. Son 24 saatte gördüğün bir soru yarım puan getirir; günlük lig puanı sınırı ${fmt(DAY_CAP)}'dir.</p></div>
+    ${timeSetHTML()}
+  </div>`;
+  bindSeg('qb', k => { S.qbranch = k; renderQuick(); });
+  bindTimeSet(renderQuick); bindGuest();
+  $('#qgo').addEventListener('click', () => {
+    const pool = QUICK.filter(q => S.qbranch === 'karisik' || q.b === S.qbranch);
+    startGame('quick', shuffle(pool).slice(0, QUICK_N));
+  });
+}
+
+// ---------- Oyun motoru ----------
+let timer = null;
+function stopTimer() { if (timer) { cancelAnimationFrame(timer.raf); timer = null; } }
+
+// Şıkların sırası her oyunda karışır (düelloda iki oyuncu için aynı sıra)
+function mix(it, seed) {
+  let h = 2166136261; for (const ch of it.id + '|' + seed) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); }
+  const rnd = () => { h = Math.imul(h ^ (h >>> 15), 2246822507); h = Math.imul(h ^ (h >>> 13), 3266489909); h ^= h >>> 16; return (h >>> 0) / 4294967296; };
+  const perm = it.o.map((_, i) => i);
+  for (let i = perm.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [perm[i], perm[j]] = [perm[j], perm[i]]; }
+  return { ...it, o: perm.map(i => it.o[i]), a: perm.indexOf(it.a) };
+}
+function startGame(mode, items, extra = {}) {
+  const seed = extra.duelCode || String(Math.random());
+  items = items.map(it => mix(it, seed));
+  S.game = { mode, items, idx: 0, score: 0, streak: 0, maxStreak: 0, correct: 0, log: [], times: [], fast: 0, repeats: 0, started: Date.now(), byBranch: Object.fromEntries(BKEYS.map(k => [k, 0])), ...extra };
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const g = S.game, it = g.items[g.idx], T = qSecs(it.t);
+  const c = g.caseObj;
+  app.innerHTML = `<div class="stack">
+    <div class="hud"><span class="step">${g.mode === 'case' ? 'Karar' : 'Soru'} ${g.idx + 1}/${g.items.length} · ${BR[it.b]}</span>
+      ${g.streak > 1 ? `<span class="streak">${g.streak} seri</span>` : ''}<span class="score">${fmt(g.score)}</span></div>
+    ${c ? `<details class="file"><summary>Dosyayı göster · ${esc(c.title)}</summary><div class="inner"><p style="margin:0">${esc(c.intro)}</p>${c.evidence.map(([k, v]) => `<div><b>${esc(k)}:</b> ${esc(v)}</div>`).join('')}</div></details>` : ''}
+    <section class="stage">
+      <div class="clock" id="clock"><svg viewBox="0 0 84 84"><circle class="bgc" cx="42" cy="42" r="36"/><circle class="fg" id="arc" cx="42" cy="42" r="36" stroke-dasharray="226.2" stroke-dashoffset="0"/></svg><b id="secs">${T}</b></div>
+      <div class="qhead"><span class="eyebrow">${c ? esc(c.role) + ' olarak karar ver' : 'Hızlı duruşma'}${tMult() > 1 ? ' · ' + esc(TIME_MODES[prefs.time].ad) + ' süre' : ''}</span><h2>${esc(it.q)}</h2></div>
+    </section>
+    <div class="opts" id="opts">${it.o.map((o, i) => `<button class="opt" data-i="${i}"><kbd>${i + 1}</kbd><span>${esc(o)}</span></button>`).join('')}</div>
+    <div id="fb"></div>
+  </div>`;
+  document.querySelectorAll('.opt').forEach(b => b.addEventListener('click', () => answer(+b.dataset.i)));
+  const start = performance.now(), dur = T * 1000;
+  stopTimer();
+  timer = { start, dur, done: false };
+  const tick = now => {
+    if (!timer || timer.done) return;
+    const left = Math.max(0, dur - (now - start));
+    const arc = $('#arc'), secs = $('#secs');
+    if (arc) { arc.style.strokeDashoffset = String(226.2 * (1 - left / dur)); secs.textContent = Math.ceil(left / 1000); $('#clock').classList.toggle('warn', left < 5000); }
+    if (left <= 0) { answer(-1); return; }
+    timer.raf = requestAnimationFrame(tick);
+  };
+  timer.raf = requestAnimationFrame(tick);
+}
+
+function answer(i) {
+  const g = S.game; if (!g || !timer || timer.done) return;
+  timer.done = true; cancelAnimationFrame(timer.raf);
+  const it = g.items[g.idx];
+  const ms = performance.now() - timer.start;
+  const frac = Math.max(0, timer.dur - ms) / timer.dur;
+  const ok = i === it.a;
+  const fast = i >= 0 && ms < FAST_MS;
+  const recent = (S.me.recent || {})[it.id];
+  const repeat = g.mode !== 'case' && recent && Date.now() - recent < REPEAT_MS;
+  let pts = 0;
+  if (ok) {
+    g.streak++; g.maxStreak = Math.max(g.maxStreak, g.streak); g.correct++;
+    pts = fast ? 100 : 100 + Math.ceil(frac * 15) * 10 + Math.min(100, 20 * (g.streak - 1));
+    if (repeat) pts = Math.round(pts / 2);
+  } else g.streak = 0;
+  if (i >= 0) g.times.push(Math.round(ms));
+  if (fast) g.fast++;
+  if (repeat) g.repeats++;
+  g.score += pts; g.byBranch[it.b] += pts;
+  g.log.push({ q: it.q, ok, pts, timeout: i < 0, fast, repeat });
+  document.querySelectorAll('.opt').forEach(b => {
+    b.disabled = true; const bi = +b.dataset.i;
+    if (bi === it.a) b.classList.add('right'); else if (bi === i) b.classList.add('wrong');
+  });
+  const last = g.idx === g.items.length - 1;
+  $('#fb').innerHTML = `<div class="verdict ${ok ? 'ok' : 'no'}">
+    <h3>${ok ? 'İsabetli karar · +' + pts : (i < 0 ? 'Süre doldu' : 'Hatalı karar')}</h3>
+    <p>${esc(it.e)}</p><span class="ref">${esc(it.r)}</span>
+    ${fast && ok ? '<p class="note" style="margin:0">Cevap insan tepki süresinin altında verildiği için hız ve seri bonusu uygulanmadı.</p>' : ''}
+    ${repeat && ok ? '<p class="note" style="margin:0">Bu soruyu son 24 saatte gördün; yarım puan verildi.</p>' : ''}
+    <div class="actions"><button class="btn" id="next">${last ? 'Kararı tefhim et' : 'Sonraki ' + (g.mode === 'case' ? 'karar' : 'soru')} →</button>
+    <button class="btn ghost sm" id="rep">Hata bildir</button></div><div id="repbox"></div></div>`;
+  $('.hud .score').textContent = fmt(g.score);
+  $('#next').addEventListener('click', next);
+  $('#rep').addEventListener('click', () => openReport(it));
+  $('#next').focus({ preventScroll: true });
+  $('#fb').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'nearest' });
+}
+
+function next() {
+  const g = S.game; if (!g) return;
+  if (g.idx < g.items.length - 1) { g.idx++; renderQuestion(); } else finish();
+}
+
+document.addEventListener('keydown', e => {
+  if (!S.game || e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  if (timer && !timer.done && /^[1-4]$/.test(e.key)) { const i = +e.key - 1; if (i < S.game.items[S.game.idx].o.length) answer(i); }
+  else if (timer && timer.done && e.key === 'Enter' && $('#next')) { e.preventDefault(); next(); }
+});
+
+function finish() {
+  const g = S.game; stopTimer();
+  const m = S.me, beforeTier = tierOf(m.total);
+  if (g.mode === 'case' && g.correct === g.items.length) { g.score += 100; g.byBranch[g.caseObj.b] += 100; g.perfect = true; }
+  // Teorik üst sınır: bunu aşan bir sonuç bellekte değiştirilmiş demektir
+  const cap = g.items.length * MAX_Q + 100;
+  if (g.score > cap || Date.now() - g.started < g.items.length * FAST_MS) { g.score = 0; BKEYS.forEach(k => { g.byBranch[k] = 0; }); g.voided = true; }
+  let award = Object.fromEntries(BKEYS.map(k => [k, 0]));
+  if (g.mode === 'case') {
+    const prev = (m.cases || {})[g.caseObj.id] || 0;
+    award[g.caseObj.b] = Math.max(0, g.score - prev);
+    m.cases = { ...(m.cases || {}), [g.caseObj.id]: Math.max(prev, g.score) };
+  } else award = { ...g.byBranch };
+  // Günlük sınır
+  if (m.day !== dayKey()) { m.day = dayKey(); m.dayPts = 0; }
+  let gained = BKEYS.reduce((t, k) => t + award[k], 0);
+  const room = Math.max(0, DAY_CAP - (m.dayPts || 0));
+  if (gained > room) {
+    let cut = gained - room; g.capped = true;
+    for (const k of BKEYS) { const d = Math.min(award[k], cut); award[k] -= d; cut -= d; }
+    gained = room;
+  }
+  if (m.week !== weekKey()) { m.week = weekKey(); m.weekPts = 0; }
+  BKEYS.forEach(k => { m[k] = (m[k] || 0) + award[k]; });
+  m.total = (m.total || 0) + gained; m.weekPts = (m.weekPts || 0) + gained; m.dayPts = (m.dayPts || 0) + gained;
+  m.games = (m.games || 0) + 1; m.answered = (m.answered || 0) + g.items.length; m.correct = (m.correct || 0) + g.correct;
+  m.bestStreak = Math.max(m.bestStreak || 0, g.maxStreak);
+  // Son 24 saatte görülen hızlı sorular
+  const now = Date.now(), rec = {};
+  Object.entries(m.recent || {}).forEach(([k, t]) => { if (now - t < REPEAT_MS) rec[k] = t; });
+  if (g.mode !== 'case') g.items.forEach(it => { rec[it.id] = now; });
+  m.recent = rec;
+  // Oyun kaydı (son 20): yönetim incelemesi ve tutarlılık kontrolü için
+  const t = g.times.length ? g.times : [0];
+  m.log = [...(m.log || []), { t: now, mode: g.mode, ref: g.caseObj ? g.caseObj.id : (g.duelCode || 'hizli'), n: g.items.length, c: g.correct,
+    s: g.score, aw: gained, fast: g.fast, rep: g.repeats, minMs: Math.min(...t), avgMs: Math.round(t.reduce((x, y) => x + y, 0) / t.length),
+    dur: now - g.started, tm: tMult(), after: m.total }].slice(-20);
+  persist(); paintChip();
+  const afterTier = tierOf(m.total);
+  if (g.mode === 'duel') { finishDuel(g); }
+  renderResult(g, gained, afterTier > beforeTier ? TIERS[afterTier].ad : null);
+}
+
+function renderResult(g, gained, promo) {
+  const title = g.mode === 'case' ? (g.correct === g.items.length ? 'Kusursuz duruşma' : g.correct >= g.items.length / 2 ? 'Dosya kapandı' : 'Dosya bozmaya döndü') :
+    g.mode === 'duel' ? 'Düello kararın verildi' : 'Hızlı duruşma bitti';
+  app.innerHTML = `<div class="stack">
+    <section class="result">
+      <span class="eyebrow">${g.caseObj ? esc(g.caseObj.court) + ' · HÜKÜM' : 'HÜKÜM'}</span>
+      <h2>${title}</h2>
+      <div class="big">${fmt(g.score)}</div>
+      <div class="kv"><div><span>İsabet</span><b>${g.correct}/${g.items.length}</b></div><div><span>En uzun seri</span><b>${g.maxStreak}</b></div><div><span>${S.guest ? 'Misafir: kaydedilmez' : 'Lige eklenen'}</span><b>${S.guest ? '—' : '+' + fmt(gained)}</b></div></div>
+      ${g.perfect ? '<p class="note" style="margin:0">Tüm kararlar isabetli: +100 kusursuz dosya bonusu.</p>' : ''}
+      ${g.mode === 'case' && gained === 0 ? '<p class="note" style="margin:0">Önceki en iyi skorunu geçmediğin için lige puan eklenmedi.</p>' : ''}
+      ${promo ? `<div class="promo">Terfi ettin: artık ${esc(promo)} Ligi'ndesin.</div>` : ''}
+      ${g.voided ? '<div class="banner">Bu oyunun sonucu teorik üst sınırı aştığı veya olanaksız bir hızda tamamlandığı için geçersiz sayıldı.</div>' : ''}
+      ${g.capped ? `<div class="banner">Günlük ${fmt(DAY_CAP)} lig puanı sınırına ulaştın; fazlası lige eklenmedi. Yarın yeniden puan toplayabilirsin.</div>` : ''}
+      ${g.fast ? `<p class="note" style="margin:0">${g.fast} cevap insan tepki süresinin altında verildi; bu cevaplara hız ve seri bonusu uygulanmadı.</p>` : ''}
+      ${S.bans[S.uid] && !S.guest ? '<div class="banner">Hesabın askıya alındığı için puanın kaydedilmedi.</div>' : ''}
+      ${guestBanner()}
+      <div class="recap">${g.log.map(l => `<div><span class="${l.ok ? 'y' : 'n'}">${l.ok ? '✓' : '✗'}</span><span>${esc(l.q)}</span><span class="mono">${l.timeout ? 'süre' : '+' + l.pts}${l.fast ? ' ⚑' : ''}${l.repeat ? ' ½' : ''}</span></div>`).join('')}</div>
+      <div id="duelbox"></div>
+      <div class="actions">
+        ${g.mode === 'case' ? '<button class="btn" id="again">Yeni dosya</button>' : g.mode === 'quick' ? '<button class="btn" id="again">Tekrar oyna</button>' : '<button class="btn" id="again">Düellolar</button>'}
+        <button class="btn ghost" id="toleague">Ligleri gör</button>
+      </div>
+    </section></div>`;
+  S.game = null;
+  $('#again').addEventListener('click', () => { leaveGame(); S.tab = g.mode === 'case' ? 'davalar' : g.mode === 'quick' ? 'hizli' : 'duello'; render(); });
+  $('#toleague').addEventListener('click', () => { leaveGame(); S.tab = 'ligler'; render(); });
+  bindGuest();
+  if (g.mode === 'duel') watchDuel(g.duelCode, $('#duelbox'));
+}
+
+// ---------- Ligler ----------
+function renderLeagues() {
+  const me = S.me, myTier = tierOf(me.total), wk = weekKey();
+  const boards = [['lig', TIERS[myTier].ad + ' Ligi · bu hafta'], ['genel', 'Genel'], ...BKEYS.map(k => [k, BR[k] + ' Ligi'])];
+  let rows = S.players.filter(p => !S.bans[p.id]), key = 'total', col = 'Toplam';
+  if (S.board === 'lig') { rows = rows.filter(p => tierOf(p.total || 0) === myTier); key = 'wk'; col = 'Bu hafta'; }
+  else if (S.board !== 'genel') { key = S.board; col = BR[S.board] + ' puanı'; }
+  const val = p => key === 'wk' ? weekPts(p) : (p[key] || 0);
+  rows.sort((a, b) => val(b) - val(a));
+  const myRank = rows.findIndex(p => p.id === S.uid) + 1;
+  const top = rows.slice(0, 50);
+  if (myRank > 50) top.push(rows[myRank - 1]);
+  app.innerHTML = `<div class="stack">${guestBanner()}
+    <div><span class="eyebrow">Ligler · ${esc(wk.split('-H')[1])}. hafta</span><h2 style="font-size:28px">Kürsüye kim çıkacak?</h2>
+      <p class="muted" style="margin:6px 0 0;max-width:64ch">Toplam puanın ligini belirler. Her lig kendi içinde haftalık yarışır; branş ligleri ise ceza, iş, aile, idare, borçlar ve miras hukuku uzmanlarını ayrı sıralar.</p></div>
+    <div class="ladder">${TIERS.map((t, i) => `<div class="${i === myTier ? 'me' : ''}"><b>${esc(t.ad)}</b><span>${fmt(t.min)}+ puan</span></div>`).join('')}</div>
+    ${segHTML('bd', S.board, boards)}
+    <div class="board">${rows.length ? `<table><thead><tr><th>Sıra</th><th>Oyuncu</th><th class="n">${esc(col)}</th></tr></thead><tbody>
+      ${top.map(p => { const r = rows.indexOf(p) + 1; return `<tr class="${p.id === S.uid ? 'me' : ''}"><td class="rk">${r <= 3 ? `<span class="medal">${r}</span>` : r}</td>
+        <td><div class="nm">${esc(p.name)}${p.id === S.uid ? ' <span class="tt">(sen)</span>' : ''}</div><div class="tt">${esc(TIERS[tierOf(p.total || 0)].ad)}</div></td>
+        <td class="n">${fmt(val(p))}</td></tr>`; }).join('')}
+    </tbody></table>` : '<div class="empty">Bu ligde henüz kimse yok. İlk dosyayı sen kapat.</div>'}</div>
+    ${myRank ? `<p class="note">Bu tablodaki sıran: <b class="mono">${myRank}/${rows.length}</b>${S.local ? ' · yerel mod' : ''}</p>` : ''}
+  </div>`;
+  bindSeg('bd', k => { S.board = k; renderLeagues(); }); bindGuest();
+}
+
+// ---------- Kaynaklar ----------
+function renderSources() {
+  const cnt = k => CASES.filter(c => c.b === k).length;
+  const qn = k => CASES.filter(c => c.b === k).reduce((t, c) => t + c.steps.length, 0) + QUICK.filter(q => q.b === k).length;
+  app.innerHTML = `<div class="stack">
+    <div><span class="eyebrow">Kaynaklar · son kontrol ${esc(LAST_CHECK)}</span><h2 style="font-size:28px">Sorular neye dayanıyor?</h2>
+      <p class="muted" style="margin:6px 0 0;max-width:64ch">Her kararın altında dayandığı kanun maddesi ya da karar künyesi gösterilir. Aşağıda oyuna alınan güncel değişiklikler ve kararlar var. Henüz yasalaşmamış taslaklar oyuna alınmadı.</p></div>
+    <div class="ladder" style="grid-template-columns:repeat(3,minmax(0,1fr))">${BKEYS.map(k => `<div><b>${BR[k]} Hukuku</b><span>${cnt(k)} dosya · ${qn(k)} soru</span></div>`).join('')}</div>
+    ${SOURCES.map(g => `<section class="panel"><span class="eyebrow">${esc(g.k)}</span>
+      <dl class="ev" style="margin:0;border-top:0">${g.items.map(([a, b]) => `<div style="grid-template-columns:minmax(0,1fr);gap:2px;padding-inline:0"><dt style="text-transform:none;letter-spacing:0;font-size:12.5px">${esc(a)}</dt><dd>${esc(b)}</dd></div>`).join('')}</dl></section>`).join('')}
+    <section class="panel"><span class="eyebrow">İzlenen gelişmeler · haftalık takip</span>
+      <dl class="ev" style="margin:0;border-top:0">${WATCH.map(([a, b]) => `<div style="grid-template-columns:minmax(0,1fr);gap:2px;padding-inline:0"><dt style="text-transform:none;letter-spacing:0;font-size:12.5px">${esc(a)}</dt><dd>${esc(b)}</dd></div>`).join('')}</dl></section>
+    <div class="banner">Celse eğitim ve eğlence amaçlıdır; hukuki danışmanlık yerine geçmez. Somut bir uyuşmazlık için bir avukata danışın. Bir soruda hata görürsen cevaptan sonra çıkan Hata bildir düğmesini kullan.</div>
+  </div>`;
+}
+
+// ---------- Süre ayarı ----------
+function timeSetHTML() {
+  return `<div class="timeset"><span class="eyebrow">Süre</span>
+    ${segHTML('tm', prefs.time, Object.entries(TIME_MODES).map(([k, v]) => [k, v.ad + ' · ' + DEF_T * v.k + ' sn']))}
+    <p class="note">Uzatılmış süre okuma veya erişilebilirlik ihtiyacı olanlar içindir. Hız bonusu kalan sürenin oranıyla hesaplandığından kazanılabilecek puan değişmez.</p></div>`;
+}
+function bindTimeSet(rerender) {
+  bindSeg('tm', k => { prefs.time = k; if (!S.guest) ls.set('celse.prefs', prefs); rerender(); });
+}
+
+// ---------- Kullanıcı adı denetimi ----------
+const BAD = ['amk', 'aq', 'orospu', 'oç', 'oc', 'piç', 'pic', 'sik', 'yarrak', 'yarak', 'göt', 'got', 'ibne', 'pezevenk', 'kahpe', 'şerefsiz', 'serefsiz', 'gavat', 'puşt', 'pust', 'kaltak', 'fuck', 'shit', 'bitch', 'nazi', 'hitler'];
+const RESERVED = ['admin', 'yonetici', 'yönetici', 'moderator', 'moderatör', 'celse', 'anthropic', 'claude', 'yargitay', 'yargıtay', 'danistay', 'danıştay', 'anayasamahkemesi', 'baro', 'tbb', 'hsk', 'adaletbakanligi', 'savcilik', 'savcılık', 'mahkeme'];
+function badName(raw) {
+  const n = raw.toLocaleLowerCase('tr-TR').replace(/0/g, 'o').replace(/1/g, 'i').replace(/3/g, 'e').replace(/4/g, 'a').replace(/5/g, 's').replace(/7/g, 't').replace(/_/g, '');
+  const flat = n.replace(/ı/g, 'i').replace(/ş/g, 's').replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ö/g, 'o').replace(/ç/g, 'c');
+  if (RESERVED.some(r => flat === r.replace(/ı/g, 'i').replace(/ş/g, 's').replace(/ü/g, 'u').replace(/ö/g, 'o').replace(/ç/g, 'c') || flat.startsWith('admin'))) return true;
+  return BAD.some(w => { const f = w.replace(/ı/g, 'i').replace(/ş/g, 's').replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ö/g, 'o').replace(/ç/g, 'c'); return f.length <= 3 ? flat === f || flat.startsWith(f + '') && flat.length <= f.length + 1 : flat.includes(f); });
+}
+
+// ---------- Hukuki metinler ----------
+function inlineMd(t) {
+  return esc(t).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/\*(.+?)\*/g, '<i>$1</i>')
+    .replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+}
+function mdToHtml(md) {
+  const lines = md.split('\n'); let out = '', i = 0;
+  while (i < lines.length) {
+    const l = lines[i];
+    if (!l.trim()) { i++; continue; }
+    if (l.startsWith('### ')) { out += `<h4>${inlineMd(l.slice(4))}</h4>`; i++; continue; }
+    if (l.startsWith('## ')) { out += `<h3>${inlineMd(l.slice(3))}</h3>`; i++; continue; }
+    if (l.startsWith('|')) {
+      const rows = []; while (i < lines.length && lines[i].startsWith('|')) { rows.push(lines[i]); i++; }
+      const cells = r => r.replace(/^\||\|$/g, '').split('|').map(c => c.trim());
+      const head = cells(rows[0]), body = rows.slice(2).map(cells);
+      out += `<div class="tblwrap"><table><thead><tr>${head.map(h => `<th>${inlineMd(h)}</th>`).join('')}</tr></thead><tbody>${body.map(r => `<tr>${r.map(c => `<td>${inlineMd(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+      continue;
+    }
+    if (/^- /.test(l)) { let li = ''; while (i < lines.length && /^- /.test(lines[i])) { li += `<li>${inlineMd(lines[i].slice(2))}</li>`; i++; } out += `<ul>${li}</ul>`; continue; }
+    if (/^\d+\. /.test(l)) { let li = ''; while (i < lines.length && /^\d+\. /.test(lines[i])) { li += `<li>${inlineMd(lines[i].replace(/^\d+\. /, ''))}</li>`; i++; } out += `<ol>${li}</ol>`; continue; }
+    let para = l; i++;
+    while (i < lines.length && lines[i].trim() && !/^(#|\||- |\d+\. )/.test(lines[i])) { para += ' ' + lines[i]; i++; }
+    out += `<p>${inlineMd(para)}</p>`;
+  }
+  return out;
+}
+function openLegal(id) {
+  const d = LEGAL.find(x => x.id === id); if (!d) return;
+  const prev = document.activeElement;
+  const m = document.createElement('div'); m.className = 'modal';
+  m.innerHTML = `<div class="sheet" role="dialog" aria-modal="true" aria-label="${esc(d.title)}"><header><h2>${esc(d.title)}</h2><button class="btn ghost sm" id="mclose">Kapat</button></header><div class="body legal">${mdToHtml(d.md)}</div></div>`;
+  document.body.appendChild(m);
+  const close = () => { m.remove(); document.removeEventListener('keydown', onKey); prev && prev.focus && prev.focus(); };
+  const onKey = e => { if (e.key === 'Escape') close(); };
+  document.addEventListener('keydown', onKey);
+  m.addEventListener('click', e => { if (e.target === m) close(); });
+  m.querySelector('#mclose').addEventListener('click', close);
+  m.querySelector('#mclose').focus();
+}
+function bindLegalLinks() { document.querySelectorAll('[data-legal]').forEach(b => b.addEventListener('click', e => { e.preventDefault(); openLegal(b.dataset.legal); })); }
+function consentHTML() {
+  return `<div class="checks">
+    <label><input type="checkbox" id="c-notice"><span><button type="button" class="linkbtn" data-legal="aydinlatma">KVKK Aydınlatma Metni</button>'ni okudum ve anladım.</span></label>
+    <label><input type="checkbox" id="c-terms"><span><button type="button" class="linkbtn" data-legal="kosullar">Kullanım Koşulları</button>'nı okudum ve kabul ediyorum.</span></label>
+    <label><input type="checkbox" id="c-age"><span>18 yaşını doldurdum.</span></label>
+  </div>`;
+}
+function consentError() {
+  if (!$('#c-notice').checked) return 'Devam etmek için Aydınlatma Metni\'ni okuduğunu ve anladığını işaretle.';
+  if (!$('#c-terms').checked) return 'Devam etmek için Kullanım Koşulları\'nı kabul etmelisin.';
+  if (!$('#c-age').checked) return 'Celse\'ye kayıt için 18 yaşını doldurmuş olmak gerekir.';
+  return '';
+}
+const consentRecord = () => ({ notice: LEGAL_VERSION.notice, terms: LEGAL_VERSION.terms, age: true, at: new Date().toISOString() });
+const needsConsent = () => !S.guest && (!S.me.consent || S.me.consent.notice !== LEGAL_VERSION.notice || S.me.consent.terms !== LEGAL_VERSION.terms);
+function renderConsent() {
+  app.innerHTML = `<form class="gate" id="cform">
+    <span class="eyebrow">Yeni yasal metinler</span><h2 style="font-size:26px">Devam etmeden önce</h2>
+    <p class="muted" style="margin:0">Celse'nin aydınlatma metni ve kullanım koşulları yayınlandı. Oynamaya devam etmek için okuyup aşağıdaki beyanları ver.</p>
+    ${consentHTML()}<div class="err" id="cerr"></div><button class="btn wide">Devam et</button>
+    <button type="button" class="btn ghost wide" id="cdel">Kabul etmiyorum, hesabımı sil</button></form>`;
+  bindLegalLinks();
+  $('#cform').addEventListener('submit', e => { e.preventDefault(); const er = consentError(); if (er) { $('#cerr').textContent = er; return; } S.me.consent = consentRecord(); persist(); render(); });
+  $('#cdel').addEventListener('click', () => { S.tab = 'yasal'; renderLegal(true); });
+}
+function banBanner() {
+  const b = S.bans[S.uid]; if (!b) return '';
+  return `<div class="banner"><b>Hesabın askıya alındı.</b> ${esc(b.reason || 'Kullanım Koşulları\'na aykırılık')}. Oynayabilirsin ancak puanların kaydedilmez. Bildirimden itibaren 15 gün içinde itiraz edebilirsin (Kullanım Koşulları 3.6).</div>`;
+}
+function renderLegal(askDelete) {
+  app.innerHTML = `<div class="stack">
+    <div><span class="eyebrow">Yasal · sürüm ${esc(LEGAL_VERSION.terms)}</span><h2 style="font-size:28px">Haklarınız ve kurallar</h2>
+      <p class="muted" style="margin:6px 0 0;max-width:64ch">Metinler taslaktır; köşeli parantezli alanlar yayın öncesinde doldurulacaktır.${S.me && S.me.consent ? ' Beyan tarihin: ' + esc(new Date(S.me.consent.at).toLocaleDateString('tr-TR')) + '.' : ''}</p></div>
+    <div class="list">${LEGAL.map(d => `<button data-legal="${d.id}"><span><b>${esc(d.title)}</b></span><span class="muted">Oku →</span></button>`).join('')}</div>
+    ${S.guest ? `<section class="panel"><span class="eyebrow">Misafir modu</span><p style="margin:0">Misafir modunda hesabın yok ve sana ait hiçbir oyun verisi saklanmıyor. Sayfayı kapattığında bu oturumdaki puanlar silinir.</p><div class="actions"><button class="btn ghost" data-exitguest>Misafir oturumunu kapat</button></div></section>` : `<section class="panel" id="delsec"><span class="eyebrow">Hesabımı sil</span>
+      <p style="margin:0">Kullanıcı adın, puanların, oyun kayıtların ve hata bildirimlerin kalıcı olarak silinir. Bu işlem geri alınamaz.</p>
+      <div class="actions" id="delact"><button class="btn ghost" id="del1">Hesabımı silmek istiyorum</button></div>
+      <div class="err" id="delerr"></div></section>`}
+  </div>`;
+  bindLegalLinks(); bindGuest();
+  if (S.guest) return;
+  const ask = () => { $('#delact').innerHTML = '<button class="btn danger" id="del2">Evet, kalıcı olarak sil</button><button class="btn ghost" id="del0">Vazgeç</button>'; $('#del2').addEventListener('click', deleteAccount); $('#del0').addEventListener('click', () => renderLegal()); };
+  $('#del1').addEventListener('click', ask);
+  if (askDelete) { ask(); $('#delsec').scrollIntoView({ block: 'center' }); }
+}
+async function deleteAccount() {
+  $('#del2').disabled = true;
+  try {
+    if (S.local) { ls.del('celse.me'); }
+    else {
+      const key = S.me.name.toLocaleLowerCase('tr-TR');
+      const u = await S.db.doc('usernames/' + key).get();
+      if (u.exists && u.data().uid === S.uid) await S.db.doc('usernames/' + key).delete();
+      await S.db.doc('reports/' + S.uid).delete().catch(() => {});
+      await S.db.doc('players/' + S.uid).delete();
+    }
+    ls.del('celse.duels');
+    S.me = null; S.tab = 'davalar'; $('#mechip').hidden = true;
+    renderGate();
+    $('#gerr').textContent = 'Hesabın silindi. İstersen yeni bir kullanıcı adıyla yeniden başlayabilirsin.';
+  } catch (e) { $('#delerr').textContent = 'Hesap silinemedi. Bağlantını kontrol edip tekrar dene ya da iletişim adresine yaz.'; $('#del2').disabled = false; }
+}
+
+// ---------- Hata bildirimi ----------
+function openReport(it) {
+  const box = $('#repbox'); if (!box || box.childElementCount) return;
+  if (S.guest) { box.innerHTML = '<p class="note">Hata bildirmek için kayıt olman gerekir; misafir modunda hiçbir veri saklanmaz. İstersen Hukuki Bilgilendirme metnindeki iletişim adresine yazabilirsin.</p>'; return; }
+  if (S.local || !S.canWrite) { box.innerHTML = '<p class="note">Bu görünümde bildirim gönderilemiyor. Hukuki Bilgilendirme metnindeki iletişim adresine yazabilirsin.</p>'; return; }
+  box.innerHTML = `<div class="report"><label class="eyebrow" for="reptxt">Ne yanlış? (madde, karar, güncellik)</label>
+    <textarea class="txt" id="reptxt" maxlength="600" placeholder="ör. Bu süre 7499 sayılı Kanunla değişti; doğru madde …"></textarea>
+    <div class="actions"><button class="btn sm" id="repsend">Bildirimi gönder</button></div><div class="err" id="reperr"></div></div>`;
+  $('#reptxt').focus();
+  $('#repsend').addEventListener('click', async () => {
+    const txt = $('#reptxt').value.trim(); if (txt.length < 5) { $('#reperr').textContent = 'Biraz daha ayrıntı yaz.'; return; }
+    $('#repsend').disabled = true;
+    try {
+      const ref = S.db.doc('reports/' + S.uid); const cur = await ref.get();
+      const items = ((cur.exists && cur.data().items) || []).slice(-29);
+      items.push({ qid: it.id, q: it.q.slice(0, 200), text: txt, at: new Date().toISOString() });
+      await ref.set({ name: S.me.name, items });
+      box.innerHTML = '<p class="note">Teşekkürler, bildirimin alındı. İncelenip gerekirse bir sonraki güncellemede düzeltilecek.</p>';
+    } catch (e) { $('#reperr').textContent = 'Gönderilemedi, tekrar dene.'; $('#repsend').disabled = false; }
+  });
+}
+
+// ---------- Hile tespiti ve yönetim ----------
+function flagsOf(p) {
+  const f = [], log = p.log || [];
+  const sum = BKEYS.reduce((t, k) => t + (p[k] || 0), 0);
+  if (Math.abs(sum - (p.total || 0)) > 0) f.push('Branş toplamı ≠ toplam');
+  if (log.length && log[log.length - 1].after !== p.total) f.push('Kayıt dışı puan');
+  for (let i = 1; i < log.length; i++) if (log[i].after - log[i].aw !== log[i - 1].after) { f.push('Kayıt zinciri kopuk'); break; }
+  if (log.some(l => l.s > l.n * MAX_Q + 100)) f.push('Üst sınır aşımı');
+  const n = log.reduce((t, l) => t + l.n, 0), fa = log.reduce((t, l) => t + (l.fast || 0), 0);
+  if (n >= 8 && fa / n > 0.25) f.push('Hızlı cevap %' + Math.round(fa / n * 100));
+  if (log.some(l => l.dur < l.n * 1200)) f.push('Olağandışı hız');
+  if ((p.dayPts || 0) > DAY_CAP) f.push('Günlük sınır aşımı');
+  if (weekPts(p) > (p.total || 0)) f.push('Haftalık > toplam');
+  const day = log.filter(l => Date.now() - l.t < 36e5).length; if (day >= 15) f.push('Saatte ' + day + ' oyun');
+  return f;
+}
+async function renderAdmin() {
+  if (!S.isOwner) { S.tab = 'davalar'; render(); return; }
+  const rows = S.players.map(p => ({ p, f: flagsOf(p) })).sort((a, b) => b.f.length - a.f.length || (b.p.total || 0) - (a.p.total || 0));
+  app.innerHTML = `<div class="stack">
+    <div><span class="eyebrow">Yönetim · yalnızca sen görürsün</span><h2 style="font-size:28px">Adil oyun incelemesi</h2>
+      <p class="muted" style="margin:6px 0 0;max-width:66ch">Otomatik işaretler yalnızca inceleme içindir; yaptırımı sen verirsin (Kullanım Koşulları 3.6). Yasaklanan oyuncu skor tablolarından çıkar ve puanı kaydedilmez.</p></div>
+    <div class="adm">${rows.map(({ p, f }) => `<div class="row"><div class="top"><b>${esc(p.name)}</b><span class="mono">${fmt(p.total)} p · ${p.games || 0} oyun · %${p.answered ? Math.round(p.correct / p.answered * 100) : 0} isabet</span></div>
+      <div>${S.bans[p.id] ? `<span class="flag">Yasaklı: ${esc(S.bans[p.id].reason || '')}</span>` : ''}${f.length ? f.map(x => `<span class="flag">${esc(x)}</span>`).join('') : '<span class="flag ok">Temiz</span>'}${p.consent ? `<span class="flag ok">Beyan ${esc(p.consent.terms)}</span>` : '<span class="flag">Beyan yok</span>'}</div>
+      <details><summary>Son oyunlar</summary><div class="glog">${(p.log || []).slice().reverse().map(l => `${new Date(l.t).toLocaleString('tr-TR')} · ${esc(l.ref)} · ${l.c}/${l.n} · skor ${l.s} · lig +${l.aw} · en hızlı ${l.minMs} ms · ort ${l.avgMs} ms · ${Math.round(l.dur / 1000)} sn · ×${l.tm}`).join('<br>') || 'Kayıt yok'}</div></details>
+      <div class="actions">${p.id === S.uid ? '' : S.bans[p.id] ? `<button class="btn ghost sm" data-unban="${esc(p.id)}">Yasağı kaldır</button>` : `<button class="btn ghost sm" data-ban="${esc(p.id)}">Askıya al</button>`}
+        <button class="btn ghost sm" data-reset="${esc(p.id)}">Puanı sıfırla</button></div></div>`).join('') || '<div class="empty">Henüz oyuncu yok.</div>'}</div>
+    <section class="panel"><span class="eyebrow">Hata bildirimleri</span><div id="reps"><p class="note">Yükleniyor…</p></div></section>
+  </div>`;
+  app.querySelectorAll('[data-ban]').forEach(b => b.addEventListener('click', async () => {
+    b.disabled = true; await S.db.doc('bans/' + b.dataset.ban).set({ reason: 'Adil oyun kurallarına aykırılık', at: new Date().toISOString() }).catch(() => {}); }));
+  app.querySelectorAll('[data-unban]').forEach(b => b.addEventListener('click', async () => { b.disabled = true; await S.db.doc('bans/' + b.dataset.unban).delete().catch(() => {}); }));
+  app.querySelectorAll('[data-reset]').forEach(b => b.addEventListener('click', async () => {
+    const p = S.players.find(x => x.id === b.dataset.reset); if (!p) return;
+    if (b.dataset.sure !== '1') { b.dataset.sure = '1'; b.textContent = 'Emin misin? Tekrar bas'; b.classList.add('danger'); return; }
+    b.disabled = true;
+    const fresh = { ...blank(p.name), consent: p.consent || null, log: [{ t: Date.now(), mode: 'sifirlama', ref: 'yonetim', n: 0, c: 0, s: 0, aw: 0, fast: 0, rep: 0, minMs: 0, avgMs: 0, dur: 0, tm: 1, after: 0 }] };
+    await S.db.doc('players/' + p.id).set(fresh).catch(() => {});
+  }));
+  try {
+    const snap = await S.db.collection('reports').get();
+    const items = []; snap.docs.forEach(d => (d.data().items || []).forEach(x => items.push({ ...x, name: d.data().name })));
+    items.sort((a, b) => (b.at || '').localeCompare(a.at || ''));
+    const el = $('#reps'); if (el) el.innerHTML = items.length ? `<div class="tblwrap"><table><thead><tr><th>Tarih</th><th>Oyuncu</th><th>Soru</th><th>Bildirim</th></tr></thead><tbody>${items.map(x => `<tr><td class="mono">${esc(new Date(x.at).toLocaleDateString('tr-TR'))}</td><td>${esc(x.name)}</td><td>${esc(x.qid)} · ${esc(x.q)}</td><td>${esc(x.text)}</td></tr>`).join('')}</tbody></table></div>` : '<p class="note">Henüz bildirim yok.</p>';
+  } catch (e) { const el = $('#reps'); if (el) el.innerHTML = '<p class="note">Bildirimler okunamadı.</p>'; }
+}
+
+// ---------- Düello ----------
+const CODE_CH = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+const myDuels = () => ls.get('celse.duels', []);
+function rememberDuel(code) { const l = myDuels().filter(c => c !== code); l.unshift(code); ls.set('celse.duels', l.slice(0, 8)); }
+
+function renderDuel() {
+  if (S.guest) {
+    app.innerHTML = `<div class="stack"><div><span class="eyebrow">Düello</span><h2 style="font-size:28px">Aynı sorular, iki rakip</h2></div>${guestBanner()}<p class="muted" style="margin:0">Düello, iki oyuncunun skorlarını karşılaştırmak için kayıt gerektirir.</p></div>`;
+    bindGuest(); return;
+  }
+  if (S.local || !S.canWrite) {
+    app.innerHTML = `<div class="stack"><div><span class="eyebrow">Düello</span><h2 style="font-size:28px">Aynı dosya, iki avukat</h2></div>
+      <div class="banner">${APP ? 'Düello, ortak lig ile birlikte bir sonraki sürümde gelecek.' : 'Düello için ortak arenaya yazma erişimi gerekiyor. ' + (S.local ? 'Bu görünüm yerel modda çalışıyor.' : 'Sayfa sahibinden "Katkıda bulunan" erişimi iste.')}</div></div>`;
+    return;
+  }
+  app.innerHTML = `<div class="stack">
+    <div><span class="eyebrow">Düello</span><h2 style="font-size:28px">Aynı sorular, iki rakip</h2>
+      <p class="muted" style="margin:6px 0 0;max-width:62ch">Bir düello aç, kodu rakibine gönder. İkiniz de aynı ${DUEL_N} soruyu ${DEF_T}'er saniyede cevaplarsınız; yüksek skor kazanır.</p></div>
+    <div class="two">
+      <div class="panel"><span class="eyebrow">Düello aç</span>
+        ${segHTML('db', S.qbranch, [['karisik', 'Karışık'], ...Object.entries(BR)])}
+        <button class="btn" id="dnew">Kodu oluştur ve oyna</button><div class="err" id="derr1"></div></div>
+      <form class="panel" id="djoin"><label class="eyebrow" for="dcode">Koda katıl</label>
+        <input class="txt code-in" id="dcode" maxlength="5" autocomplete="off" placeholder="K7Q2M">
+        <button class="btn ghost">Düelloya katıl</button><div class="err" id="derr2"></div></form>
+    </div>
+    <div class="stack" style="gap:8px"><span class="eyebrow">Son düelloların</span><div class="list" id="dlist"><div class="empty">Henüz düello yok.</div></div></div>
+  </div>`;
+  bindSeg('db', k => { S.qbranch = k; renderDuel(); });
+  $('#dnew').addEventListener('click', createDuel);
+  $('#djoin').addEventListener('submit', e => { e.preventDefault(); joinDuel($('#dcode').value.trim().toUpperCase(), $('#derr2')); });
+  loadDuelList();
+}
+
+async function loadDuelList() {
+  const codes = myDuels(); if (!codes.length) return;
+  const snaps = await Promise.all(codes.map(c => S.db.doc('duels/' + c).get().catch(() => null)));
+  const el = $('#dlist'); if (!el) return;
+  const rows = snaps.map((s, i) => s && s.exists ? { code: codes[i], ...s.data() } : null).filter(Boolean);
+  if (!rows.length) return;
+  el.innerHTML = rows.map(d => {
+    const meHost = d.host && d.host.uid === S.uid, mine = meHost ? d.host : d.guest, opp = meHost ? d.guest : d.host;
+    let st = 'Rakip bekleniyor';
+    if (mine && mine.score == null) st = 'Senin sıran';
+    else if (opp && opp.score != null && mine) st = mine.score > opp.score ? 'Kazandın ' + fmt(mine.score) + '–' + fmt(opp.score) : mine.score < opp.score ? 'Kaybettin ' + fmt(mine.score) + '–' + fmt(opp.score) : 'Berabere';
+    else if (opp) st = 'Rakip oynuyor';
+    return `<button data-c="${esc(d.code)}"><span><b class="mono">${esc(d.code)}</b> · ${esc(opp ? opp.name : '—')}</span><span class="muted">${esc(st)}</span></button>`;
+  }).join('');
+  el.querySelectorAll('button').forEach(b => b.addEventListener('click', () => joinDuel(b.dataset.c, $('#derr2'))));
+}
+
+async function createDuel() {
+  const err = $('#derr1'); $('#dnew').disabled = true;
+  try {
+    const pool = QUICK.filter(q => S.qbranch === 'karisik' || q.b === S.qbranch);
+    const qids = shuffle(pool).slice(0, DUEL_N).map(q => q.id);
+    let code = ''; for (let i = 0; i < 5; i++) code += CODE_CH[Math.floor(Math.random() * CODE_CH.length)];
+    await S.db.doc('duels/' + code).set({ branch: S.qbranch, qids, created: Date.now(), host: { uid: S.uid, name: S.me.name, score: null, correct: null }, guest: null });
+    rememberDuel(code);
+    app.innerHTML = `<div class="stack"><section class="panel" style="align-items:flex-start">
+      <span class="eyebrow">Düello kodu</span><div class="code">${code}</div>
+      <p style="margin:0">Bu kodu rakibine gönder; Düello sekmesinde "Koda katıl" alanına yazsın. Sen şimdi oynayabilirsin, sonuç ikiniz de bitirince görünür.</p>
+      <div class="actions"><button class="btn" id="dplay">Şimdi oyna</button><button class="btn ghost" id="dcopy">Kodu kopyala</button></div>
+    </section></div>`;
+    $('#dcopy').addEventListener('click', async () => { try { await navigator.clipboard.writeText(code); $('#dcopy').textContent = 'Kopyalandı'; } catch (e) { $('#dcopy').textContent = code; } });
+    $('#dplay').addEventListener('click', () => playDuel(code, qids, 'host'));
+  } catch (e) { err.textContent = 'Düello oluşturulamadı. Tekrar dene.'; $('#dnew').disabled = false; }
+}
+
+async function joinDuel(code, err) {
+  if (!/^[A-Z0-9]{5}$/.test(code)) { err.textContent = 'Kod 5 karakterden oluşur.'; return; }
+  err.textContent = '';
+  try {
+    const ref = S.db.doc('duels/' + code); const snap = await ref.get();
+    if (!snap.exists) { err.textContent = 'Bu kodla bir düello bulunamadı.'; return; }
+    const d = snap.data();
+    let role = null;
+    if (d.host && d.host.uid === S.uid) role = 'host';
+    else if (d.guest && d.guest.uid === S.uid) role = 'guest';
+    else if (!d.guest) { await ref.update({ guest: { uid: S.uid, name: S.me.name, score: null, correct: null } }); role = 'guest'; }
+    else { err.textContent = 'Bu düelloda iki oyuncu zaten var.'; return; }
+    rememberDuel(code);
+    const mine = role === 'host' ? d.host : d.guest;
+    if (mine && mine.score != null) { app.innerHTML = '<div class="stack"><section class="result"><span class="eyebrow">Düello ' + esc(code) + '</span><div id="duelbox"></div><button class="btn ghost" id="dback" style="align-self:flex-start">← Düellolar</button></section></div>'; $('#dback').addEventListener('click', () => { leaveGame(); renderDuel(); }); watchDuel(code, $('#duelbox')); return; }
+    playDuel(code, d.qids, role);
+  } catch (e) { err.textContent = 'Düelloya bağlanılamadı. Tekrar dene.'; }
+}
+
+function playDuel(code, qids, role) {
+  const items = qids.map(id => QUICK.find(q => q.id === id)).filter(Boolean);
+  startGame('duel', items, { duelCode: code, duelRole: role });
+}
+function finishDuel(g) {
+  S.db.doc('duels/' + g.duelCode).update({ [g.duelRole]: { score: g.score, correct: g.correct } }).catch(() => {});
+}
+function watchDuel(code, box) {
+  if (S.duelUnsub) S.duelUnsub();
+  S.duelUnsub = S.db.doc('duels/' + code).onSnapshot(s => {
+    if (!s.exists || !box.isConnected) return;
+    const d = s.data(), h = d.host || {}, gu = d.guest || null;
+    const done = h.score != null && gu && gu.score != null;
+    const side = (p, other) => p ? `<div class="side ${done && p.score > other.score ? 'win' : ''}"><span>${esc(p.name)}${p.uid === S.uid ? ' (sen)' : ''}</span><b>${p.score == null ? '…' : fmt(p.score)}</b><small class="muted">${p.score == null ? 'oynuyor' : p.correct + '/' + d.qids.length + ' isabet'}</small></div>` : '<div class="side"><span>Rakip bekleniyor</span><b>—</b><small class="muted">kod: ' + esc(code) + '</small></div>';
+    let verdict = 'Rakibin bitirdiğinde sonuç burada görünür.';
+    if (done) { const meH = h.uid === S.uid, a = meH ? h.score : gu.score, b = meH ? gu.score : h.score; verdict = a > b ? 'Düelloyu kazandın.' : a < b ? 'Bu düelloyu rakibin aldı.' : 'Düello berabere bitti.'; }
+    box.innerHTML = `<div class="stack" style="gap:10px"><span class="eyebrow">Düello ${esc(code)}</span>
+      <div class="vs">${side(h, gu || {})}<i>vs</i>${side(gu, h)}</div><p style="margin:0;font-weight:600">${verdict}</p></div>`;
+  }, () => {});
+}
+
+// Android geri tuşu (yalnızca uygulama sürümünde kullanılır)
+window.celseBack = () => {
+  const m = document.querySelector('.modal'); if (m) { m.querySelector('#mclose').click(); return true; }
+  if (S.game) { leaveGame(); S.tab = 'davalar'; render(); return true; }
+  if (S.sub) { render(); return true; }
+  if (S.me && S.tab !== 'davalar') { S.tab = 'davalar'; render(); return true; }
+  return false;
+};
+boot();
+})();
+</script>
