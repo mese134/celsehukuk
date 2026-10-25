@@ -29,17 +29,28 @@ jobs:
           python3 tools/build.py
           npx cap sync android
 
-      - name: İmza anahtarlarını kontrol et
+      - name: İmza anahtarını hazırla
+        id: key
         env:
           KEYSTORE_B64: ${{ secrets.CELSE_KEYSTORE_B64 }}
         run: |
           if [ -z "$KEYSTORE_B64" ]; then
-            echo "::error::CELSE_KEYSTORE_B64 gizli değeri eksik. Settings > Secrets and variables > Actions bölümünden ekleyin."
-            exit 1
+            echo "::warning::İmza anahtarı (CELSE_KEYSTORE_B64) girilmemiş. Yalnızca test APK'sı derlenecek; Play Store paketi için Settings > Secrets and variables > Actions bölümünden dört gizli değeri ekleyin."
+            echo "signed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "$KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/upload.jks"
+            echo "signed=true" >> "$GITHUB_OUTPUT"
           fi
-          echo "$KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/upload.jks"
 
-      - name: Play Store paketi (.aab) ve test APK'sı derle
+      - name: Test APK'sı derle (imzasız kurulum için)
+        if: steps.key.outputs.signed == 'false'
+        working-directory: android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon --stacktrace
+
+      - name: Play Store paketi (.aab) ve imzalı APK derle
+        if: steps.key.outputs.signed == 'true'
         working-directory: android
         env:
           CELSE_KEYSTORE_FILE: ${{ runner.temp }}/upload.jks
@@ -51,6 +62,14 @@ jobs:
           ./gradlew bundleRelease assembleRelease --no-daemon --stacktrace
 
       - uses: actions/upload-artifact@v4
+        if: steps.key.outputs.signed == 'false'
+        with:
+          name: celse-test-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+
+      - uses: actions/upload-artifact@v4
+        if: steps.key.outputs.signed == 'true'
         with:
           name: celse-release
           path: |
