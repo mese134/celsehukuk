@@ -237,7 +237,7 @@ QUICK.push(
   { id: 'qa11', b: 'aile', q: 'AYM, TMK m.175\'teki "süresiz olarak" ibaresini iptal etti. İptal ne zaman yürürlüğe girecek?', o: ['Hemen, 04.06.2026\'da', '30.09.2026\'da', '30.06.2027\'de', 'Meclis karar verince'], a: 2, e: 'Karar 30.09.2026 tarihli Resmî Gazete\'de yayımlandı; iptal hükmü dokuz ay sonra, 30.06.2027\'de yürürlüğe girecek.', r: 'AYM E.2025/156, K.2026/131 · RG 30.09.2026/33386' }
 );
 
-const LAST_CHECK = '24 Ekim 2026';
+const LAST_CHECK = '25 Ekim 2026';
 const SOURCES = [
   { k: 'Yürürlükteki mevzuat', items: [
     ['7589 sayılı Kanun (12. Yargı Paketi), RG 31.07.2026/33326', 'Belirsiz alacak davasının kaldırılması (HMK m.107), kısmi davada tek seferlik artırım (HMK m.109/4), kanuni faiz (3095 m.1), bedensel zararda faiz başlangıcı (TBK m.55), miras taşınmazında mirasçılara özgü ilk artırma (İİK m.114), İYUK m.46 değişiklikleri.'],

@@ -17,7 +17,7 @@ os.chdir(ROOT)
 # ---- 1. Oyun gövdesi: app.html + veri dosyaları
 app = open(os.path.join(SRC, 'app.html'), encoding='utf-8').read()
 data = '\n'.join(open(os.path.join(SRC, f), encoding='utf-8').read()
-                 for f in ['data.js', 'data2.js', 'data3.js', 'legal.js'])
+                 for f in ['data.js', 'data2.js', 'data3.js', 'data4.js', 'legal.js'])
 body = app.replace('/*DATA*/', data)
 gf = re.search(r'<link rel="preconnect" href="https://fonts.googleapis.com">\s*<link rel="stylesheet" href="https://fonts.googleapis.com/[^"]+">', body)
 assert gf, 'Google Fonts bağlantısı bulunamadı'
