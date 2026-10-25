@@ -100,7 +100,6 @@ QUICK.push(
 );
 
 SOURCES[1].items.push(['AYM 15.01.2026, E.2025/191, K.2026/14 (RG 18.03.2026/33200)', 'Kamulaştırma Kanunu m.10/3-d\'ye yönelik itiraz oybirliğiyle reddedildi.']);
-SOURCES[0].items.push(['KVK Kurulu ilke kararı 18.02.2026, 2026/347 (RG 24.03.2026/33203)', 'Aydınlatma ve açık rıza ayrı metin ve ayrı beyanla; oyunun kayıt ekranı buna göre düzenlendi.']);
 
 // İzlenen gelişmeler (mevzuat takibi)
 const WATCH = [

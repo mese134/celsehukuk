@@ -144,7 +144,7 @@ def md(src):
 toc = ''.join(f'<li><a href="#{d["id"]}">{html.escape(d["title"])}</a></li>' for d in legal['d'])
 secs = ''.join(f'<section id="{d["id"]}"><h2>{html.escape(d["title"])}</h2>{md(d["md"])}</section>' for d in legal['d'])
 page = f'''<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Celse · Gizlilik ve Yasal Metinler</title><link rel="stylesheet" href="fonts/fonts.css">
+<title>Celse · Gizlilik ve Kullanım Koşulları</title><link rel="stylesheet" href="fonts/fonts.css">
 <style>
 :root{{--bg:#eceff3;--s:#fff;--ink:#151b26;--mu:#5a6476;--li:#d3d9e2;--ac:#8e1b30}}
 @media (prefers-color-scheme:dark){{:root{{--bg:#0e121a;--s:#171d28;--ink:#e7ebf1;--mu:#97a1b3;--li:#283141;--ac:#e5627a;color-scheme:dark}}}}
@@ -155,8 +155,8 @@ h3{{font-size:16px;margin:18px 0 4px}} a{{color:var(--ac)}} .mu{{color:var(--mu)
 .t{{overflow-x:auto;border:1px solid var(--li);border-radius:8px;margin:0 0 12px;background:var(--s)}}
 table{{border-collapse:collapse;width:100%;font-size:13.5px;min-width:440px}} th,td{{text-align:left;vertical-align:top;padding:7px 10px;border-bottom:1px solid var(--li)}} th{{background:var(--bg)}}
 </style></head><body><main>
-<h1>Celse · Yasal metinler</h1>
-<p class="mu">Sürüm {legal["v"]["terms"]}. Bu sayfa Celse uygulamasının gizlilik politikası ve kullanım koşullarıdır. Hesap ve veri silme: uygulamada Yasal → Hesabımı sil adımını kullanın veya aydınlatma metnindeki iletişim adresine yazın. Bu sürümde veriler yalnızca cihazınızda tutulur ve uygulama verilerini silmek tüm kayıtları kaldırır.</p>
+<h1>Celse · Gizlilik ve Kullanım Koşulları</h1>
+<p class="mu">Sürüm {legal["v"]["terms"]}. Celse'nin gizlilik bildirimi ve kullanım koşulları. Veri toplamıyoruz; veriler yalnızca cihazınızda tutulur. Silmek için uygulamada Yasal → Hesabımı sil adımını kullanın. İletişim: noktanokta629@gmail.com</p>
 <ul>{toc}</ul>{secs}</main></body></html>'''
 open('site/yasal.html', 'w', encoding='utf-8').write(page)
 print('www/index.html', os.path.getsize('www/index.html'), '· site/index.html', os.path.getsize('site/index.html'), '· site/yasal.html', os.path.getsize('site/yasal.html'))

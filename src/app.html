@@ -384,7 +384,7 @@ function renderGate() {
     <button class="btn wide" id="gbtn">Kayıt ol ve başla</button>
     <div class="or"><span>veya</span></div>
     <button type="button" class="btn ghost wide" id="guestbtn">Misafir olarak oyna</button>
-    <p class="note" style="margin:0">Misafir modunda kullanıcı adı gerekmez; hiçbir puan veya kayıt saklanmaz, ligde yer almazsın. Yalnızca ilk iki kutu yeterlidir.</p>
+    <p class="note" style="margin:0">Misafir modunda kullanıcı adı gerekmez; hiçbir puan veya kayıt saklanmaz, ligde yer almazsın.</p>
     <p class="note" style="margin:0">Celse eğitim ve eğlence amaçlıdır; hukuki danışmanlık yerine geçmez.</p>
     ${S.local ? (APP ? '<div class="banner">Bu sürümde profilin ve puanların yalnızca bu cihazda saklanır. Ortak lig ve düello bir sonraki sürümde geliyor.</div>' : '<div class="banner">Bu görünümde ortak skor tablosuna bağlanılamadı. Oyun yerel modda çalışır; puanların yalnızca bu tarayıcıda tutulur.</div>') : ''}
   </form>`;
@@ -417,8 +417,7 @@ function renderGate() {
   });
   $('#guestbtn').addEventListener('click', () => {
     const err = $('#gerr');
-    if (!$('#c-notice').checked) { err.textContent = 'Misafir olarak oynamak için de Aydınlatma Metni\'ni okuduğunu ve anladığını işaretle.'; return; }
-    if (!$('#c-terms').checked) { err.textContent = 'Misafir olarak oynamak için de Kullanım Koşulları\'nı kabul etmelisin.'; return; }
+    const cErr = consentError(); if (cErr) { err.textContent = cErr; return; }
     startGuest();
   });
   bindLegalLinks();
@@ -426,7 +425,7 @@ function renderGate() {
 }
 function startGuest() {
   S.guest = true;
-  S.me = { ...blank('Misafir'), consent: { ...consentRecord(), age: false } };
+  S.me = { ...blank('Misafir'), consent: consentRecord() };
   enter();
 }
 function exitGuest() {
@@ -841,23 +840,19 @@ function openLegal(id) {
 function bindLegalLinks() { document.querySelectorAll('[data-legal]').forEach(b => b.addEventListener('click', e => { e.preventDefault(); openLegal(b.dataset.legal); })); }
 function consentHTML() {
   return `<div class="checks">
-    <label><input type="checkbox" id="c-notice"><span><button type="button" class="linkbtn" data-legal="aydinlatma">KVKK Aydınlatma Metni</button>'ni okudum ve anladım.</span></label>
-    <label><input type="checkbox" id="c-terms"><span><button type="button" class="linkbtn" data-legal="kosullar">Kullanım Koşulları</button>'nı okudum ve kabul ediyorum.</span></label>
-    <label><input type="checkbox" id="c-age"><span>18 yaşını doldurdum.</span></label>
+    <label><input type="checkbox" id="c-terms"><span><button type="button" class="linkbtn" data-legal="kosullar">Kullanım Koşulları</button>'nı kabul ediyorum.</span></label>
+    <p class="note" style="margin:0">Veri toplamıyoruz; her şey cihazında kalır. <button type="button" class="linkbtn" data-legal="gizlilik">Gizlilik Bildirimi</button></p>
   </div>`;
 }
 function consentError() {
-  if (!$('#c-notice').checked) return 'Devam etmek için Aydınlatma Metni\'ni okuduğunu ve anladığını işaretle.';
-  if (!$('#c-terms').checked) return 'Devam etmek için Kullanım Koşulları\'nı kabul etmelisin.';
-  if (!$('#c-age').checked) return 'Celse\'ye kayıt için 18 yaşını doldurmuş olmak gerekir.';
-  return '';
+  return $('#c-terms').checked ? '' : 'Devam etmek için Kullanım Koşulları\'nı kabul et.';
 }
-const consentRecord = () => ({ notice: LEGAL_VERSION.notice, terms: LEGAL_VERSION.terms, age: true, at: new Date().toISOString() });
+const consentRecord = () => ({ notice: LEGAL_VERSION.notice, terms: LEGAL_VERSION.terms, at: new Date().toISOString() });
 const needsConsent = () => !S.guest && (!S.me.consent || S.me.consent.notice !== LEGAL_VERSION.notice || S.me.consent.terms !== LEGAL_VERSION.terms);
 function renderConsent() {
   app.innerHTML = `<form class="gate" id="cform">
-    <span class="eyebrow">Yeni yasal metinler</span><h2 style="font-size:26px">Devam etmeden önce</h2>
-    <p class="muted" style="margin:0">Celse'nin aydınlatma metni ve kullanım koşulları yayınlandı. Oynamaya devam etmek için okuyup aşağıdaki beyanları ver.</p>
+    <span class="eyebrow">Güncellenen koşullar</span><h2 style="font-size:26px">Devam etmeden önce</h2>
+    <p class="muted" style="margin:0">Yasal metinleri sadeleştirdik. Oynamaya devam etmek için kullanım koşullarını onayla.</p>
     ${consentHTML()}<div class="err" id="cerr"></div><button class="btn wide">Devam et</button>
     <button type="button" class="btn ghost wide" id="cdel">Kabul etmiyorum, hesabımı sil</button></form>`;
   bindLegalLinks();
@@ -871,7 +866,7 @@ function banBanner() {
 function renderLegal(askDelete) {
   app.innerHTML = `<div class="stack">
     <div><span class="eyebrow">Yasal · sürüm ${esc(LEGAL_VERSION.terms)}</span><h2 style="font-size:28px">Haklarınız ve kurallar</h2>
-      <p class="muted" style="margin:6px 0 0;max-width:64ch">Metinler taslaktır; köşeli parantezli alanlar yayın öncesinde doldurulacaktır.${S.me && S.me.consent ? ' Beyan tarihin: ' + esc(new Date(S.me.consent.at).toLocaleDateString('tr-TR')) + '.' : ''}</p></div>
+      <p class="muted" style="margin:6px 0 0;max-width:64ch">Veri toplamıyoruz; her şey cihazında kalır. İletişim: noktanokta629@gmail.com.${S.me && S.me.consent ? ' Onay tarihin: ' + esc(new Date(S.me.consent.at).toLocaleDateString('tr-TR')) + '.' : ''}</p></div>
     <div class="list">${LEGAL.map(d => `<button data-legal="${d.id}"><span><b>${esc(d.title)}</b></span><span class="muted">Oku →</span></button>`).join('')}</div>
     ${S.guest ? `<section class="panel"><span class="eyebrow">Misafir modu</span><p style="margin:0">Misafir modunda hesabın yok ve sana ait hiçbir oyun verisi saklanmıyor. Sayfayı kapattığında bu oturumdaki puanlar silinir.</p><div class="actions"><button class="btn ghost" data-exitguest>Misafir oturumunu kapat</button></div></section>` : `<section class="panel" id="delsec"><span class="eyebrow">Hesabımı sil</span>
       <p style="margin:0">Kullanıcı adın, puanların, oyun kayıtların ve hata bildirimlerin kalıcı olarak silinir. Bu işlem geri alınamaz.</p>
@@ -905,8 +900,8 @@ async function deleteAccount() {
 // ---------- Hata bildirimi ----------
 function openReport(it) {
   const box = $('#repbox'); if (!box || box.childElementCount) return;
-  if (S.guest) { box.innerHTML = '<p class="note">Hata bildirmek için kayıt olman gerekir; misafir modunda hiçbir veri saklanmaz. İstersen Hukuki Bilgilendirme metnindeki iletişim adresine yazabilirsin.</p>'; return; }
-  if (S.local || !S.canWrite) { box.innerHTML = '<p class="note">Bu görünümde bildirim gönderilemiyor. Hukuki Bilgilendirme metnindeki iletişim adresine yazabilirsin.</p>'; return; }
+  if (S.guest) { box.innerHTML = '<p class="note">Hata bildirmek için kayıt olman gerekir; misafir modunda hiçbir veri saklanmaz. İstersen noktanokta629@gmail.com adresine yazabilirsin.</p>'; return; }
+  if (S.local || !S.canWrite) { box.innerHTML = '<p class="note">Bu sürümde bildirim gönderilemiyor. Hatayı noktanokta629@gmail.com adresine yazabilirsin.</p>'; return; }
   box.innerHTML = `<div class="report"><label class="eyebrow" for="reptxt">Ne yanlış? (madde, karar, güncellik)</label>
     <textarea class="txt" id="reptxt" maxlength="600" placeholder="ör. Bu süre 7499 sayılı Kanunla değişti; doğru madde …"></textarea>
     <div class="actions"><button class="btn sm" id="repsend">Bildirimi gönder</button></div><div class="err" id="reperr"></div></div>`;
