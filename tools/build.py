@@ -59,7 +59,48 @@ open('www/index.html', 'w', encoding='utf-8').write(
 
 os.makedirs('site', exist_ok=True)
 build_fonts('site/fonts')
-open('site/index.html', 'w', encoding='utf-8').write(HEAD.replace('{FLAG}', '') + body + '</body></html>')
+SITE_URL = os.environ.get('SITE_URL', 'https://mese134.github.io/celsehukuk/')
+WEB_META = (
+    '<meta name="description" content="Türk hukuku duruşma oyunu: ceza, iş, aile, idare, borçlar ve miras dosyalarında 15 saniyede karar ver.">'
+    '<meta name="theme-color" content="#8e1b30">'
+    '<link rel="manifest" href="manifest.webmanifest">'
+    '<link rel="icon" type="image/png" href="icon-192.png">'
+    '<link rel="apple-touch-icon" href="apple-touch-icon.png">'
+    '<meta name="apple-mobile-web-app-capable" content="yes">'
+    '<meta name="apple-mobile-web-app-title" content="Celse">'
+    '<meta property="og:type" content="website">'
+    '<meta property="og:title" content="Celse · Hukuk Duruşma Oyunu">'
+    '<meta property="og:description" content="Dosyayı oku, 15 saniyede karar ver. Ceza, iş, aile, idare, borçlar ve miras hukuku.">'
+    f'<meta property="og:url" content="{SITE_URL}">'
+    f'<meta property="og:image" content="{SITE_URL}og.png">'
+    '<meta property="og:image:width" content="1200"><meta property="og:image:height" content="586">'
+    '<meta name="twitter:card" content="summary_large_image">'
+)
+SW_REG = '''<script>
+if ('serviceWorker' in navigator) window.addEventListener('load', function(){ navigator.serviceWorker.register('sw.js').catch(function(){}); });
+</script>'''
+open('site/index.html', 'w', encoding='utf-8').write(HEAD.replace('{FLAG}', WEB_META) + body + SW_REG + '</body></html>')
+for f in ['icon-192.png', 'icon-512.png', 'apple-touch-icon.png', 'og.png']:
+    shutil.copy(os.path.join(SRC, f), os.path.join('site', f))
+json.dump({
+    'name': 'Celse · Hukuk Duruşma Oyunu', 'short_name': 'Celse', 'lang': 'tr',
+    'start_url': './', 'scope': './', 'display': 'standalone',
+    'background_color': '#8e1b30', 'theme_color': '#8e1b30',
+    'icons': [{'src': 'icon-192.png', 'sizes': '192x192', 'type': 'image/png'},
+              {'src': 'icon-512.png', 'sizes': '512x512', 'type': 'image/png', 'purpose': 'any maskable'}]
+}, open('site/manifest.webmanifest', 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+fonts = sorted(f for f in os.listdir('site/fonts'))
+ver = str(int(os.path.getmtime('site/index.html')))
+open('site/sw.js', 'w', encoding='utf-8').write(f'''// Celse çevrimdışı önbellek. Sayfa önce ağdan istenir; bağlantı yoksa önbellekten açılır.
+const C = 'celse-{ver}';
+const FILES = ['./', 'index.html', 'yasal.html', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png', {', '.join(repr('fonts/' + f) for f in fonts)}];
+self.addEventListener('install', e => {{ e.waitUntil(caches.open(C).then(c => c.addAll(FILES)).then(() => self.skipWaiting())); }});
+self.addEventListener('activate', e => {{ e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== C).map(k => caches.delete(k)))).then(() => self.clients.claim())); }});
+self.addEventListener('fetch', e => {{
+  if (e.request.method !== 'GET') return;
+  e.respondWith(fetch(e.request).then(r => {{ const copy = r.clone(); caches.open(C).then(c => c.put(e.request, copy)); return r; }}).catch(() => caches.match(e.request, {{ ignoreSearch: true }})));
+}});
+''')
 
 # ---- 3. Yasal metinler sayfası
 legal_src = open(os.path.join(SRC, 'legal.js'), encoding='utf-8').read()
