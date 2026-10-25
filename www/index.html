@@ -942,74 +942,67 @@ const WATCH = [
   ['KVKK yapay zekâ teklifi', '08.01.2026\'da TBMM\'ye sunuldu, yasalaşmadı.']
 ];
 
-// ===== Hukuki metinler (kaynak: "Celse Hukuki Metinleri" dokümanı, sürüm 1.0) =====
-const LEGAL_VERSION = { notice: '1.1', terms: '1.1' };
+// ===== Hukuki metinler (kaynak: "Celse Hukuki Metinleri" dokümanı, sürüm 1.2) =====
+const LEGAL_VERSION = { notice: '1.2', terms: '1.1' };
 const LEGAL = [
-{ id: 'aydinlatma', title: 'KVKK Aydınlatma Metni', md: `*Sürüm 1.1 · Yürürlük: [YÜRÜRLÜK TARİHİ]*
+{ id: 'aydinlatma', title: 'KVKK Aydınlatma Metni', md: `*Sürüm 1.2 · Yürürlük: [YÜRÜRLÜK TARİHİ]*
 
-Bu metin, Celse hukuk oyununu ("Uygulama") kullanırken kişisel verilerinizin nasıl işlendiğini 6698 sayılı Kişisel Verilerin Korunması Kanunu'nun ("Kanun") 10. maddesi ve Aydınlatma Yükümlülüğünün Yerine Getirilmesinde Uyulacak Usul ve Esaslar Hakkında Tebliğ uyarınca açıklar.
+Bu metin, Celse hukuk oyununu ("Uygulama") kullanırken kişisel verilerinizin nasıl işlendiğini 6698 sayılı Kişisel Verilerin Korunması Kanunu'nun ("Kanun") 10. maddesi ve Aydınlatma Yükümlülüğünün Yerine Getirilmesinde Uyulacak Usul ve Esaslar Hakkında Tebliğ uyarınca açıklar. Uygulama iki biçimde sunulur: web sitesi (mese134.github.io/celsehukuk) ve Android uygulaması.
 
 ### 1.1. Veri sorumlusu
 
 [VERİ SORUMLUSU ADI SOYADI / UNVANI], [AÇIK ADRES] ("Veri Sorumlusu"). İletişim: [İLETİŞİM E-POSTASI] · KEP: [KEP ADRESİ].
 
-### 1.2. İşlenen kişisel veriler
+### 1.2. Özet
 
-| Veri kategorisi | Veriler | Kaynağı |
+Bu sürümde oyun verileriniz yalnızca kendi cihazınızda saklanır; Veri Sorumlusuna, diğer oyunculara veya üçüncü kişilere gönderilmez. Android uygulaması internete hiç bağlanmaz. Web sitesini açtığınızda ise tarayıcınızın gönderdiği teknik bilgiler, siteyi barındıran sağlayıcı tarafından işlenir.
+
+### 1.3. İşlenen kişisel veriler
+
+| Veri kategorisi | Veriler | Nerede tutulur |
 | --- | --- | --- |
-| Kimlik (takma ad) | Seçtiğiniz kullanıcı adı | Siz |
-| Hesap tanımlayıcısı | Barındırma platformunun atadığı, adınızı içermeyen kullanıcı kimliği | Barındırma platformu |
-| Oyun ve performans | Toplam ve branş puanları, haftalık puan, oynanan oyun ve doğru cevap sayısı, en uzun seri, dosya bazında en iyi skor, lig kademesi | Uygulama kullanımınız |
-| İşlem güvenliği | Son oyunlarınızın cevap süreleri ve puan özeti, hile tespit işaretleri, uyarı ve yasaklama kayıtları | Uygulama kullanımınız |
-| Düello | Düello kodu, rakibin kullanıcı adı, karşılaştırmalı skorlar | Uygulama kullanımınız |
-| Anlık çevrimiçi durum | O an sayfada olduğunuz bilgisi ve kullanıcı adınız (kaydedilmez) | Uygulama kullanımınız |
-| Beyan kayıtları | Kabul ettiğiniz metin sürümleri ve tarihleri | Siz |
-| Tercihler | Süre ayarı, son düello kodları (yalnızca cihazınızda) | Siz |
-| Teknik veriler | IP adresi, tarayıcı ve cihaz bilgisi, erişim kayıtları | Barındırma ve yazı tipi sağlayıcıları |
+| Kimlik (takma ad) | Seçtiğiniz kullanıcı adı | Yalnızca cihazınızda |
+| Oyun ve performans | Toplam ve branş puanları, haftalık puan, oynanan oyun ve doğru cevap sayısı, en uzun seri, dosya bazında en iyi skor, son oyunların cevap süreleri | Yalnızca cihazınızda |
+| Beyan kayıtları | Kabul ettiğiniz metin sürümleri ve tarihleri | Yalnızca cihazınızda |
+| Tercihler | Süre ayarı | Yalnızca cihazınızda |
+| Teknik veriler (yalnızca web sitesi) | IP adresi, tarayıcı ve cihaz bilgisi, erişim zamanı | Barındırma sağlayıcısının erişim kayıtlarında |
+| Başvuru kayıtları | Veri Sorumlusuna yazdığınız başvuru ve iletişim bilgileriniz | Veri Sorumlusunda |
 
 Uygulama özel nitelikli kişisel veri (Kanun m.6) işlemez. Kullanıcı adınıza gerçek adınızı, T.C. kimlik numaranızı, sağlık bilgisi veya başka bir kişisel veri yazmamanızı rica ederiz.
 
-**Misafir modu:** Kayıt olmadan misafir olarak oynarsanız kullanıcı adı, puan, oyun kaydı, beyan ve tercih verileriniz saklanmaz. Oyun bilgileri yalnızca o oturum boyunca cihazınızın belleğinde tutulur ve sayfa kapandığında silinir. Bu durumda yalnızca yukarıdaki teknik veriler, barındırma ve yazı tipi sağlayıcıları tarafından işlenir.
+**Misafir modu:** Kayıt olmadan misafir olarak oynarsanız kullanıcı adı, puan, oyun kaydı, beyan ve tercih verileriniz cihazınıza da yazılmaz; yalnızca o oturum boyunca bellekte tutulur ve sayfa kapandığında silinir. Web sitesinde teknik veriler yine barındırma sağlayıcısı tarafından işlenir.
 
-### 1.3. İşleme amaçları ve hukuki sebepler
+### 1.4. İşleme amaçları ve hukuki sebepler
 
 | Amaç | Hukuki sebep (Kanun m.5/2) |
 | --- | --- |
-| Hesabınızı oluşturmak, oyunu oynatmak, puanlarınızı hesaplamak ve saklamak | (c) Sözleşmenin kurulması veya ifasıyla doğrudan ilgili olması (Kullanım Koşulları) |
-| Kullanıcı adınızı ve puanınızı lig ve skor tablolarında diğer oyunculara göstermek | (c) Sözleşmenin ifası |
-| Düello eşleşmesi ve sonuçlarını iki oyuncuya göstermek | (c) Sözleşmenin ifası |
-| Hile, otomasyon ve kötüye kullanımı tespit etmek, adil rekabeti korumak | (f) Temel hak ve özgürlüklerinize zarar vermemek kaydıyla Veri Sorumlusunun meşru menfaati |
-| Uygulama güvenliğini sağlamak, hataları gidermek | (f) Meşru menfaat |
-| Beyan ve başvuru kayıtlarını tutmak, ispat yükümlülüğünü yerine getirmek | (ç) Hukuki yükümlülüğün yerine getirilmesi; (e) bir hakkın tesisi, kullanılması veya korunması |
+| Web sitesini sunmak, güvenliğini sağlamak ve kötüye kullanımı önlemek (barındırma sağlayıcısının erişim kayıtları) | (f) Temel hak ve özgürlüklerinize zarar vermemek kaydıyla Veri Sorumlusunun meşru menfaati |
+| Başvurularınızı cevaplamak, başvuru kayıtlarını tutmak | (ç) Hukuki yükümlülüğün yerine getirilmesi; (e) bir hakkın tesisi, kullanılması veya korunması |
 | Yetkili kurum ve mahkemelerin taleplerini karşılamak | (ç) Hukuki yükümlülük; (a) kanunlarda açıkça öngörülmesi |
 
-Uygulama bugün pazarlama, profil çıkarma, reklam veya üçüncü kişilere satış amacıyla veri işlemez; bu nedenle açık rızanıza dayanan bir işlem yoktur.
+Cihazınızda saklanan oyun verileri Veri Sorumlusuna ulaşmaz; puan hesaplaması ve hile tespiti cihazınızda yapılır ve hakkınızda bir karar verilmez. Uygulama pazarlama, profil çıkarma, reklam veya satış amacıyla veri işlemez; açık rızanıza dayanan bir işlem yoktur.
 
-### 1.4. Toplama yöntemi
+### 1.5. Toplama yöntemi
 
-Veriler, Uygulamayı kullanmanız sırasında elektronik ortamda, kısmen otomatik yollarla (puan ve süre hesaplaması) toplanır. Tercihleriniz tarayıcınızın yerel depolama alanında tutulur.
+Oyun verileri, Uygulamayı kullanmanız sırasında cihazınızda otomatik olarak oluşturulur ve tarayıcınızın yerel depolama alanında veya Android uygulama verisinde tutulur. Teknik veriler, web sitesini açtığınızda tarayıcınız tarafından barındırma sağlayıcısına otomatik olarak gönderilir.
 
-### 1.5. Aktarım
+### 1.6. Aktarım
 
-**Yurt içi:** Kişisel verileriniz, talep edilmesi hâlinde ve yalnızca ilgili mevzuatın gerektirdiği ölçüde yetkili kamu kurum ve kuruluşlarına ve yargı mercilerine aktarılabilir.
+**Yurt içi:** Veri Sorumlusunun elindeki başvuru kayıtları, talep edilmesi hâlinde ve yalnızca ilgili mevzuatın gerektirdiği ölçüde yetkili kamu kurum ve kuruluşlarına ve yargı mercilerine aktarılabilir.
 
-**Diğer oyuncular:** Kullanıcı adınız, puanlarınız ve lig kademeniz skor tablolarında; düello sonuçlarınız rakibinize gösterilir. Bu, hizmetin doğası gereğidir.
+**Yurt dışı:** Web sitesi GitHub, Inc. (ABD) tarafından sunulan GitHub Pages hizmeti üzerinde barındırılır; siteyi açtığınızda teknik verileriniz bu sağlayıcıya ve sunucularının bulunduğu ülkelere iletilir. Bu aktarım Kanun m.9 uyarınca [AKTARIM MEKANİZMASI] güvencesine dayanılarak yapılır. Yazı tipleri ve tüm oyun dosyaları sitenin kendisinden yüklenir; başka bir üçüncü taraf hizmete bağlantı kurulmaz. Android uygulaması yurt dışına veri aktarmaz.
 
-**Yurt dışı:** Uygulama [BARINDIRMA SAĞLAYICISI] altyapısında çalışır; veriler bu sağlayıcının [ÜLKE] dahil yurt dışındaki sunucularında barındırılır. Sayfadaki yazı tipleri Google LLC tarafından sunulduğundan IP adresiniz bu sağlayıcıya iletilir. Bu aktarımlar Kanun m.9 uyarınca [AKTARIM MEKANİZMASI: ör. Kurulca ilan edilen standart sözleşme] güvencesine dayanılarak yapılır.
+**Diğer oyuncular:** Bu sürümde skor tablosu veya düello yoktur; verileriniz diğer oyunculara gösterilmez.
 
-### 1.6. Saklama süreleri
+### 1.7. Saklama süreleri
 
 | Veri | Süre |
 | --- | --- |
-| Hesap, oyun ve düello verileri | Hesabınız açık kaldığı sürece; hesap silindiğinde en geç [30] gün içinde silinir veya anonim hâle getirilir |
-| İşlem güvenliği kayıtları | Kayıt tarihinden itibaren [1 yıl] |
-| Yasaklama kayıtları | Yasak süresince ve sona ermesinden itibaren [2 yıl] |
-| Beyan ve başvuru kayıtları | İlişkinin sona ermesinden itibaren genel zamanaşımı süresi olan [10 yıl] |
-| Cihazınızdaki tercihler | Siz silene kadar |
+| Cihazınızdaki oyun verileri ve tercihler | Siz silene kadar (Yasal → Hesabımı sil, tarayıcı verilerini temizlemek veya uygulamayı kaldırmak) |
+| Barındırma sağlayıcısının erişim kayıtları | Sağlayıcının kendi saklama politikasına göre |
+| Başvuru kayıtları | İlişkinin sona ermesinden itibaren genel zamanaşımı süresi olan [10 yıl] |
 
-Süresi dolan veriler, Kişisel Verilerin Silinmesi, Yok Edilmesi veya Anonim Hale Getirilmesi Hakkında Yönetmelik uyarınca periyodik imha kapsamında silinir.
-
-### 1.7. Haklarınız (Kanun m.11)
+### 1.8. Haklarınız (Kanun m.11)
 
 Veri Sorumlusuna başvurarak:
 
@@ -1023,17 +1016,17 @@ Veri Sorumlusuna başvurarak:
 - münhasıran otomatik sistemlerle analiz edilmesi suretiyle aleyhinize bir sonuç ortaya çıkmasına itiraz etme,
 - Kanuna aykırı işleme sebebiyle zarara uğramanız hâlinde zararın giderilmesini talep etme
 
-haklarına sahipsiniz.
+haklarına sahipsiniz. Cihazınızda tutulan verilere Veri Sorumlusunun erişimi olmadığından, bu verileri Yasal → Hesabımı sil adımıyla doğrudan kendiniz silebilirsiniz.
 
-**Otomatik değerlendirme:** Hile tespit sistemi şüpheli oyunları otomatik olarak işaretler; ancak puan sıfırlama veya yasaklama kararı insan incelemesiyle verilir ve bu kararlara itiraz edebilirsiniz.
+### 1.9. Başvuru usulü
 
-### 1.8. Başvuru usulü
-
-Başvurularınızı, Veri Sorumlusuna Başvuru Usul ve Esasları Hakkında Tebliğ uyarınca yazılı olarak [AÇIK ADRES] adresine, KEP adresimize [KEP ADRESİ], güvenli elektronik imza veya mobil imzayla ya da Veri Sorumlusuna daha önce bildirdiğiniz ve sistemimizde kayıtlı e-posta adresinizden [İLETİŞİM E-POSTASI] adresine iletebilirsiniz. Başvurunuzda adınız soyadınız, imzanız, tebligata esas adresiniz ve talebiniz yer almalıdır; Uygulamadaki kullanıcı adınızı belirtmeniz kaydınızı bulmamızı kolaylaştırır.
+Başvurularınızı, Veri Sorumlusuna Başvuru Usul ve Esasları Hakkında Tebliğ uyarınca yazılı olarak [AÇIK ADRES] adresine, KEP adresimize [KEP ADRESİ], güvenli elektronik imza veya mobil imzayla ya da Veri Sorumlusuna daha önce bildirdiğiniz ve sistemimizde kayıtlı e-posta adresinizden [İLETİŞİM E-POSTASI] adresine iletebilirsiniz. Başvurunuzda adınız soyadınız, imzanız, tebligata esas adresiniz ve talebiniz yer almalıdır.
 
 Başvurunuz en geç 30 gün içinde ücretsiz sonuçlandırılır; işlemin ayrıca bir maliyet gerektirmesi hâlinde Kurulca belirlenen tarifedeki ücret alınabilir (Kanun m.13). Başvurunuzun reddedilmesi, cevabın yetersiz bulunması veya süresinde cevap verilmemesi hâlinde, cevabı öğrendiğiniz tarihten itibaren 30 gün ve her hâlde başvuru tarihinden itibaren 60 gün içinde Kişisel Verileri Koruma Kuruluna şikâyette bulunabilirsiniz (Kanun m.14).
 
-Hesabınızı Uygulamadaki **Yasal → Hesabımı sil** adımıyla da silebilirsiniz.` },
+### 1.10. Değişiklikler
+
+Ortak lig, düello veya çevrimiçi hesap gibi verilerinizin cihazınızdan çıkmasını gerektiren bir özellik eklendiğinde bu metin güncellenir ve Uygulamayı kullanmaya devam etmeden önce yeni metni okumanız istenir.` },
 
 { id: 'kosullar', title: 'Kullanım Koşulları', md: `*Sürüm 1.1 · Yürürlük: [YÜRÜRLÜK TARİHİ]*
 
@@ -1121,26 +1114,25 @@ Bu Koşullar Türk hukukuna tabidir. Uyuşmazlıklarda genel yetki kuralları uy
 
 [VERİ SORUMLUSU ADI SOYADI / UNVANI] · [AÇIK ADRES] · [İLETİŞİM E-POSTASI] · KEP: [KEP ADRESİ]` },
 
-{ id: 'cerez', title: 'Çerez ve Yerel Depolama Politikası', md: `*Sürüm 1.1 · Yürürlük: [YÜRÜRLÜK TARİHİ]*
+{ id: 'cerez', title: 'Çerez ve Yerel Depolama Politikası', md: `*Sürüm 1.2 · Yürürlük: [YÜRÜRLÜK TARİHİ]*
 
-Uygulama reklam, analitik veya sosyal medya çerezi kullanmaz. Yalnızca oyunun çalışması için gerekli olan tarayıcı depolamasını kullanır. Kişisel Verileri Koruma Kurumunun Çerez Uygulamaları Hakkında Rehberi'ne göre yalnızca iletişimin gerçekleştirilmesi için kullanılan veya kullanıcının açıkça talep ettiği bir hizmetin sunulması için zorunlu olan çerezler açık rıza gerektirmez. Bu politikada tarayıcının yerel depolama alanı (localStorage) da aynı ilkelerle ele alınmıştır.
+Uygulama çerez kullanmaz; reklam, analitik veya sosyal medya aracı içermez. Yalnızca oyunun çalışması için gerekli olan tarayıcı depolamasını kullanır. Kişisel Verileri Koruma Kurumunun Çerez Uygulamaları Hakkında Rehberi'ne göre yalnızca iletişimin gerçekleştirilmesi için kullanılan veya kullanıcının açıkça talep ettiği bir hizmetin sunulması için zorunlu olan çerezler açık rıza gerektirmez. Bu politikada tarayıcının yerel depolama alanı (localStorage) ve çevrimdışı önbellek de aynı ilkelerle ele alınmıştır.
 
 ### 4.1. Kullanılan depolama
 
-| Ad | Tür | Amaç | Süre | Sağlayan |
-| --- | --- | --- | --- | --- |
-| celse.me | Yerel depolama | Bağlantısız modda kayıtlı profil ve puanların cihazda tutulması (misafir modunda yazılmaz) | Siz silene kadar | Uygulama |
-| celse.duels | Yerel depolama | Son 8 düello kodunun listelenmesi | Siz silene kadar | Uygulama |
-| celse.prefs | Yerel depolama | Süre ayarının hatırlanması (misafir modunda yazılmaz) | Siz silene kadar | Uygulama |
-| Oturum çerezleri | Çerez | Barındırma platformunda oturumun ve güvenliğin sağlanması | Platformun belirlediği süre | [BARINDIRMA SAĞLAYICISI] |
+| Ad | Tür | Amaç | Süre |
+| --- | --- | --- | --- |
+| celse.me | Yerel depolama | Kayıtlı profil ve puanların cihazda tutulması (misafir modunda yazılmaz) | Siz silene kadar |
+| celse.prefs | Yerel depolama | Süre ayarının hatırlanması (misafir modunda yazılmaz) | Siz silene kadar |
+| celse-… önbelleği | Çevrimdışı önbellek (yalnızca web sitesi) | Sitenin internet olmadan da açılabilmesi için oyun dosyalarının kopyası; kişisel veri içermez | Yeni sürüm yayınlandığında yenilenir |
 
 ### 4.2. Üçüncü taraf kaynaklar
 
-Sayfadaki yazı tipleri Google Fonts üzerinden yüklenir. Bu sırada tarayıcınız IP adresinizi ve tarayıcı bilgilerinizi Google LLC'ye iletir. Google Fonts çerez yerleştirmez. [Kendi alan adına geçildiğinde yazı tipleri Uygulamanın kendi sunucusundan sunulacak ve bu aktarım sona erecektir.]
+Yazı tipleri ve oyun dosyaları Uygulamanın kendisinden yüklenir; Google Fonts veya başka bir üçüncü taraf hizmet kullanılmaz. Web sitesini barındıran GitHub Pages hizmeti çerez yerleştirmez, ancak siteyi açtığınızda teknik verilerinizi erişim kayıtlarında işler (bkz. Aydınlatma Metni).
 
 ### 4.3. Depolamayı yönetme
 
-Tarayıcınızın ayarlarından site verilerini silebilir veya engelleyebilirsiniz. Zorunlu depolamayı engellerseniz Uygulama çalışmaya devam eder, ancak tercihleriniz ve bağlantısız moddaki puanlarınız hatırlanmaz.
+Tarayıcınızın ayarlarından site verilerini silebilir veya engelleyebilirsiniz; Android'de uygulama verisini temizleyebilir veya uygulamayı kaldırabilirsiniz. Depolamayı engellerseniz Uygulama çalışmaya devam eder, ancak tercihleriniz ve puanlarınız hatırlanmaz.
 
 ### 4.4. Değişiklikler
 
