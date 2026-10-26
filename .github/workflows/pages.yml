@@ -4,6 +4,11 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  schedule:
+    # Resmî Gazete 00.00'da yayımlanır (UTC+3). 00.20, 09.00 ve 15.00'te yenilenir (mükerrer sayılar için).
+    - cron: '20 21 * * *'
+    - cron: '0 6 * * *'
+    - cron: '0 12 * * *'
 
 permissions:
   contents: read
@@ -32,6 +37,22 @@ jobs:
         run: |
           npm ci
           python3 tools/build.py
+
+      - name: Resmî Gazete fihristini al
+        continue-on-error: true
+        run: python3 tools/rg.py site/rg.json --debug rg-debug
+
+      - name: Fihrist ham sayfalarını sakla (inceleme için)
+        if: always()
+        continue-on-error: true
+        uses: actions/upload-artifact@v4
+        with:
+          name: rg-debug
+          path: |
+            rg-debug
+            site/rg.json
+          retention-days: 3
+          if-no-files-found: ignore
 
       - uses: actions/configure-pages@v5
 
