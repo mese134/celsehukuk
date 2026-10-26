@@ -17,7 +17,7 @@ os.chdir(ROOT)
 # ---- 1. Oyun gövdesi: app.html + veri dosyaları
 app = open(os.path.join(SRC, 'app.html'), encoding='utf-8').read()
 data = '\n'.join(open(os.path.join(SRC, f), encoding='utf-8').read()
-                 for f in ['data.js', 'data2.js', 'data3.js', 'data4.js', 'legal.js'])
+                 for f in ['data.js', 'data2.js', 'data3.js', 'data4.js', 'data5.js', 'legal.js'])
 body = app.replace('/*DATA*/', data)
 gf = re.search(r'<link rel="preconnect" href="https://fonts.googleapis.com">\s*<link rel="stylesheet" href="https://fonts.googleapis.com/[^"]+">', body)
 assert gf, 'Google Fonts bağlantısı bulunamadı'
@@ -27,7 +27,7 @@ body = body.replace(gf.group(0), '<link rel="stylesheet" href="fonts/fonts.css">
 def build_fonts(dst):
     os.makedirs(dst, exist_ok=True)
     css = []
-    for fam, weights in [('zilla-slab', [500, 600, 700]), ('public-sans', [400, 500, 600, 700]), ('jetbrains-mono', [500, 700])]:
+    for fam, weights in [('spectral', [500, 600, 700]), ('source-sans-3', [400, 600, 700])]:
         base = os.path.join(ROOT, 'node_modules', '@fontsource', fam)
         for w in weights:
             c = open(os.path.join(base, f'{w}.css'), encoding='utf-8').read()

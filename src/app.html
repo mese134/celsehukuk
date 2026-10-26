@@ -1,7 +1,7 @@
 <title>Celse Arenası</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap&subset=latin-ext">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:wght@500;600;700&family=Source+Sans+3:wght@400;600;700&display=swap&subset=latin-ext">
 <style>
 /* Düzen: tek sütunlu oyun alanı; üstte yapışkan duruşma çubuğu, altında sekmeler ve dosya kartları */
 :root{
@@ -9,9 +9,9 @@
   --accent:#8e1b30; --accent-ink:#ffffff; --accent-soft:#f5e3e6;
   --brass:#9a6c12; --brass-soft:#f6ecd6;
   --ok:#17784a; --ok-soft:#dff1e7; --bad:#b3262d; --bad-soft:#f8e0e1;
-  --f-display:"Zilla Slab", Rockwell, "Roboto Slab", Georgia, serif;
-  --f-body:"Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --f-mono:"JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --f-display:"Spectral", Georgia, "Times New Roman", serif;
+  --f-body:"Source Sans 3", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono:"Source Sans 3", system-ui, -apple-system, "Segoe UI", sans-serif;
   --r:10px;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
@@ -28,11 +28,11 @@
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html,body{min-height:100%}
-body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
 button{font:inherit;color:inherit;cursor:pointer}
 button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-h1,h2,h3{font-family:var(--f-display);font-weight:700;line-height:1.15;text-wrap:balance;margin:0}
+h1,h2,h3{font-family:var(--f-display);font-weight:600;line-height:1.15;text-wrap:balance;margin:0}
 .mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
 .wrap{max-width:760px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 
@@ -42,7 +42,7 @@ h1,h2,h3{font-family:var(--f-display);font-weight:700;line-height:1.15;text-wrap
 .brand{display:flex;align-items:baseline;gap:8px;margin-right:auto;background:none;border:0;padding:0}
 .brand b{font-family:var(--f-display);font-size:24px;letter-spacing:-.01em}
 .brand b i{font-style:normal;color:var(--accent)}
-.brand small{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.brand small{font-family:var(--f-mono);font-size:10.5px;color:var(--muted)}
 .online{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);white-space:nowrap}
 .online::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--ok)}
 .chip-me{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:4px 10px 4px 4px;min-width:0}
@@ -59,14 +59,15 @@ h1,h2,h3{font-family:var(--f-display);font-weight:700;line-height:1.15;text-wrap
 
 main{padding-block:20px 48px}
 .stack{display:flex;flex-direction:column;gap:16px}
-.eyebrow{font-family:var(--f-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.eyebrow{font-family:var(--f-body);font-size:13px;font-weight:600;color:var(--muted)}
 .muted{color:var(--muted)}
-.note{font-size:13px;color:var(--muted)}
+.note{font-size:13.5px;color:var(--muted)}
+.fine{font-size:11.5px;line-height:1.45;color:var(--muted);margin:2px 0 0;text-align:center}
 
 /* Profil şeridi */
 .profile{display:grid;grid-template-columns:1fr auto;gap:14px 18px;align-items:end;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px}
 .profile h2{font-size:26px}
-.tier{display:inline-flex;align-items:center;gap:6px;font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--brass);background:var(--brass-soft);padding:3px 8px;border-radius:4px}
+.tier{display:inline-flex;align-items:center;gap:6px;font-family:var(--f-mono);font-size:11px;color:var(--brass);background:var(--brass-soft);padding:3px 8px;border-radius:4px}
 .pts{text-align:right}
 .pts b{display:block;font-family:var(--f-mono);font-size:28px;color:var(--brass);line-height:1}
 .pts span{font-size:12px;color:var(--muted)}
@@ -97,7 +98,7 @@ main{padding-block:20px 48px}
 /* Dosya ekranı */
 .docket{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
 .docket header{padding:18px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:6px}
-.docket header .tc{font-family:var(--f-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.docket header .tc{font-family:var(--f-mono);font-size:11px;color:var(--muted)}
 .docket header h2{font-size:28px}
 .docket .row{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--muted)}
 .docket .row b{color:var(--ink);font-weight:600}
@@ -106,7 +107,7 @@ main{padding-block:20px 48px}
 .ev{display:grid;gap:0;border-top:1px solid var(--line)}
 .ev div{display:grid;grid-template-columns:150px minmax(0,1fr);gap:12px;padding:12px 18px;border-bottom:1px solid var(--line);font-size:14px}
 .ev div:last-child{border-bottom:0}
-.ev dt{font-family:var(--f-mono);font-size:11.5px;color:var(--accent);text-transform:uppercase;letter-spacing:.04em;padding-top:2px}
+.ev dt{font-family:var(--f-mono);font-size:11.5px;color:var(--accent);padding-top:2px}
 .ev dd{margin:0}
 @media (max-width:560px){.ev div{grid-template-columns:1fr;gap:2px}}
 
@@ -118,7 +119,7 @@ main{padding-block:20px 48px}
 
 /* Oyun ekranı */
 .hud{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-.hud .step{font-family:var(--f-mono);font-size:12px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.hud .step{font-family:var(--f-mono);font-size:12px;color:var(--muted);}
 .hud .score{margin-left:auto;font-family:var(--f-mono);font-weight:700;color:var(--brass);font-size:18px}
 .hud .streak{font-family:var(--f-mono);font-size:12px;color:var(--accent);font-weight:700}
 .stage{display:grid;grid-template-columns:auto minmax(0,1fr);gap:18px;align-items:start;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px}
@@ -177,7 +178,7 @@ details.file .inner{padding:0 14px 14px;font-size:14px;display:flex;flex-directi
 @media (max-width:560px){.ladder{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .board{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
 .board table{width:100%;border-collapse:collapse;font-size:14px}
-.board th{font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-align:left;font-weight:500;padding:10px 14px;border-bottom:1px solid var(--line)}
+.board th{font-family:var(--f-mono);font-size:11px;color:var(--muted);text-align:left;font-weight:500;padding:10px 14px;border-bottom:1px solid var(--line)}
 .board td{padding:10px 14px;border-bottom:1px solid var(--line)}
 .board tr:last-child td{border-bottom:0}
 .board td.n,.board th.n{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums}
@@ -193,9 +194,9 @@ details.file .inner{padding:0 14px 14px;font-size:14px;display:flex;flex-directi
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:12px}
 .two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 @media (max-width:560px){.two{grid-template-columns:1fr}}
-.code{font-family:var(--f-mono);font-size:34px;letter-spacing:.2em;font-weight:700;color:var(--accent)}
+.code{font-family:var(--f-mono);font-size:34px;font-weight:700;color:var(--accent)}
 input.txt{font:inherit;font-size:16px;width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
-input.code-in{font-family:var(--f-mono);text-transform:uppercase;letter-spacing:.2em;font-size:20px}
+input.code-in{font-family:var(--f-mono);font-size:20px}
 .vs{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:12px;align-items:center;text-align:center}
 .vs .side{background:var(--bg);border-radius:8px;padding:14px;min-width:0}
 .vs .side b{display:block;font-family:var(--f-mono);font-size:28px;color:var(--brass)}
@@ -384,9 +385,7 @@ function renderGate() {
     <button class="btn wide" id="gbtn">Kayıt ol ve başla</button>
     <div class="or"><span>veya</span></div>
     <button type="button" class="btn ghost wide" id="guestbtn">Misafir olarak oyna</button>
-    <p class="note" style="margin:0">Misafir modunda kullanıcı adı gerekmez; hiçbir puan veya kayıt saklanmaz, ligde yer almazsın.</p>
-    <p class="note" style="margin:0">Celse eğitim ve eğlence amaçlıdır; hukuki danışmanlık yerine geçmez.</p>
-    ${S.local ? (APP ? '<div class="banner">Bu sürümde profilin ve puanların yalnızca bu cihazda saklanır. Ortak lig ve düello bir sonraki sürümde geliyor.</div>' : '<div class="banner">Bu görünümde ortak skor tablosuna bağlanılamadı. Oyun yerel modda çalışır; puanların yalnızca bu tarayıcıda tutulur.</div>') : ''}
+    <p class="fine">Misafir modunda puanların saklanmaz ve ligde yer almazsın. Celse eğitim ve eğlence amaçlıdır; hukuki danışmanlık değildir.${S.local ? ' Puanların yalnızca bu cihazda tutulur; ortak lig yakında.' : ''}</p>
   </form>`;
   $('#gate').addEventListener('submit', async ev => {
     ev.preventDefault();
@@ -773,7 +772,7 @@ function renderSources() {
       <dl class="ev" style="margin:0;border-top:0">${g.items.map(([a, b]) => `<div style="grid-template-columns:minmax(0,1fr);gap:2px;padding-inline:0"><dt style="text-transform:none;letter-spacing:0;font-size:12.5px">${esc(a)}</dt><dd>${esc(b)}</dd></div>`).join('')}</dl></section>`).join('')}
     <section class="panel"><span class="eyebrow">İzlenen gelişmeler · haftalık takip</span>
       <dl class="ev" style="margin:0;border-top:0">${WATCH.map(([a, b]) => `<div style="grid-template-columns:minmax(0,1fr);gap:2px;padding-inline:0"><dt style="text-transform:none;letter-spacing:0;font-size:12.5px">${esc(a)}</dt><dd>${esc(b)}</dd></div>`).join('')}</dl></section>
-    <div class="banner">Celse eğitim ve eğlence amaçlıdır; hukuki danışmanlık yerine geçmez. Somut bir uyuşmazlık için bir avukata danışın. Bir soruda hata görürsen cevaptan sonra çıkan Hata bildir düğmesini kullan.</div>
+    <p class="fine">Celse eğitim ve eğlence amaçlıdır; hukuki danışmanlık değildir. Somut bir sorun için bir avukata danış. Bir soruda hata görürsen cevaptan sonra çıkan Hata bildir düğmesini kullan.</p>
   </div>`;
 }
 
@@ -841,7 +840,7 @@ function bindLegalLinks() { document.querySelectorAll('[data-legal]').forEach(b 
 function consentHTML() {
   return `<div class="checks">
     <label><input type="checkbox" id="c-terms"><span><button type="button" class="linkbtn" data-legal="kosullar">Kullanım Koşulları</button>'nı kabul ediyorum.</span></label>
-    <p class="note" style="margin:0">Veri toplamıyoruz; her şey cihazında kalır. <button type="button" class="linkbtn" data-legal="gizlilik">Gizlilik Bildirimi</button></p>
+    <p class="note" style="margin:0"><button type="button" class="linkbtn" data-legal="gizlilik">Gizlilik Bildirimi</button></p>
   </div>`;
 }
 function consentError() {
