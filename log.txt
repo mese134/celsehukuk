@@ -1,0 +1,60 @@
+Önceki rg.json alınamadı: <urlopen error [Errno -2] Name or service not known>
+Erişim tamam
+2026-10-26 tamam 3 madde
+2026-10-25 tamam 7 madde
+2026-10-24 HATA <urlopen error timed out>
+2026-10-23 tamam 9 madde
+2026-10-22 tamam 9 madde
+2026-10-21 tamam 9 madde
+2026-10-20 HATA <urlopen error timed out>
+2026-10-19 tamam 9 madde
+2026-10-18 tamam 5 madde
+2026-10-17 tamam 12 madde
+2026-10-16 HATA <urlopen error timed out>
+2026-10-15 tamam 32 madde
+2026-10-14 tamam 4 madde
+2026-10-13 HATA <urlopen error timed out>
+2026-10-12 tamam 6 madde
+2026-10-11 tamam 5 madde
+2026-10-10 tamam 21 madde
+2026-10-09 HATA <urlopen error timed out>
+2026-10-08 tamam 6 madde
+2026-10-07 tamam 9 madde
+2026-10-06 tamam 14 madde
+2026-10-05 HATA <urlopen error timed out>
+2026-10-04 tamam 5 madde
+2026-10-03 tamam 7 madde
+2026-10-02 tamam 8 madde
+2026-10-01 HATA <urlopen error timed out>
+2026-09-30 tamam 5 madde
+2026-09-29 tamam 5 madde
+2026-09-28 tamam 5 madde
+2026-09-27 HATA <urlopen error timed out>
+Yazıldı: out/rg.json 22 gün
+{
+ "date": "2026-10-26",
+ "label": "26 Ekim 2026 Pazartesi",
+ "sayi": null,
+ "url": "https://www.resmigazete.gov.tr/eskiler/2026/10/20261026.htm",
+ "groups": [
+  {
+   "k": "Yönetmelik",
+   "key": true,
+   "items": [
+    {
+     "t": "Bingöl Üniversitesi Biyoteknoloji Uygulama ve Araştırma Merkezi Yönetmeliğinin Yürürlükten Kaldırılmasına Dair Yönetmelik",
+     "u": "https://www.resmigazete.gov.tr/eskiler/2026/10/20261026-1.htm"
+    },
+    {
+     "t": "Bingöl Üniversitesi Proje Koordinasyon Uygulama ve Araştırma Merkezi Yönetmeliğinin Yürürlükten Kaldırılmasına Dair Yönetmelik",
+     "u": "https://www.resmigazete.gov.tr/eskiler/2026/10/20261026-2.htm"
+    },
+    {
+     "t": "Bingöl Üniversitesi Sosyal ve Ekonomik Çalışmalar Uygulama ve Araştırma Merkezi Yönetmeliğinin Yürürlükten Kaldırılmasına Dair Yönetmelik",
+     "u": "https://www.resmigazete.gov.tr/eskiler/2026/10/20261026-3.htm"
+    }
+   ]
+  }
+ ],
+ "mukerrer": []
+}
