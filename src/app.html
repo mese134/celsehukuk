@@ -253,6 +253,20 @@ input.code-in{font-family:var(--f-mono);font-size:20px}
 textarea.txt{font:inherit;font-size:14px;width:100%;min-height:80px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink);resize:vertical}
 .report{display:flex;flex-direction:column;gap:8px;align-self:stretch}
 
+.daily{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px 16px;align-items:center;background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:var(--r);padding:16px 18px}
+.daily h3{font-family:var(--f-display);font-size:22px;margin:2px 0 4px}
+.daily .meta{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;font-size:13.5px;color:var(--muted)}
+.daily .dstreak{text-align:center;min-width:72px}
+.daily .dstreak b{display:block;font-family:var(--f-display);font-size:34px;line-height:1;color:var(--brass)}
+.daily .dstreak span{font-size:12px;color:var(--muted)}
+.daily .actions{grid-column:1/-1;margin:0}
+.nbstrip{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;background:var(--accent-soft);color:var(--ink);border-radius:8px;padding:10px 14px;font-size:14px}
+.study{display:grid;gap:14px}
+.study .panel h3{font-family:var(--f-display);font-size:21px;margin:0}
+.nbcount{display:flex;gap:18px;flex-wrap:wrap}
+.nbcount div{display:flex;flex-direction:column}
+.nbcount b{font-family:var(--f-display);font-size:28px;line-height:1.1}
+.nbcount span{font-size:12.5px;color:var(--muted)}
 @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
 </style>
 
@@ -265,6 +279,7 @@ textarea.txt{font:inherit;font-size:14px;width:100%;min-height:80px;padding:10px
   <nav class="tabs" id="tabs" hidden><div class="wrap" role="tablist">
     <button class="tab" role="tab" data-tab="davalar">Davalar</button>
     <button class="tab" role="tab" data-tab="hizli">Hızlı Duruşma</button>
+    <button class="tab" role="tab" data-tab="calis">Çalış</button>
     <button class="tab" role="tab" data-tab="duello">Düello</button>
     <button class="tab" role="tab" data-tab="ligler">Ligler</button>
     <button class="tab" role="tab" data-tab="kaynaklar">Kaynaklar</button>
@@ -280,7 +295,7 @@ textarea.txt{font:inherit;font-size:14px;width:100%;min-height:80px;padding:10px
 <script>
 (() => {
 const APP = !!window.CELSE_APP;   // Play Store sürümü: çevrimdışı, veriler cihazda
-const BR = { ceza: 'Ceza', is: 'İş', aile: 'Aile', idare: 'İdare', borclar: 'Borçlar', miras: 'Miras' };
+const BR = { ceza: 'Ceza', is: 'İş', aile: 'Aile', idare: 'İdare', borclar: 'Borçlar', miras: 'Miras', icra: 'İcra ve İflas', ticaret: 'Ticaret' };
 const BKEYS = Object.keys(BR);
 const TIERS = [
   { ad: 'Stajyer', min: 0 }, { ad: 'Avukat', min: 1500 }, { ad: 'Kıdemli Avukat', min: 4000 },
@@ -314,8 +329,35 @@ function weekKey(d = new Date()) {
   return t.getUTCFullYear() + '-H' + String(Math.ceil(((t - y0) / 864e5 + 1) / 7)).padStart(2, '0');
 }
 const tierOf = pts => { let t = 0; TIERS.forEach((x, i) => { if (pts >= x.min) t = i; }); return t; };
-const blank = name => ({ name, total: 0, ceza: 0, is: 0, aile: 0, idare: 0, borclar: 0, miras: 0, games: 0, answered: 0, correct: 0, bestStreak: 0, week: weekKey(), weekPts: 0, cases: {} });
+const blank = name => ({ name, total: 0, ceza: 0, is: 0, aile: 0, idare: 0, borclar: 0, miras: 0, icra: 0, ticaret: 0, games: 0, answered: 0, correct: 0, bestStreak: 0, week: weekKey(), weekPts: 0, cases: {} });
 const weekPts = p => (p && p.week === weekKey()) ? (p.weekPts || 0) : 0;
+// Hata defteri: yanlış → hemen tekrar; doğru bildikçe 1, 3, 7 gün sonra; dördüncü doğruda defterden çıkar
+const NB_DAYS = [0, 1, 3, 7];
+function findItem(id) {
+  const q = QUICK.find(x => x.id === id); if (q) return q;
+  const mm = /^(.+)-(\d+)$/.exec(id); const c = mm && CASES.find(x => x.id === mm[1]);
+  return c && c.steps[+mm[2]] ? { ...c.steps[+mm[2]], id, b: c.b, cid: c.id } : null;
+}
+function nbMark(it, ok) {
+  if (!S.me) return;
+  const nb = S.me.nb || (S.me.nb = {}), e = nb[it.id], now = Date.now();
+  if (!ok) { nb[it.id] = { box: 0, due: now }; return; }
+  if (e && e.due <= now) { const box = e.box + 1; if (box >= NB_DAYS.length) delete nb[it.id]; else nb[it.id] = { box, due: now + NB_DAYS[box] * 864e5 }; }
+}
+const nbAll = () => Object.entries((S.me && S.me.nb) || {}).filter(([id]) => findItem(id));
+const nbDue = () => nbAll().filter(([, e]) => e.due <= Date.now());
+// Günün dosyası: tarihe göre herkese aynı dosya
+const dayOffset = (k) => { const d = new Date(); d.setDate(d.getDate() + k); return dayKey(d); };
+function dailyCase() { const d = new Date(); const n = Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 864e5); return CASES[(n * 7 + 3) % CASES.length]; }
+function dailyState() {
+  const dl = (S.me && S.me.daily) || {};
+  const alive = dl.last === dayKey() || dl.last === dayOffset(-1);
+  return { done: dl.last === dayKey(), streak: alive ? (dl.streak || 0) : 0, best: dl.best || 0 };
+}
+// Süreler modu: süre soran ve şıklarında süre bulunan hızlı sorular
+const DUR_RE = /\d+\s*(gün|iş günü|ay|yıl|hafta|saat)\b|\b(bir|iki|üç|altı|yedi|on|otuz)\s+(gün|ay|yıl|hafta)\b/i;
+const SURE_EXTRA = ['qe5'];
+const isSure = q => SURE_EXTRA.includes(q.id) || (/(süre|zamanaşımı|kaç gün|ne zaman|en geç|hangi süre|ne kadar)/i.test(q.q) && q.o.filter(o => DUR_RE.test(o)).length >= 2);
 const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
 
 // ---------- Kurulum ----------
@@ -376,7 +418,7 @@ function renderGate() {
   <form class="gate" id="gate">
     <span class="eyebrow">Türk mevzuatıyla süreli duruşma oyunu</span>
     <h1>Cel<i>se</i>'ye hoş geldin</h1>
-    <p class="muted" style="margin:0">Ceza, iş, aile, idare, borçlar ve miras hukuku dosyalarında karar ver. Her karar için 15 saniyen var; istersen süreyi uzatabilirsin. Doğru ve hızlı kararlar puan getirir, puanın seni Stajyer liginden Yargıtay Üyesi ligine taşır.</p>
+    <p class="muted" style="margin:0">Ceza, iş, aile, idare, borçlar, miras, icra-iflas ve ticaret hukuku dosyalarında karar ver. Her karar için 15 saniyen var; istersen süreyi uzatabilirsin. Doğru ve hızlı kararlar puan getirir, puanın seni Stajyer liginden Yargıtay Üyesi ligine taşır.</p>
     <label for="uname" class="eyebrow">Kullanıcı adı</label>
     <input class="txt" id="uname" maxlength="18" autocomplete="off" placeholder="ör. av_deniz" required>
     <div class="note">3–18 karakter: harf, rakam ve alt çizgi. Kullanıcı adın skor tablosunda görünür ve sonradan değiştirilemez.</div>
@@ -467,7 +509,7 @@ function render() {
   S.sub = null;
   document.querySelectorAll('.tab').forEach(t => t.setAttribute('aria-selected', String(t.dataset.tab === S.tab)));
   window.scrollTo(0, 0);
-  ({ davalar: renderCases, hizli: renderQuick, duello: renderDuel, ligler: renderLeagues, kaynaklar: renderSources, yasal: renderLegal, yonetim: renderAdmin })[S.tab]();
+  ({ davalar: renderCases, hizli: renderQuick, calis: renderStudy, duello: renderDuel, ligler: renderLeagues, kaynaklar: renderSources, yasal: renderLegal, yonetim: renderAdmin })[S.tab]();
 }
 
 function profileHTML() {
@@ -497,6 +539,8 @@ function renderCases() {
     ${!S.local && !S.canWrite ? '<div class="banner">Görüntüleme erişimin var; oynayabilirsin ama puanın kaydedilmez. Sayfa sahibinden "Katkıda bulunan" erişimi iste.</div>' : ''}
     ${guestBanner()}
     ${S.guest ? '' : banBanner()}
+    ${dailyHTML()}
+    ${nbDue().length ? `<div class="nbstrip"><span>Hata defterinde <b>${nbDue().length}</b> soru tekrar bekliyor.</span><button class="btn sm" id="nbgo">Tekrar et</button></div>` : ''}
     ${profileHTML()}
     ${timeSetHTML()}
     <div class="stack" style="gap:10px">
@@ -515,13 +559,28 @@ function renderCases() {
     </div></div>`;
   bindSeg('br', k => { S.branch = k; renderCases(); });
   bindTimeSet(renderCases); bindGuest();
+  if ($('#dgo')) $('#dgo').addEventListener('click', () => renderBrief(dailyCase(), { daily: !dailyState().done }));
+  if ($('#nbgo')) $('#nbgo').addEventListener('click', startReview);
   document.querySelectorAll('.case').forEach(b => b.addEventListener('click', () => renderBrief(CASES.find(c => c.id === b.dataset.id))));
 }
 
-function renderBrief(c) {
+function dailyHTML() {
+  const c = dailyCase(), st = dailyState();
+  const today = new Date().toLocaleDateString('tr-TR', { day: 'numeric', month: 'long' });
+  return `<section class="daily">
+    <div><span class="eyebrow">Günün dosyası · ${esc(today)}</span><h3>${esc(c.title)}</h3>
+      <div class="meta"><span class="pill">${esc(BR[c.b])} Hukuku</span><span>${esc(c.role)}</span><span>${c.steps.length} karar</span></div></div>
+    <div class="dstreak"><b>${st.streak}</b><span>günlük seri</span></div>
+    <div class="actions">${st.done ? `<span class="note" style="margin:0">Bugünün dosyasını kapattın. Yarın yeni dosya gelecek; seriyi sürdürmek için yarın da oyna.</span><button class="btn ghost sm" id="dgo">Yeniden oku</button>`
+      : `<button class="btn" id="dgo">Dosyayı aç</button><span class="note" style="margin:0">Günün dosyasını bitirince seri bonusu: +${100 + 20 * Math.min(st.streak, 10)}</span>`}</div>
+  </section>`;
+}
+
+function renderBrief(c, extra = {}) {
   S.sub = 'brief';
   app.innerHTML = `<div class="stack">
     <button class="btn ghost" id="back" style="align-self:flex-start">← Dosyalar</button>
+    ${extra.daily ? '<div class="banner"><b>Günün dosyası.</b> Bitirdiğinde günlük seri bonusu kazanırsın.</div>' : ''}
     <article class="docket">
       <header>
         <span class="tc">T.C. ${esc(c.court)}</span>
@@ -536,7 +595,7 @@ function renderBrief(c) {
       <button class="btn" id="go">Duruşmayı başlat</button>
     </div></div>`;
   $('#back').addEventListener('click', renderCases);
-  $('#go').addEventListener('click', () => startGame('case', c.steps.map((s, i) => ({ ...s, id: c.id + '-' + i, b: c.b })), { caseObj: c }));
+  $('#go').addEventListener('click', () => startGame('case', c.steps.map((s, i) => ({ ...s, id: c.id + '-' + i, b: c.b })), { caseObj: c, daily: !!extra.daily }));
 }
 
 // ---------- Hızlı duruşma ----------
@@ -581,14 +640,15 @@ function startGame(mode, items, extra = {}) {
 
 function renderQuestion() {
   const g = S.game, it = g.items[g.idx], T = qSecs(it.t);
-  const c = g.caseObj;
+  const c = g.caseObj || (it.cid ? CASES.find(x => x.id === it.cid) : null);
+  const modeName = { review: 'Hata defteri', sure: 'Süreler' }[g.mode] || 'Hızlı duruşma';
   app.innerHTML = `<div class="stack">
     <div class="hud"><span class="step">${g.mode === 'case' ? 'Karar' : 'Soru'} ${g.idx + 1}/${g.items.length} · ${BR[it.b]}</span>
       ${g.streak > 1 ? `<span class="streak">${g.streak} seri</span>` : ''}<span class="score">${fmt(g.score)}</span></div>
     ${c ? `<details class="file"><summary>Dosyayı göster · ${esc(c.title)}</summary><div class="inner"><p style="margin:0">${esc(c.intro)}</p>${c.evidence.map(([k, v]) => `<div><b>${esc(k)}:</b> ${esc(v)}</div>`).join('')}</div></details>` : ''}
     <section class="stage">
       <div class="clock" id="clock"><svg viewBox="0 0 84 84"><circle class="bgc" cx="42" cy="42" r="36"/><circle class="fg" id="arc" cx="42" cy="42" r="36" stroke-dasharray="226.2" stroke-dashoffset="0"/></svg><b id="secs">${T}</b></div>
-      <div class="qhead"><span class="eyebrow">${c ? esc(c.role) + ' olarak karar ver' : 'Hızlı duruşma'}${tMult() > 1 ? ' · ' + esc(TIME_MODES[prefs.time].ad) + ' süre' : ''}</span><h2>${esc(it.q)}</h2></div>
+      <div class="qhead"><span class="eyebrow">${g.mode === 'review' ? 'Hata defteri · ' + (c ? esc(c.title) : esc(BR[it.b]) + ' Hukuku') : c ? esc(c.role) + ' olarak karar ver' : modeName}${tMult() > 1 ? ' · ' + esc(TIME_MODES[prefs.time].ad) + ' süre' : ''}</span><h2>${esc(it.q)}</h2></div>
     </section>
     <div class="opts" id="opts">${it.o.map((o, i) => `<button class="opt" data-i="${i}"><kbd>${i + 1}</kbd><span>${esc(o)}</span></button>`).join('')}</div>
     <div id="fb"></div>
@@ -624,6 +684,7 @@ function answer(i) {
     pts = fast ? 100 : 100 + Math.ceil(frac * 15) * 10 + Math.min(100, 20 * (g.streak - 1));
     if (repeat) pts = Math.round(pts / 2);
   } else g.streak = 0;
+  nbMark(it, ok);
   if (i >= 0) g.times.push(Math.round(ms));
   if (fast) g.fast++;
   if (repeat) g.repeats++;
@@ -671,7 +732,20 @@ function finish() {
     const prev = (m.cases || {})[g.caseObj.id] || 0;
     award[g.caseObj.b] = Math.max(0, g.score - prev);
     m.cases = { ...(m.cases || {}), [g.caseObj.id]: Math.max(prev, g.score) };
+  } else if (g.mode === 'review') {
+    // Tekrar modu öğrenme içindir; lig puanı getirmez
   } else award = { ...g.byBranch };
+  // Günün dosyası: günde bir kez seri bonusu
+  if (g.daily && !g.voided) {
+    const dl = m.daily || {};
+    if (dl.last !== dayKey()) {
+      const streak = dl.last === dayOffset(-1) ? (dl.streak || 0) + 1 : 1;
+      g.dailyBonus = 100 + 20 * Math.min(streak - 1, 10);
+      award[g.caseObj.b] += g.dailyBonus;
+      m.daily = { last: dayKey(), streak, best: Math.max(dl.best || 0, streak) };
+      g.dailyStreak = streak;
+    }
+  }
   // Günlük sınır
   if (m.day !== dayKey()) { m.day = dayKey(); m.dayPts = 0; }
   let gained = BKEYS.reduce((t, k) => t + award[k], 0);
@@ -689,7 +763,7 @@ function finish() {
   // Son 24 saatte görülen hızlı sorular
   const now = Date.now(), rec = {};
   Object.entries(m.recent || {}).forEach(([k, t]) => { if (now - t < REPEAT_MS) rec[k] = t; });
-  if (g.mode !== 'case') g.items.forEach(it => { rec[it.id] = now; });
+  if (g.mode !== 'case' && g.mode !== 'review') g.items.forEach(it => { rec[it.id] = now; });
   m.recent = rec;
   // Oyun kaydı (son 20): yönetim incelemesi ve tutarlılık kontrolü için
   const t = g.times.length ? g.times : [0];
@@ -704,13 +778,17 @@ function finish() {
 
 function renderResult(g, gained, promo) {
   const title = g.mode === 'case' ? (g.correct === g.items.length ? 'Kusursuz duruşma' : g.correct >= g.items.length / 2 ? 'Dosya kapandı' : 'Dosya bozmaya döndü') :
-    g.mode === 'duel' ? 'Düello kararın verildi' : 'Hızlı duruşma bitti';
+    g.mode === 'duel' ? 'Düello kararın verildi' : g.mode === 'review' ? 'Tekrar bitti' : g.mode === 'sure' ? 'Süreler turu bitti' : 'Hızlı duruşma bitti';
+  const left = nbAll().length;
   app.innerHTML = `<div class="stack">
     <section class="result">
       <span class="eyebrow">${g.caseObj ? esc(g.caseObj.court) + ' · HÜKÜM' : 'HÜKÜM'}</span>
       <h2>${title}</h2>
       <div class="big">${fmt(g.score)}</div>
-      <div class="kv"><div><span>İsabet</span><b>${g.correct}/${g.items.length}</b></div><div><span>En uzun seri</span><b>${g.maxStreak}</b></div><div><span>${S.guest ? 'Misafir: kaydedilmez' : 'Lige eklenen'}</span><b>${S.guest ? '—' : '+' + fmt(gained)}</b></div></div>
+      <div class="kv"><div><span>İsabet</span><b>${g.correct}/${g.items.length}</b></div><div><span>En uzun seri</span><b>${g.maxStreak}</b></div><div><span>${g.mode === 'review' ? 'Defterde kalan' : S.guest ? 'Misafir: kaydedilmez' : 'Lige eklenen'}</span><b>${g.mode === 'review' ? left : S.guest ? '—' : '+' + fmt(gained)}</b></div></div>
+      ${g.dailyBonus ? `<div class="promo">Günün dosyası kapandı: ${g.dailyStreak} günlük seri, +${g.dailyBonus} bonus.</div>` : ''}
+      ${g.mode === 'review' ? '<p class="note" style="margin:0">Tekrar modu lig puanı getirmez. Doğru bildiğin sorular 1, 3 ve 7 gün sonra yeniden sorulur; dördüncü doğruda defterden çıkar.</p>' : ''}
+      ${g.mode !== 'review' && g.log.some(l => !l.ok) ? '<p class="note" style="margin:0">Yanlış cevapladığın sorular hata defterine eklendi (Çalış sekmesi).</p>' : ''}
       ${g.perfect ? '<p class="note" style="margin:0">Tüm kararlar isabetli: +100 kusursuz dosya bonusu.</p>' : ''}
       ${g.mode === 'case' && gained === 0 ? '<p class="note" style="margin:0">Önceki en iyi skorunu geçmediğin için lige puan eklenmedi.</p>' : ''}
       ${promo ? `<div class="promo">Terfi ettin: artık ${esc(promo)} Ligi'ndesin.</div>` : ''}
@@ -722,15 +800,54 @@ function renderResult(g, gained, promo) {
       <div class="recap">${g.log.map(l => `<div><span class="${l.ok ? 'y' : 'n'}">${l.ok ? '✓' : '✗'}</span><span>${esc(l.q)}</span><span class="mono">${l.timeout ? 'süre' : '+' + l.pts}${l.fast ? ' ⚑' : ''}${l.repeat ? ' ½' : ''}</span></div>`).join('')}</div>
       <div id="duelbox"></div>
       <div class="actions">
-        ${g.mode === 'case' ? '<button class="btn" id="again">Yeni dosya</button>' : g.mode === 'quick' ? '<button class="btn" id="again">Tekrar oyna</button>' : '<button class="btn" id="again">Düellolar</button>'}
+        ${g.mode === 'case' ? '<button class="btn" id="again">Yeni dosya</button>' : g.mode === 'quick' ? '<button class="btn" id="again">Tekrar oyna</button>' : g.mode === 'duel' ? '<button class="btn" id="again">Düellolar</button>' : '<button class="btn" id="again">Çalışmaya dön</button>'}
         <button class="btn ghost" id="toleague">Ligleri gör</button>
       </div>
     </section></div>`;
   S.game = null;
-  $('#again').addEventListener('click', () => { leaveGame(); S.tab = g.mode === 'case' ? 'davalar' : g.mode === 'quick' ? 'hizli' : 'duello'; render(); });
+  $('#again').addEventListener('click', () => { leaveGame(); S.tab = { case: 'davalar', quick: 'hizli', duel: 'duello' }[g.mode] || 'calis'; render(); });
   $('#toleague').addEventListener('click', () => { leaveGame(); S.tab = 'ligler'; render(); });
   bindGuest();
   if (g.mode === 'duel') watchDuel(g.duelCode, $('#duelbox'));
+}
+
+// ---------- Çalış: hata defteri ve süreler ----------
+function startReview() {
+  const due = shuffle(nbDue()).slice(0, 10).map(([id]) => findItem(id));
+  if (!due.length) return;
+  leaveGame(); S.tab = 'calis';
+  startGame('review', due);
+}
+function renderStudy() {
+  const all = nbAll(), due = nbDue(), now = Date.now();
+  const soon = all.filter(([, e]) => e.due > now).sort((a, b) => a[1].due - b[1].due)[0];
+  const soonTxt = soon ? new Date(soon[1].due).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long' }) : '';
+  const sb = S.sbranch || 'karisik';
+  const surePool = QUICK.filter(isSure);
+  const bks = BKEYS.filter(k => surePool.some(q => q.b === k));
+  const poolN = surePool.filter(q => sb === 'karisik' || q.b === sb).length;
+  app.innerHTML = `<div class="stack">
+    <div><span class="eyebrow">Çalış</span><h2 style="font-size:28px">Eksiğini kapat, süreleri ezberle</h2>
+      <p class="muted" style="margin:6px 0 0;max-width:62ch">HMGS'ye, staja ya da duruşmaya hazırlanırken: yanlışlarını tekrar et, dava açma ve itiraz sürelerini çalış.</p></div>
+    ${guestBanner()}
+    <div class="study">
+      <section class="panel"><h3>Hata defteri</h3>
+        <div class="nbcount"><div><b>${due.length}</b><span>şimdi tekrar edilecek</span></div><div><b>${all.length}</b><span>defterdeki toplam soru</span></div>${soon ? `<div><b style="font-size:20px;padding-top:6px">${esc(soonTxt)}</b><span>sıradaki tekrar</span></div>` : ''}</div>
+        <p class="note" style="margin:0">Yanlış cevapladığın ya da süresi dolan her soru buraya düşer. Doğru bildikçe 1, 3 ve 7 gün sonra yeniden sorulur; dördüncü doğruda defterden çıkar. Bu modda lig puanı yok; amaç öğrenmek.</p>
+        <button class="btn" id="nbgo" style="align-self:flex-start" ${due.length ? '' : 'disabled'}>${due.length ? 'Tekrar et (' + Math.min(10, due.length) + ' soru)' : 'Şu an tekrar edilecek soru yok'}</button>
+      </section>
+      <section class="panel"><h3>Süreler</h3>
+        <p class="note" style="margin:0">Dava açma, itiraz, başvuru ve zamanaşımı süreleri. ${QUICK_N} soruluk tur; puanlar lige eklenir.</p>
+        ${segHTML('sb', sb, [['karisik', 'Karışık'], ...bks.map(k => [k, BR[k]])])}
+        <button class="btn" id="sgo" style="align-self:flex-start">Süre turunu başlat <span style="font-weight:400;opacity:.8">· ${poolN} soru havuzu</span></button>
+      </section>
+    </div>
+    ${timeSetHTML()}
+  </div>`;
+  $('#nbgo').addEventListener('click', startReview);
+  bindSeg('sb', k => { S.sbranch = k; renderStudy(); });
+  $('#sgo').addEventListener('click', () => startGame('sure', shuffle(surePool.filter(q => sb === 'karisik' || q.b === sb)).slice(0, QUICK_N)));
+  bindTimeSet(renderStudy); bindGuest();
 }
 
 // ---------- Ligler ----------
@@ -747,7 +864,7 @@ function renderLeagues() {
   if (myRank > 50) top.push(rows[myRank - 1]);
   app.innerHTML = `<div class="stack">${guestBanner()}
     <div><span class="eyebrow">Ligler · ${esc(wk.split('-H')[1])}. hafta</span><h2 style="font-size:28px">Kürsüye kim çıkacak?</h2>
-      <p class="muted" style="margin:6px 0 0;max-width:64ch">Toplam puanın ligini belirler. Her lig kendi içinde haftalık yarışır; branş ligleri ise ceza, iş, aile, idare, borçlar ve miras hukuku uzmanlarını ayrı sıralar.</p></div>
+      <p class="muted" style="margin:6px 0 0;max-width:64ch">Toplam puanın ligini belirler. Her lig kendi içinde haftalık yarışır; branş ligleri ise her hukuk dalının uzmanlarını ayrı sıralar.</p></div>
     <div class="ladder">${TIERS.map((t, i) => `<div class="${i === myTier ? 'me' : ''}"><b>${esc(t.ad)}</b><span>${fmt(t.min)}+ puan</span></div>`).join('')}</div>
     ${segHTML('bd', S.board, boards)}
     <div class="board">${rows.length ? `<table><thead><tr><th>Sıra</th><th>Oyuncu</th><th class="n">${esc(col)}</th></tr></thead><tbody>
