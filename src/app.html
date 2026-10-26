@@ -330,7 +330,7 @@ details.rgday .inner{padding:0 16px 14px;display:flex;flex-direction:column;gap:
 <script>
 (() => {
 const APP = !!window.CELSE_APP;   // Play Store sürümü: çevrimdışı, veriler cihazda
-const BR = { ceza: 'Ceza', is: 'İş', aile: 'Aile', idare: 'İdare', borclar: 'Borçlar', miras: 'Miras', icra: 'İcra ve İflas', ticaret: 'Ticaret' };
+const BR = { ceza: 'Ceza', is: 'İş', aile: 'Aile', idare: 'İdare', borclar: 'Borçlar', miras: 'Miras', icra: 'İcra ve İflas', ticaret: 'Ticaret', infaz: 'İnfaz' };
 const BKEYS = Object.keys(BR);
 const TIERS = [
   { ad: 'E grubu', min: 0 }, { ad: 'D grubu', min: 1500 }, { ad: 'C grubu', min: 4000 },
@@ -364,7 +364,7 @@ function weekKey(d = new Date()) {
   return t.getUTCFullYear() + '-H' + String(Math.ceil(((t - y0) / 864e5 + 1) / 7)).padStart(2, '0');
 }
 const tierOf = pts => { let t = 0; TIERS.forEach((x, i) => { if (pts >= x.min) t = i; }); return t; };
-const blank = name => ({ name, total: 0, ceza: 0, is: 0, aile: 0, idare: 0, borclar: 0, miras: 0, icra: 0, ticaret: 0, games: 0, answered: 0, correct: 0, bestStreak: 0, week: weekKey(), weekPts: 0, cases: {} });
+const blank = name => ({ name, total: 0, ceza: 0, is: 0, aile: 0, idare: 0, borclar: 0, miras: 0, icra: 0, ticaret: 0, infaz: 0, games: 0, answered: 0, correct: 0, bestStreak: 0, week: weekKey(), weekPts: 0, cases: {} });
 const weekPts = p => (p && p.week === weekKey()) ? (p.weekPts || 0) : 0;
 // Hata defteri: yanlış → hemen tekrar; doğru bildikçe 1, 3, 7 gün sonra; dördüncü doğruda defterden çıkar
 const NB_DAYS = [0, 1, 3, 7];
@@ -430,7 +430,7 @@ function rgCardHTML() {
 }
 
 // Kariyer istatistikleri: alan ve kanun bazında isabet
-const LAW_NAMES = { 'TMK': 'Türk Medenî Kanunu', 'TBK': 'Türk Borçlar Kanunu', 'TCK': 'Türk Ceza Kanunu', 'CMK': 'Ceza Muhakemesi Kanunu', 'İş K.': 'İş Kanunu', 'İYUK': 'İdari Yargılama Usulü K.', 'İİK': 'İcra ve İflas Kanunu', 'TTK': 'Türk Ticaret Kanunu', 'AY': 'Anayasa', 'HMK': 'Hukuk Muhakemeleri K.', '657 s. K.': 'Devlet Memurları K. (657)', '1475 s. K.': 'Kıdem tazminatı (1475)', '7036 s. K.': 'İş Mahkemeleri K. (7036)', '6284 s. K.': 'Ailenin Korunması K. (6284)', '6502 s. K.': 'Tüketicinin Korunması K. (6502)', '4483 s. K.': 'Memurların Yargılanması K. (4483)', '2942 s. K.': 'Kamulaştırma K. (2942)' };
+const LAW_NAMES = { 'TMK': 'Türk Medenî Kanunu', 'TBK': 'Türk Borçlar Kanunu', 'TCK': 'Türk Ceza Kanunu', 'CMK': 'Ceza Muhakemesi Kanunu', 'İş K.': 'İş Kanunu', 'İYUK': 'İdari Yargılama Usulü K.', 'İİK': 'İcra ve İflas Kanunu', 'TTK': 'Türk Ticaret Kanunu', 'AY': 'Anayasa', 'HMK': 'Hukuk Muhakemeleri K.', '657 s. K.': 'Devlet Memurları K. (657)', '1475 s. K.': 'Kıdem tazminatı (1475)', '7036 s. K.': 'İş Mahkemeleri K. (7036)', '6284 s. K.': 'Ailenin Korunması K. (6284)', '6502 s. K.': 'Tüketicinin Korunması K. (6502)', '4483 s. K.': 'Memurların Yargılanması K. (4483)', '2942 s. K.': 'Kamulaştırma K. (2942)', '5275 s. K.': 'İnfaz Kanunu (5275)', '4675 s. K.': 'İnfaz Hâkimliği K. (4675)' };
 function lawKey(r) {
   const first = String(r || '').split('·')[0].trim();
   const mm = /^(.*?)\s+m\.\s*/.exec(first);
@@ -554,7 +554,7 @@ function renderGate() {
   <form class="gate" id="gate">
     <span class="eyebrow">Türk mevzuatıyla süreli duruşma oyunu</span>
     <h1>Cel<i>se</i>'ye hoş geldin</h1>
-    <p class="muted" style="margin:0">Ceza, iş, aile, idare, borçlar, miras, icra-iflas ve ticaret hukuku dosyalarında karar ver. Her karar için 15 saniyen var; istersen süreyi uzatabilirsin. Doğru ve hızlı kararlar puan getirir, puanın seni E grubundan en iyi grup olan A grubuna taşır.</p>
+    <p class="muted" style="margin:0">Ceza, iş, aile, idare, borçlar, miras, icra-iflas, ticaret ve infaz hukuku dosyalarında karar ver; infaz bölümünde ceza yatarını sen hesapla. Her karar için 15 saniyen var; istersen süreyi uzatabilirsin. Doğru ve hızlı kararlar puan getirir, puanın seni E grubundan en iyi grup olan A grubuna taşır.</p>
     <label for="uname" class="eyebrow">Kullanıcı adı</label>
     <input class="txt" id="uname" maxlength="18" autocomplete="off" placeholder="ör. av_deniz" required>
     <div class="note">3–18 karakter: harf, rakam ve alt çizgi. Kullanıcı adın skor tablosunda görünür ve sonradan değiştirilemez.</div>

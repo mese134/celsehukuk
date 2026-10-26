@@ -17,7 +17,7 @@ os.chdir(ROOT)
 # ---- 1. Oyun gövdesi: app.html + veri dosyaları
 app = open(os.path.join(SRC, 'app.html'), encoding='utf-8').read()
 data = '\n'.join(open(os.path.join(SRC, f), encoding='utf-8').read()
-                 for f in ['data.js', 'data2.js', 'data3.js', 'data4.js', 'data5.js', 'data6.js', 'data7.js', 'legal.js'])
+                 for f in ['data.js', 'data2.js', 'data3.js', 'data4.js', 'data5.js', 'data6.js', 'data7.js', 'data8.js', 'legal.js'])
 body = app.replace('/*DATA*/', data)
 gf = re.search(r'<link rel="preconnect" href="https://fonts.googleapis.com">\s*<link rel="stylesheet" href="https://fonts.googleapis.com/[^"]+">', body)
 assert gf, 'Google Fonts bağlantısı bulunamadı'
@@ -61,7 +61,7 @@ os.makedirs('site', exist_ok=True)
 build_fonts('site/fonts')
 SITE_URL = os.environ.get('SITE_URL', 'https://mese134.github.io/celsehukuk/')
 WEB_META = (
-    '<meta name="description" content="Türk hukuku duruşma oyunu: ceza, iş, aile, idare, borçlar, miras, icra-iflas ve ticaret hukuku dosyalarında 15 saniyede karar ver. İnternetsiz oynanır; günün dosyası, hata defteri ve Resmî Gazete takibi.">'
+    '<meta name="description" content="Türk hukuku duruşma oyunu: ceza, iş, aile, idare, borçlar, miras, icra-iflas, ticaret ve infaz hukuku dosyalarında 15 saniyede karar ver. İnternetsiz oynanır; günün dosyası, hata defteri ve Resmî Gazete takibi.">'
     '<meta name="theme-color" content="#8e1b30">'
     '<link rel="manifest" href="manifest.webmanifest">'
     '<link rel="icon" type="image/png" href="icon-192.png">'
@@ -70,7 +70,7 @@ WEB_META = (
     '<meta name="apple-mobile-web-app-title" content="Celse">'
     '<meta property="og:type" content="website">'
     '<meta property="og:title" content="Celse · Hukuk Duruşma Oyunu">'
-    '<meta property="og:description" content="Dosyayı oku, 15 saniyede karar ver. Ceza, iş, aile, idare, borçlar, miras, icra-iflas ve ticaret hukuku. Günün dosyası ve Resmî Gazete takibi.">'
+    '<meta property="og:description" content="Dosyayı oku, 15 saniyede karar ver. Ceza, iş, aile, idare, borçlar, miras, icra-iflas, ticaret ve infaz hukuku. Günün dosyası ve Resmî Gazete takibi.">'
     f'<meta property="og:url" content="{SITE_URL}">'
     f'<meta property="og:image" content="{SITE_URL}og.png">'
     '<meta property="og:image:width" content="1200"><meta property="og:image:height" content="586">'
