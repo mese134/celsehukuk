@@ -1764,8 +1764,8 @@ const APP = !!window.CELSE_APP;   // Play Store sürümü: çevrimdışı, veril
 const BR = { ceza: 'Ceza', is: 'İş', aile: 'Aile', idare: 'İdare', borclar: 'Borçlar', miras: 'Miras', icra: 'İcra ve İflas', ticaret: 'Ticaret' };
 const BKEYS = Object.keys(BR);
 const TIERS = [
-  { ad: 'Stajyer', min: 0 }, { ad: 'Avukat', min: 1500 }, { ad: 'Kıdemli Avukat', min: 4000 },
-  { ad: 'Hâkim', min: 8000 }, { ad: 'Yargıtay Üyesi', min: 15000 }
+  { ad: 'E grubu', min: 0 }, { ad: 'D grubu', min: 1500 }, { ad: 'C grubu', min: 4000 },
+  { ad: 'B grubu', min: 8000 }, { ad: 'A grubu', min: 15000 }
 ];
 const DEF_T = 15;
 const QUICK_N = 8, DUEL_N = 6;
@@ -1985,7 +1985,7 @@ function renderGate() {
   <form class="gate" id="gate">
     <span class="eyebrow">Türk mevzuatıyla süreli duruşma oyunu</span>
     <h1>Cel<i>se</i>'ye hoş geldin</h1>
-    <p class="muted" style="margin:0">Ceza, iş, aile, idare, borçlar, miras, icra-iflas ve ticaret hukuku dosyalarında karar ver. Her karar için 15 saniyen var; istersen süreyi uzatabilirsin. Doğru ve hızlı kararlar puan getirir, puanın seni Stajyer liginden Yargıtay Üyesi ligine taşır.</p>
+    <p class="muted" style="margin:0">Ceza, iş, aile, idare, borçlar, miras, icra-iflas ve ticaret hukuku dosyalarında karar ver. Her karar için 15 saniyen var; istersen süreyi uzatabilirsin. Doğru ve hızlı kararlar puan getirir, puanın seni E grubundan en iyi grup olan A grubuna taşır.</p>
     <label for="uname" class="eyebrow">Kullanıcı adı</label>
     <input class="txt" id="uname" maxlength="18" autocomplete="off" placeholder="ör. av_deniz" required>
     <div class="note">3–18 karakter: harf, rakam ve alt çizgi. Kullanıcı adın skor tablosunda görünür ve sonradan değiştirilemez.</div>
@@ -2086,10 +2086,10 @@ function profileHTML() {
   const pct = next ? Math.min(100, (m.total - TIERS[ti].min) / (next.min - TIERS[ti].min) * 100) : 100;
   const acc = m.answered ? Math.round(m.correct / m.answered * 100) : 0;
   return `<section class="profile">
-    <div class="stack" style="gap:6px"><span class="tier">${esc(TIERS[ti].ad)} Ligi</span><h2>${esc(m.name)}</h2></div>
+    <div class="stack" style="gap:6px"><span class="tier">${esc(TIERS[ti].ad)}</span><h2>${esc(m.name)}</h2></div>
     <div class="pts"><b>${fmt(m.total)}</b><span>toplam puan</span></div>
     <div class="prog"><div class="track"><div class="fill" style="width:${pct}%"></div></div>
-      <div class="lbl"><span>${esc(TIERS[ti].ad)}</span><span>${next ? fmt(next.min - m.total) + ' puan sonra ' + esc(next.ad) : 'En üst lig'}</span></div></div>
+      <div class="lbl"><span>${esc(TIERS[ti].ad)}</span><span>${next ? fmt(next.min - m.total) + ' puan sonra ' + esc(next.ad) : 'En üst grup'}</span></div></div>
     <div class="stats"><span>Bu hafta <b>${fmt(weekPts(m))}</b></span><span>İsabet <b>%${acc}</b></span><span>En uzun seri <b>${m.bestStreak || 0}</b></span>
       ${BKEYS.map(k => `<span>${BR[k]} <b>${fmt(m[k])}</b></span>`).join('')}</div>
   </section>`;
@@ -2363,7 +2363,7 @@ function renderResult(g, gained, promo) {
       ${g.mode !== 'review' && g.log.some(l => !l.ok) ? '<p class="note" style="margin:0">Yanlış cevapladığın sorular hata defterine eklendi (Çalış sekmesi).</p>' : ''}
       ${g.perfect ? '<p class="note" style="margin:0">Tüm kararlar isabetli: +100 kusursuz dosya bonusu.</p>' : ''}
       ${g.mode === 'case' && gained === 0 ? '<p class="note" style="margin:0">Önceki en iyi skorunu geçmediğin için lige puan eklenmedi.</p>' : ''}
-      ${promo ? `<div class="promo">Terfi ettin: artık ${esc(promo)} Ligi'ndesin.</div>` : ''}
+      ${promo ? `<div class="promo">Bir üst gruba çıktın: artık ${esc(promo)}ndasın.</div>` : ''}
       ${g.voided ? '<div class="banner">Bu oyunun sonucu teorik üst sınırı aştığı veya olanaksız bir hızda tamamlandığı için geçersiz sayıldı.</div>' : ''}
       ${g.capped ? `<div class="banner">Günlük ${fmt(DAY_CAP)} lig puanı sınırına ulaştın; fazlası lige eklenmedi. Yarın yeniden puan toplayabilirsin.</div>` : ''}
       ${g.fast ? `<p class="note" style="margin:0">${g.fast} cevap insan tepki süresinin altında verildi; bu cevaplara hız ve seri bonusu uygulanmadı.</p>` : ''}
@@ -2456,9 +2456,9 @@ function renderCareer() {
   const qFor = k => QUICK.filter(q => lawKey(q.r) === k);
   const topicHTML = (list, practice) => list.map(([k, e]) => `<div class="topic"><span><b>${esc(lawName(k))}</b><small>%${pct(e)} isabet · ${e.c}/${e.a} doğru</small></span>${practice && qFor(k).length >= 3 ? `<button class="btn sm ghost" data-law="${esc(k)}">Bu konudan çalış</button>` : ''}</div>`).join('');
   app.innerHTML = `<div class="stack">${guestBanner()}
-    <div><span class="eyebrow">Kariyer</span><h2 style="font-size:28px">Stajyerlikten Yargıtay'a</h2>
-      <p class="muted" style="margin:6px 0 0;max-width:64ch">Puanın rütbeni belirler. Aşağıda hangi alanda ve hangi kanunda güçlü olduğunu, nereye çalışman gerektiğini görürsün. Bu bilgiler yalnızca bu cihazda tutulur.</p></div>
-    <div class="ladder">${TIERS.map((t, i) => `<div class="${i === ti ? 'me' : ''}"><b>${esc(t.ad)}</b><span>${fmt(t.min)}+ puan</span></div>`).join('')}</div>
+    <div><h2 style="font-size:28px">Kariyer</h2>
+      <p class="muted" style="margin:6px 0 0;max-width:64ch">Puanın grubunu belirler; en iyisi A grubu. Aşağıda hangi alanda ve hangi kanunda güçlü olduğunu, nereye çalışman gerektiğini görürsün. Bu bilgiler yalnızca bu cihazda tutulur.</p></div>
+    <div class="ladder">${TIERS.map((t, i) => [t, i]).reverse().map(([t, i]) => `<div class="${i === ti ? 'me' : ''}"><b>${esc(t.ad)}</b><span>${fmt(t.min)}+ puan</span></div>`).join('')}</div>
     <section class="panel"><div class="nbcount"><div><b>${fmt(m.total)}</b><span>toplam puan</span></div><div><b>%${acc}</b><span>genel isabet</span></div><div><b>${fmt(m.answered || 0)}</b><span>cevaplanan soru</span></div><div><b>${m.bestStreak || 0}</b><span>en uzun doğru serisi</span></div><div><b>${dl.best || 0}</b><span>en uzun günlük seri</span></div></div></section>
     <section class="panel"><h3 style="font-family:var(--f-display);font-size:21px;margin:0">Alanlara göre isabet</h3>
       <div class="bars">${BKEYS.map(k => { const e = st.b[k]; const p = pct(e); return `<div class="bar-row"><span>${esc(BR[k])}</span><span class="tr"><i class="${cls(p)}" style="width:${e && e.a ? Math.max(p, 3) : 0}%"></i></span><span>${e && e.a ? '%' + p + ' · ' + e.a + ' soru' : '—'}</span></div>`; }).join('')}</div></section>
@@ -2530,7 +2530,7 @@ function finishPP(g) {
 function renderLeagues() {
   if (S.local || S.guest) return renderCareer();
   const me = S.me, myTier = tierOf(me.total), wk = weekKey();
-  const boards = [['lig', TIERS[myTier].ad + ' Ligi · bu hafta'], ['genel', 'Genel'], ...BKEYS.map(k => [k, BR[k] + ' Ligi'])];
+  const boards = [['lig', TIERS[myTier].ad + ' · bu hafta'], ['genel', 'Genel'], ...BKEYS.map(k => [k, BR[k] + ' Ligi'])];
   let rows = S.players.filter(p => !S.bans[p.id]), key = 'total', col = 'Toplam';
   if (S.board === 'lig') { rows = rows.filter(p => tierOf(p.total || 0) === myTier); key = 'wk'; col = 'Bu hafta'; }
   else if (S.board !== 'genel') { key = S.board; col = BR[S.board] + ' puanı'; }
@@ -2542,7 +2542,7 @@ function renderLeagues() {
   app.innerHTML = `<div class="stack">${guestBanner()}
     <div><span class="eyebrow">Ligler · ${esc(wk.split('-H')[1])}. hafta</span><h2 style="font-size:28px">Kürsüye kim çıkacak?</h2>
       <p class="muted" style="margin:6px 0 0;max-width:64ch">Toplam puanın ligini belirler. Her lig kendi içinde haftalık yarışır; branş ligleri ise her hukuk dalının uzmanlarını ayrı sıralar.</p></div>
-    <div class="ladder">${TIERS.map((t, i) => `<div class="${i === myTier ? 'me' : ''}"><b>${esc(t.ad)}</b><span>${fmt(t.min)}+ puan</span></div>`).join('')}</div>
+    <div class="ladder">${TIERS.map((t, i) => [t, i]).reverse().map(([t, i]) => `<div class="${i === myTier ? 'me' : ''}"><b>${esc(t.ad)}</b><span>${fmt(t.min)}+ puan</span></div>`).join('')}</div>
     ${segHTML('bd', S.board, boards)}
     <div class="board">${rows.length ? `<table><thead><tr><th>Sıra</th><th>Oyuncu</th><th class="n">${esc(col)}</th></tr></thead><tbody>
       ${top.map(p => { const r = rows.indexOf(p) + 1; return `<tr class="${p.id === S.uid ? 'me' : ''}"><td class="rk">${r <= 3 ? `<span class="medal">${r}</span>` : r}</td>
