@@ -260,6 +260,23 @@ textarea.txt{font:inherit;font-size:14px;width:100%;min-height:80px;padding:10px
 .daily .dstreak span{font-size:12px;color:var(--muted)}
 .daily .actions{grid-column:1/-1;margin:0}
 .nbstrip{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;background:var(--accent-soft);color:var(--ink);border-radius:8px;padding:10px 14px;font-size:14px}
+.rg{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;display:flex;flex-direction:column;gap:10px}
+.rg header{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.rg h3{font-family:var(--f-display);font-size:20px;margin:0}
+.rg ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.rg li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 10px;align-items:baseline;padding:8px 0;border-top:1px solid var(--line)}
+.rg li:first-child{border-top:0}
+.rg li a{color:var(--ink);text-decoration:none;font-size:14.5px;line-height:1.4}
+.rg li a:hover{text-decoration:underline}
+.rgt{display:inline-block;font-size:11.5px;font-weight:600;padding:2px 7px;border-radius:4px;background:var(--sunk);color:var(--muted);white-space:nowrap}
+.rgt.key{background:var(--accent-soft);color:var(--accent)}
+.newdot{display:inline-block;font-size:11px;font-weight:700;background:var(--accent);color:var(--accent-ink);border-radius:999px;padding:1px 7px;margin-left:6px;vertical-align:middle}
+.tab .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--accent);margin-left:5px;vertical-align:top}
+details.rgday{background:var(--surface);border:1px solid var(--line);border-radius:var(--r)}
+details.rgday summary{padding:12px 16px;cursor:pointer;font-weight:600;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+details.rgday summary span{font-weight:400;color:var(--muted);font-size:13.5px}
+details.rgday .inner{padding:0 16px 14px;display:flex;flex-direction:column;gap:12px}
+.rggrp b{display:block;font-size:13px;color:var(--muted);margin:4px 0 2px}
 .study{display:grid;gap:14px}
 .study .panel h3{font-family:var(--f-display);font-size:21px;margin:0}
 .nbcount{display:flex;gap:18px;flex-wrap:wrap}
@@ -279,6 +296,7 @@ textarea.txt{font:inherit;font-size:14px;width:100%;min-height:80px;padding:10px
     <button class="tab" role="tab" data-tab="davalar">Davalar</button>
     <button class="tab" role="tab" data-tab="hizli">Hızlı Duruşma</button>
     <button class="tab" role="tab" data-tab="calis">Çalış</button>
+    <button class="tab" role="tab" data-tab="gazete">Resmî Gazete</button>
     <button class="tab" role="tab" data-tab="duello">Düello</button>
     <button class="tab" role="tab" data-tab="ligler">Ligler</button>
     <button class="tab" role="tab" data-tab="kaynaklar">Kaynaklar</button>
@@ -1580,9 +1598,9 @@ QUICK.push(
 );
 
 // ===== Yasal metinler (sürüm 2.0 · sade). Ayrıntılı KVKK sürümü dokümanda arşivde; sunuculu sürüme geçince geri gelecek. =====
-const LEGAL_VERSION = { notice: '2.0', terms: '2.0' };
+const LEGAL_VERSION = { notice: '2.1', terms: '2.0' };
 const LEGAL = [
-{ id: 'gizlilik', title: 'Gizlilik Bildirimi', md: `*Sürüm 2.0 · Yürürlük: 25.10.2026*
+{ id: 'gizlilik', title: 'Gizlilik Bildirimi', md: `*Sürüm 2.1 · Yürürlük: 26.10.2026*
 
 Celse'yi Melikşah geliştirir. İletişim: noktanokta629@gmail.com
 
@@ -1590,7 +1608,8 @@ Celse'yi Melikşah geliştirir. İletişim: noktanokta629@gmail.com
 
 - **Misafir modu:** Hiçbir şey cihazına bile kaydedilmez; sayfayı kapatınca silinir.
 - **Silmek için:** Yasal → Hesabımı sil adımını kullan ya da tarayıcı veya uygulama verilerini temizle.
-- **Android uygulaması** internete bağlanmaz.
+- **Android uygulaması** internete yalnızca Resmî Gazete başlıklarını almak için bağlanır. Başlıklar GitHub Pages'ten indirilir; bu istekte sana ait hiçbir bilgi gönderilmez, ancak GitHub her internet isteğinde olduğu gibi cihazının IP adresini teknik olarak görür.
+- **Resmî Gazete bölümü:** Başlıklar resmigazete.gov.tr'den otomatik alınır. Bir başlığa dokunduğunda Resmî Gazete'nin sitesine gidersin; orada o sitenin kendi kuralları geçerlidir.
 - **Web sitesi** GitHub Pages (GitHub, Inc., ABD) üzerinde barındırılır. Siteyi açtığında tarayıcın IP adresi gibi teknik bilgileri GitHub'a gönderir; GitHub bu kayıtları kendi gizlilik politikasına göre tutar, biz bu kayıtlara erişmeyiz.
 - **Çerez:** Kullanılmaz. Oyun yalnızca kendini çalıştırmak için tarayıcının yerel depolamasını ve internetsiz açılabilmek için bir önbellek kullanır.
 - **Değişiklik:** Ortak lig gibi verilerin cihazından çıkmasını gerektiren bir özellik eklenirse bu bildirim güncellenir ve önce sana gösterilir.
@@ -1675,6 +1694,46 @@ function dailyState() {
   const alive = dl.last === dayKey() || dl.last === dayOffset(-1);
   return { done: dl.last === dayKey(), streak: alive ? (dl.streak || 0) : 0, best: dl.best || 0 };
 }
+// Resmî Gazete: GitHub her gün fihristi alıp rg.json olarak yayımlar
+const RG_URL = APP ? 'https://mese134.github.io/celsehukuk/rg.json' : 'rg.json';
+const RG = { data: null, state: 'idle' };
+function loadRG() {
+  if (RG.state === 'loading') return;
+  if (!RG.data && !S.guest) RG.data = ls.get('celse.rg', null);
+  RG.state = 'loading';
+  fetch(RG_URL, { cache: 'no-cache' }).then(r => r.ok ? r.json() : Promise.reject(r.status)).then(d => {
+    RG.data = d; RG.state = 'ok';
+    if (!S.guest) ls.set('celse.rg', d);
+    paintRGDot();
+    if (S.game || S.sub) return;
+    if (S.tab === 'gazete') render();
+    else if (S.tab === 'davalar') { const el = document.querySelector('section.rg'), anchor = document.querySelector('section.daily');
+      const html = rgCardHTML(); if (el) el.outerHTML = html; else if (anchor) anchor.insertAdjacentHTML('afterend', html);
+      if ($('#rgall')) $('#rgall').addEventListener('click', () => { S.tab = 'gazete'; render(); }); }
+  }).catch(() => { RG.state = 'error'; if (!S.game && !S.sub && S.tab === 'gazete') render(); });
+}
+const rgLatest = () => (RG.data && RG.data.days && RG.data.days[0]) || null;
+let rgSeenMem = null;
+const rgSeen = () => S.guest ? rgSeenMem : ls.get('celse.rgseen', null);
+function rgMarkSeen() { const d = rgLatest(); if (!d) return; if (S.guest) rgSeenMem = d.date; else ls.set('celse.rgseen', d.date); paintRGDot(); }
+const rgIsNew = () => { const d = rgLatest(); return !!d && d.date !== rgSeen(); };
+function paintRGDot() { const t = document.querySelector('[data-tab=gazete]'); if (t) t.innerHTML = 'Resmî Gazete' + (rgIsNew() ? '<span class="dot" aria-label="yeni"></span>' : ''); }
+const rgItems = (day, onlyKey) => [...(day.groups || []), ...(day.mukerrer || []).flatMap(m => m.groups.map(g => ({ ...g, k: g.k + ' · Mükerrer ' + m.n })))]
+  .flatMap(g => g.items.map(it => ({ ...it, k: g.k, key: !!((g.key && !it.minor) || it.boost) }))).filter(it => !onlyKey || it.key);
+const rgLink = it => `<li><span class="rgt${it.key ? ' key' : ''}">${esc(it.k)}</span><a href="${esc(it.u)}" target="_blank" rel="noopener">${esc(it.t)}</a></li>`;
+function rgCardHTML() {
+  const d = rgLatest(); if (!d) return '';
+  const key = rgItems(d, true), all = rgItems(d, false);
+  const show = (key.length ? key : all).slice(0, 4);
+  const isToday = d.date === dayKey();
+  return `<section class="rg">
+    <header><div><span class="eyebrow">${isToday ? 'Bugün' : esc(d.label.split(' ').slice(0, 2).join(' '))} Resmî Gazete'de${d.sayi ? ' · Sayı ' + esc(d.sayi) : ''}${rgIsNew() ? '<span class="newdot">Yeni</span>' : ''}</span>
+      <h3>${key.length ? key.length + ' önemli düzenleme' : all.length ? all.length + ' yayım' : 'Hukuken öne çıkan düzenleme yok'}</h3></div>
+      <button class="btn ghost sm" id="rgall">Tümünü gör</button></header>
+    ${show.length ? `<ul>${show.map(rgLink).join('')}</ul>` : ''}
+  </section>`;
+}
+
 // Süreler modu: süre soran ve şıklarında süre bulunan hızlı sorular
 const DUR_RE = /\d+\s*(gün|iş günü|ay|yıl|hafta|saat)\b|\b(bir|iki|üç|altı|yedi|on|otuz)\s+(gün|ay|yıl|hafta)\b/i;
 const SURE_EXTRA = ['qe5'];
@@ -1806,6 +1865,7 @@ function bindGuest() { document.querySelectorAll('[data-exitguest]').forEach(b =
 
 function enter() {
   $('#tabs').hidden = false; paintChip();
+  loadRG(); paintRGDot();
   document.querySelector('[data-tab=yonetim]').hidden = !S.isOwner || S.guest;
   if (needsConsent()) { renderConsent(); return; }
   render();
@@ -1830,7 +1890,7 @@ function render() {
   S.sub = null;
   document.querySelectorAll('.tab').forEach(t => t.setAttribute('aria-selected', String(t.dataset.tab === S.tab)));
   window.scrollTo(0, 0);
-  ({ davalar: renderCases, hizli: renderQuick, calis: renderStudy, duello: renderDuel, ligler: renderLeagues, kaynaklar: renderSources, yasal: renderLegal, yonetim: renderAdmin })[S.tab]();
+  ({ davalar: renderCases, hizli: renderQuick, calis: renderStudy, gazete: renderGazette, duello: renderDuel, ligler: renderLeagues, kaynaklar: renderSources, yasal: renderLegal, yonetim: renderAdmin })[S.tab]();
 }
 
 function profileHTML() {
@@ -1861,6 +1921,7 @@ function renderCases() {
     ${guestBanner()}
     ${S.guest ? '' : banBanner()}
     ${dailyHTML()}
+    ${rgCardHTML()}
     ${nbDue().length ? `<div class="nbstrip"><span>Hata defterinde <b>${nbDue().length}</b> soru tekrar bekliyor.</span><button class="btn sm" id="nbgo">Tekrar et</button></div>` : ''}
     ${profileHTML()}
     ${timeSetHTML()}
@@ -1882,6 +1943,7 @@ function renderCases() {
   bindTimeSet(renderCases); bindGuest();
   if ($('#dgo')) $('#dgo').addEventListener('click', () => renderBrief(dailyCase(), { daily: !dailyState().done }));
   if ($('#nbgo')) $('#nbgo').addEventListener('click', startReview);
+  if ($('#rgall')) $('#rgall').addEventListener('click', () => { S.tab = 'gazete'; render(); });
   document.querySelectorAll('.case').forEach(b => b.addEventListener('click', () => renderBrief(CASES.find(c => c.id === b.dataset.id))));
 }
 
@@ -2169,6 +2231,26 @@ function renderStudy() {
   bindSeg('sb', k => { S.sbranch = k; renderStudy(); });
   $('#sgo').addEventListener('click', () => startGame('sure', shuffle(surePool.filter(q => sb === 'karisik' || q.b === sb)).slice(0, QUICK_N)));
   bindTimeSet(renderStudy); bindGuest();
+}
+
+// ---------- Resmî Gazete ----------
+function renderGazette() {
+  const days = (RG.data && RG.data.days) || [];
+  const only = S.rgOnly !== false;
+  app.innerHTML = `<div class="stack">
+    <div><span class="eyebrow">Resmî Gazete · son ${days.length || 30} gün</span><h2 style="font-size:28px">Mevzuatta bugün ne değişti?</h2>
+      <p class="muted" style="margin:6px 0 0;max-width:64ch">Kanunlar, Cumhurbaşkanlığı kararnameleri, yönetmelikler ve yüksek mahkeme kararları. Atamalar ve ilanlar gösterilmez. Başlığa dokununca resmî metin açılır.</p></div>
+    ${segHTML('rgf', only ? 'key' : 'all', [['key', 'Önemli olanlar'], ['all', 'Tümü']])}
+    ${!days.length ? `<div class="empty">${RG.state === 'error' ? 'Fihrist şu an alınamadı. Bağlantını kontrol et ya da <a href="https://www.resmigazete.gov.tr/" target="_blank" rel="noopener">resmigazete.gov.tr</a> adresini aç.' : 'Fihrist yükleniyor…'}</div>` : ''}
+    ${days.map((d, i) => { const its = rgItems(d, only); return `<details class="rgday"${i === 0 ? ' open' : ''}>
+      <summary>${esc(d.label)}${d.sayi ? ' · Sayı ' + esc(d.sayi) : ''}<span>${its.length ? its.length + ' kayıt' : (only && rgItems(d, false).length ? 'Öne çıkan yok · ' + rgItems(d, false).length + ' yayım' : 'Kayıt yok')}${d.mukerrer && d.mukerrer.length ? ' · ' + d.mukerrer.length + ' mükerrer' : ''}</span></summary>
+      <div class="inner">${its.length ? `<div class="rg" style="border:0;padding:0"><ul>${its.map(rgLink).join('')}</ul></div>` : ''}
+        <a href="${esc(d.url)}" target="_blank" rel="noopener" class="note">Günün tam fihristi →</a></div></details>`; }).join('')}
+    <p class="fine">Başlıklar ${RG.data && RG.data.updated ? esc(new Date(RG.data.updated).toLocaleString('tr-TR', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' })) + ' tarihinde ' : ''}resmigazete.gov.tr'den otomatik alındı. Celse bu metinleri özetlemez veya yorumlamaz; bağlayıcı olan Resmî Gazete'deki metindir.</p>
+  </div>`;
+  bindSeg('rgf', k => { S.rgOnly = k === 'key'; renderGazette(); });
+  rgMarkSeen();
+  if (RG.state !== 'ok') loadRG();
 }
 
 // ---------- Ligler ----------

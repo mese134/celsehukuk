@@ -36,6 +36,8 @@ TYPES = [
     (r'MİLLETLERARASI', 'Milletlerarası Andlaşma', False),
     (r'KARAR', 'Karar', False),
 ]
+# Hukuk uygulayıcısını doğrudan ilgilendiren başlıklar "önemli" sayılır
+BOOST = re.compile(r'Türk Ticaret|Türk Borçlar|Türk Medenî|Türk Medeni|Ceza|İcra|İflas|Avukat|Noter|Arabulucu|Tüketici|Kişisel Veri|Hukuk|Yargı|Mahkeme|Anonim ve Limited|Kira|Tapu|Kamulaştırma Kanunu|Vergi Usul|İş Kanunu|Sosyal Sigortalar')
 SKIP_SUB = re.compile(r'ATAMA|İLÂN|İLAN')
 SECTION = re.compile(r'^(YASAMA|YÜRÜTME VE İDARE|YARGI|İL[ÂA]N) BÖLÜMÜ$')
 
@@ -44,15 +46,22 @@ def up(s):
     return s.replace('i', 'İ').replace('ı', 'I').upper().replace('Â', 'A').replace('Î', 'I').replace('Û', 'U')
 
 
-def fetch(url):
+def fetch(url, tries=3):
     req = urllib.request.Request(url, headers={'User-Agent': UA, 'Accept-Language': 'tr-TR,tr;q=0.9'})
-    try:
-        with urllib.request.urlopen(req, timeout=20) as r:
-            raw = r.read()
-    except urllib.error.HTTPError as e:
-        if e.code == 404:
-            return None
-        raise
+    for n in range(tries):
+        try:
+            with urllib.request.urlopen(req, timeout=15) as r:
+                raw = r.read()
+            break
+        except urllib.error.HTTPError as e:
+            if e.code == 404:
+                return None
+            if n == tries - 1:
+                raise
+        except Exception:
+            if n == tries - 1:
+                raise
+        time.sleep(2 + 3 * n)
     m = re.search(rb'charset=["\']?([\w-]+)', raw[:2000], re.I)
     enc = (m.group(1).decode() if m else 'utf-8').lower()
     for e in ([enc] if enc not in ('utf-8', 'utf8') else []) + ['utf-8', 'cp1254']:
@@ -120,13 +129,17 @@ def classify(sub):
 def parse(html, url):
     p = Lines(); p.feed(html); p.flush()
     out = {'sayi': None, 'groups': []}
+    
     section, sub, group = None, None, None
     for text, links in p.lines:
         if out['sayi'] is None:
-            m = re.search(r'Sayı\s*:\s*(\d{4,6})', text)
+            m = re.search(r'Sayı\s*:\s*(\d{4,6})', text) or re.search(r'(\d{5})\s*Sayılı', text)
             if m:
                 out['sayi'] = m.group(1)
         u = up(text)
+        for href, _ in links:
+            if re.search(r'/?\d{8}\.pdf$', href or '') and 'pdf' not in out:
+                out['pdf'] = urljoin(url, href)
         if not links and SECTION.match(u):
             section = u; sub = None; group = None
             continue
@@ -147,7 +160,14 @@ def parse(html, url):
                 kind, key = classify(sub)
                 group = {'k': kind, 'key': key, 'items': []}
                 out['groups'].append(group)
-            item = {'t': title[:400], 'u': urljoin(url, href)}
+            u2 = urljoin(url, href)
+            if re.search(r'/\d{8}\.pdf$', u2):
+                continue
+            item = {'t': title[:400], 'u': u2}
+            if group['k'] == 'Yönetmelik' and 'Üniversitesi' in title:
+                item['minor'] = 1
+            if not group['key'] and BOOST.search(title):
+                item['boost'] = 1
             if item not in group['items']:
                 group['items'].append(item)
     out['groups'] = [g for g in out['groups'] if g['items']]
@@ -164,7 +184,7 @@ def day_entry(d, debug=None):
         open(os.path.join(debug, dd + '.htm'), 'w', encoding='utf-8').write(html)
     e = parse(html, url)
     entry = {'date': d.strftime('%Y-%m-%d'), 'label': f'{d.day} {AYLAR[d.month - 1]} {d.year} {GUNLER[d.weekday()]}',
-             'sayi': e['sayi'], 'url': url, 'groups': e['groups'], 'mukerrer': []}
+             'sayi': e['sayi'], 'url': url, 'pdf': e.get('pdf'), 'groups': e['groups'], 'mukerrer': []}
     for n in range(1, 5):
         murl = BASE.format(y=y, m=mo, d=dd, suf=f'M{n}')
         mh = fetch(murl)
@@ -193,7 +213,7 @@ def main():
     days = {x['date']: x for x in prev.get('days', [])}
     today = datetime.now(TR).date()
     # İlk çalışmada son 30 günü doldur; sonra yalnızca son 3 günü yenile (mükerrer sayılar için)
-    span = KEEP_DAYS if len(days) < 5 else 3
+    span = KEEP_DAYS
     errors = []
     t0 = time.time()
     # Önce erişimi sına: sunucu cevap vermiyorsa vakit kaybetmeden eski veriyle devam et
@@ -209,6 +229,8 @@ def main():
             print('Süre sınırı doldu; kalan günler sonraki çalışmada alınacak')
             break
         d = today - timedelta(days=k)
+        if k >= 3 and d.strftime('%Y-%m-%d') in days:
+            continue  # eski ve zaten alınmış gün
         try:
             e = day_entry(d, debug if k < 2 else None)
             if e and (e['groups'] or e['mukerrer']):

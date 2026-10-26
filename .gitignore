@@ -6,3 +6,4 @@ android/app/src/main/assets/public/
 android/capacitor-cordova-android-plugins/
 site/
 .DS_Store
+tools/__pycache__/

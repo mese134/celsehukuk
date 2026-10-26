@@ -1,7 +1,7 @@
 // ===== Yasal metinler (sürüm 2.0 · sade). Ayrıntılı KVKK sürümü dokümanda arşivde; sunuculu sürüme geçince geri gelecek. =====
-const LEGAL_VERSION = { notice: '2.0', terms: '2.0' };
+const LEGAL_VERSION = { notice: '2.1', terms: '2.0' };
 const LEGAL = [
-{ id: 'gizlilik', title: 'Gizlilik Bildirimi', md: `*Sürüm 2.0 · Yürürlük: 25.10.2026*
+{ id: 'gizlilik', title: 'Gizlilik Bildirimi', md: `*Sürüm 2.1 · Yürürlük: 26.10.2026*
 
 Celse'yi Melikşah geliştirir. İletişim: noktanokta629@gmail.com
 
@@ -9,7 +9,8 @@ Celse'yi Melikşah geliştirir. İletişim: noktanokta629@gmail.com
 
 - **Misafir modu:** Hiçbir şey cihazına bile kaydedilmez; sayfayı kapatınca silinir.
 - **Silmek için:** Yasal → Hesabımı sil adımını kullan ya da tarayıcı veya uygulama verilerini temizle.
-- **Android uygulaması** internete bağlanmaz.
+- **Android uygulaması** internete yalnızca Resmî Gazete başlıklarını almak için bağlanır. Başlıklar GitHub Pages'ten indirilir; bu istekte sana ait hiçbir bilgi gönderilmez, ancak GitHub her internet isteğinde olduğu gibi cihazının IP adresini teknik olarak görür.
+- **Resmî Gazete bölümü:** Başlıklar resmigazete.gov.tr'den otomatik alınır. Bir başlığa dokunduğunda Resmî Gazete'nin sitesine gidersin; orada o sitenin kendi kuralları geçerlidir.
 - **Web sitesi** GitHub Pages (GitHub, Inc., ABD) üzerinde barındırılır. Siteyi açtığında tarayıcın IP adresi gibi teknik bilgileri GitHub'a gönderir; GitHub bu kayıtları kendi gizlilik politikasına göre tutar, biz bu kayıtlara erişmeyiz.
 - **Çerez:** Kullanılmaz. Oyun yalnızca kendini çalıştırmak için tarayıcının yerel depolamasını ve internetsiz açılabilmek için bir önbellek kullanır.
 - **Değişiklik:** Ortak lig gibi verilerin cihazından çıkmasını gerektiren bir özellik eklenirse bu bildirim güncellenir ve önce sana gösterilir.
