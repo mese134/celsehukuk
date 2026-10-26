@@ -40,6 +40,7 @@ jobs:
 
       - name: Resmî Gazete fihristini al
         continue-on-error: true
+        timeout-minutes: 6
         run: python3 tools/rg.py site/rg.json --debug rg-debug
 
       - name: Fihrist ham sayfalarını sakla (inceleme için)

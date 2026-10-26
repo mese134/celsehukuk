@@ -47,7 +47,7 @@ def up(s):
 def fetch(url):
     req = urllib.request.Request(url, headers={'User-Agent': UA, 'Accept-Language': 'tr-TR,tr;q=0.9'})
     try:
-        with urllib.request.urlopen(req, timeout=30) as r:
+        with urllib.request.urlopen(req, timeout=20) as r:
             raw = r.read()
     except urllib.error.HTTPError as e:
         if e.code == 404:
@@ -195,7 +195,19 @@ def main():
     # İlk çalışmada son 30 günü doldur; sonra yalnızca son 3 günü yenile (mükerrer sayılar için)
     span = KEEP_DAYS if len(days) < 5 else 3
     errors = []
+    t0 = time.time()
+    # Önce erişimi sına: sunucu cevap vermiyorsa vakit kaybetmeden eski veriyle devam et
+    try:
+        fetch('https://www.resmigazete.gov.tr/')
+        print('Erişim tamam')
+    except Exception as ex:
+        print('Resmî Gazete sitesine erişilemedi:', repr(ex))
+        errors.append(f'erişim: {ex!r}')
+        span = 0
     for k in range(span):
+        if time.time() - t0 > 240:
+            print('Süre sınırı doldu; kalan günler sonraki çalışmada alınacak')
+            break
         d = today - timedelta(days=k)
         try:
             e = day_entry(d, debug if k < 2 else None)
