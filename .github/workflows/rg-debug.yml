@@ -1,0 +1,28 @@
+name: Resmî Gazete inceleme
+
+# Yalnızca elle çalıştırılır: fihristin ham hâlini ve üretilen rg.json'u rg-debug dalına yazar.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+      - name: Fihristi al
+        run: |
+          mkdir -p out
+          SITE_URL=https://invalid.example/ python3 tools/rg.py out/rg.json --debug out/raw > out/log.txt 2>&1 || true
+          curl -sS -m 20 -o out/home.htm -w "%{http_code}\n" https://www.resmigazete.gov.tr/ > out/curl.txt 2>&1 || true
+          curl -sS -m 20 -o out/day.htm -w "%{http_code}\n" "https://www.resmigazete.gov.tr/eskiler/$(TZ=Europe/Istanbul date +%Y/%m/%Y%m%d).htm" >> out/curl.txt 2>&1 || true
+          tail -c 3000 out/log.txt
+      - name: rg-debug dalına yaz
+        run: |
+          cd out
+          git init -q -b rg-debug
+          git config user.email celse@local; git config user.name Celse
+          git add -A; git commit -qm "rg debug $(date -u +%FT%TZ)"
+          git push -qf "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" rg-debug
