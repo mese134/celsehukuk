@@ -2,8 +2,17 @@
   "appId": "com.celsehukuk",
   "appName": "Celse",
   "webDir": "www",
-  "android": { "backgroundColor": "#8E1B30" },
+  "android": {
+    "backgroundColor": "#8E1B30"
+  },
   "plugins": {
-    "SystemBars": { "insetsHandling": "css", "initialViewportFitValueHint": "cover" }
+    "SystemBars": {
+      "insetsHandling": "css",
+      "initialViewportFitValueHint": "cover"
+    },
+    "LocalNotifications": {
+      "smallIcon": "ic_stat_celse",
+      "iconColor": "#8E1B30"
+    }
   }
 }

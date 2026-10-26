@@ -278,6 +278,23 @@ details.rgday summary span{font-weight:400;color:var(--muted);font-size:13.5px}
 details.rgday .inner{padding:0 16px 14px;display:flex;flex-direction:column;gap:12px}
 .rggrp b{display:block;font-size:13px;color:var(--muted);margin:4px 0 2px}
 .study{display:grid;gap:14px}
+.bars{display:flex;flex-direction:column;gap:10px}
+.bar-row{display:grid;grid-template-columns:100px minmax(0,1fr) 84px;gap:10px;align-items:center;font-size:14px}
+.bar-row .tr{height:10px;border-radius:999px;background:var(--sunk);overflow:hidden}
+.bar-row .tr i{display:block;height:100%;background:var(--accent);border-radius:999px}
+.bar-row .tr i.mid{background:var(--brass)}.bar-row .tr i.hi{background:var(--ok)}
+.bar-row span:last-child{text-align:right;color:var(--muted);font-size:12.5px}
+.topics{display:flex;flex-direction:column;gap:8px}
+.topic{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+.topic b{font-weight:600}.topic small{color:var(--muted);font-size:12.5px;display:block}
+.ppnames{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ppnames label{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted);font-weight:600}
+.ppres{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ppres div{border:1px solid var(--line);border-radius:10px;padding:14px;background:var(--surface);text-align:center}
+.ppres div.win{border-color:var(--brass);background:var(--brass-soft)}
+.ppres b{display:block;font-family:var(--f-display);font-size:34px;line-height:1.1}
+.handoff{text-align:center;padding:40px 10px;display:flex;flex-direction:column;gap:14px;align-items:center}
+.handoff h2{font-size:30px}
 .study .panel h3{font-family:var(--f-display);font-size:21px;margin:0}
 .nbcount{display:flex;gap:18px;flex-wrap:wrap}
 .nbcount div{display:flex;flex-direction:column}
@@ -1597,6 +1614,115 @@ QUICK.push(
   { id: "qt12", b: "ticaret", q: "Gerçek kişi tacirin ticaret unvanı neyden oluşur?", o: ["Serbestçe seçilir", "Ad ve soyadından; kısaltılmadan", "Yalnızca soyadından", "Vergi numarasından"], a: 1, e: "Gerçek kişi tacirin ticaret unvanı, kısaltılmamış ad ve soyadından oluşur; işletmenin türünü gösteren ve gerçeğe uygun eklemeler yapılabilir.", r: "TTK m.41/1" }
 );
 
+// ===== İcra ve İflas ile Ticaret genişletmesi (40'ar soru) · 26.10.2026 · resmî PDF karşılaştırması bekliyor =====
+CASES.push(
+  {
+    id: "e3", b: "icra", title: "Borcum Yok", court: "Ankara 12. Asliye Ticaret Mahkemesi", esas: "Dava öncesi", role: "Borçlu vekili", zorluk: 2,
+    intro: "Müvekkil Orion Yapı Ltd. Şti. hakkında, daha önce iade edilmiş bir avans gerekçe gösterilerek 900.000 TL'lik ilamsız takip başlatıldı. Müvekkil ödeme emrine süresinde itiraz etmedi; takip kesinleşti ve banka hesaplarına haciz konuldu. Avansın iade edildiğini gösteren banka dekontu elinde.",
+    evidence: [
+      ["Banka dekontu", "12.03.2026; 900.000 TL, açıklama: \"avans iadesi\"."],
+      ["Ödeme emri", "Tebliğ edilmiş; itiraz yok, takip kesinleşmiş."],
+      ["Haciz yazıları", "Üç bankadaki hesaplara haciz konulmuş."]
+    ],
+    steps: [
+      { q: "Takip kesinleşmiş olsa da müvekkil borçlu olmadığını hangi davayla ileri sürebilir?", o: ["İtirazın iptali", "Menfi tespit davası", "İhalenin feshi", "Tasarrufun iptali"], a: 1,
+        e: "İcra takibinden önce veya sonra borçlu, borçlu olmadığının tespiti için menfi tespit davası açabilir.", r: "İİK m.72/1" },
+      { q: "Takipten sonra açılan menfi tespit davasında mahkeme takibi tedbiren durdurabilir mi?", o: ["Evet, teminatsız", "Hayır; ancak teminat karşılığında icra veznesindeki paranın alacaklıya ödenmemesine karar verebilir", "Evet, yalnızca alacaklı kabul ederse", "Hayır, hiçbir tedbir verilemez"], a: 1,
+        e: "Takipten sonra açılan menfi tespit davasında icra takibi durdurulamaz. Borçlu, uygun teminat göstermek şartıyla icra veznesindeki paranın alacaklıya verilmemesi için ihtiyati tedbir isteyebilir.", r: "İİK m.72/3" },
+      { q: "Bu tedbir için gösterilecek teminat en az ne kadar olmalıdır?", o: ["Alacağın %5'i", "Alacağın %15'i", "Alacağın %50'si", "Alacağın tamamı"], a: 1,
+        e: "Bu durumda teminat, alacağın yüzde on beşinden aşağı olamaz.", r: "İİK m.72/3" },
+      { q: "Menfi tespit davası hangi mahkemede görülür?", o: ["İcra mahkemesi", "Genel mahkeme; burada taraflar tacir ve uyuşmazlık ticari olduğundan asliye ticaret", "Sulh hukuk", "Danıştay"], a: 1,
+        e: "Menfi tespit davası icra mahkemesinde değil, genel görev kurallarına göre görevli mahkemede açılır. Uyuşmazlık ticari ise asliye ticaret mahkemesi görevlidir.", r: "İİK m.72/1 · TTK m.4-5" },
+      { q: "Dava borçlu lehine sonuçlanırsa haksız ve kötü niyetli takip yapan alacaklı ne ile sorumlu tutulabilir?", o: ["Hiçbir şey", "Alacağın %20'sinden aşağı olmamak üzere tazminat", "Alacağın iki katı ceza", "Yalnızca yargılama gideri"], a: 1,
+        e: "Dava borçlu lehine hükme bağlanırsa takip durur. Borçlunun talebi üzerine haksız ve kötü niyetli takip yapan alacaklı, alacağın yüzde yirmisinden aşağı olmamak üzere tazminata mahkûm edilir.", r: "İİK m.72/5" }
+    ]
+  },
+  {
+    id: "e4", b: "icra", title: "Kaçmadan Önce", court: "İzmir 4. Asliye Ticaret Mahkemesi", esas: "2026/611 D.İş", role: "Alacaklı vekili", zorluk: 3,
+    intro: "Müvekkil Ege Lojistik A.Ş.'nin, borçlu Selçuk Tarım Ltd. Şti.'den vadesi 1 Ekim 2026'da gelmiş 2.300.000 TL'lik fatura alacağı var. Alacak rehinle güvence altında değil. Borçlunun araçlarını hızla devretmeye başladığı öğrenildi.",
+    evidence: [
+      ["Faturalar ve sözleşme", "Vade 01.10.2026; ödeme yapılmamış."],
+      ["Trafik kayıtları", "Son iki haftada borçlunun 6 aracı devredilmiş."],
+      ["İhtarname", "08.10.2026; cevapsız."]
+    ],
+    steps: [
+      { q: "İhtiyati haciz için temel koşul nedir?", o: ["Alacağın ilama bağlanmış olması", "Vadesi gelmiş ve rehinle temin edilmemiş bir para borcu", "Borçlunun iflas etmiş olması", "Noter ihtarı"], a: 1,
+        e: "Vadesi gelmiş ve rehinle temin edilmemiş bir para borcunun alacaklısı, borçlunun mallarının ihtiyaten haczini isteyebilir.", r: "İİK m.257/1" },
+      { q: "Alacaklı ihtiyati haciz kararı için kural olarak ne göstermelidir?", o: ["Hiçbir şey", "Borçlunun ve üçüncü kişilerin olası zararlarına karşı teminat", "Bilirkişi raporu", "Borçlunun rızası"], a: 1,
+        e: "İhtiyati haciz isteyen alacaklı, haksız çıktığı takdirde borçlunun ve üçüncü kişilerin bu yüzden uğrayacakları zararlardan sorumlu olup, teminat göstermeye mecburdur. Alacak bir ilama dayanıyorsa teminat aranmaz.", r: "İİK m.259" },
+      { q: "Karar alındı. Uygulanması için ne kadar sürede icra dairesinden istenmelidir?", o: ["7 gün", "Karar tarihinden itibaren 10 gün", "1 ay", "Süre yok"], a: 1,
+        e: "İhtiyati haciz kararı, karar tarihinden itibaren on gün içinde icra dairesinden istenerek uygulanır; aksi hâlde kendiliğinden kalkar.", r: "İİK m.261/1" },
+      { q: "Dava açmadan önce alınan ihtiyati haciz uygulandıktan sonra alacaklı ne yapmalıdır?", o: ["Hiçbir şey", "Uygulamadan itibaren 7 gün içinde takip başlatmalı veya dava açmalı", "1 yıl içinde dava açmalı", "Yalnızca borçluya bildirmeli"], a: 1,
+        e: "Dava açılmadan önce ihtiyati haciz yapılmışsa alacaklı, haczin uygulanmasından itibaren yedi gün içinde takip talebinde bulunmak veya dava açmak zorundadır; aksi hâlde haciz kendiliğinden kalkar.", r: "İİK m.264/1" },
+      { q: "Borçlu ihtiyati haciz kararına hangi sürede itiraz edebilir?", o: ["3 gün", "Kararın uygulanmasından (yüzüne karşı uygulanmadıysa tebliğden) itibaren 7 gün", "15 gün", "30 gün"], a: 1,
+        e: "Borçlu, ihtiyati haciz kararı yüzüne karşı uygulanmışsa haczin uygulanmasından, değilse tutanağın tebliğinden itibaren yedi gün içinde kararı veren mahkemeye itiraz edebilir.", r: "İİK m.265/1" }
+    ]
+  },
+  {
+    id: "t3", b: "ticaret", title: "Kopya Ambalaj", court: "İstanbul 9. Asliye Ticaret Mahkemesi", esas: "Dava öncesi", role: "Davacı vekili", zorluk: 2,
+    intro: "Müvekkil Karadeniz Çay A.Ş., yıllardır kırmızı-altın ambalajlı \"Tepe\" çayını satıyor. Rakip bir firma, neredeyse aynı renk ve düzende \"Tepeli\" adlı bir çay piyasaya sürdü. Müşteriler ürünleri karıştırdıklarını bildiriyor ve müvekkilin satışları düştü.",
+    evidence: [
+      ["Ambalaj karşılaştırması", "Renk, yazı tipi ve yerleşim büyük ölçüde aynı."],
+      ["Müşteri şikâyetleri", "\"Tepe sandık, Tepeli çıktı\" içerikli 40 bildirim."],
+      ["Satış raporu", "Son üç ayda %18 düşüş."]
+    ],
+    steps: [
+      { q: "Haksız rekabetin genel tanımı nedir?", o: ["Yalnızca fiyat kırmak", "Rakipler veya tedarikçilerle müşteriler arasındaki ilişkileri etkileyen, aldatıcı veya dürüstlük kuralına diğer şekillerdeki aykırı davranış ve uygulamalar", "Yalnızca marka tecavüzü", "Kâr marjı yüksek satış"], a: 1,
+        e: "Rakipler arasında veya tedarik edenlerle müşteriler arasındaki ilişkileri etkileyen aldatıcı veya dürüstlük kuralına diğer şekillerdeki aykırı davranışlar ile ticari uygulamalar haksız ve hukuka aykırıdır.", r: "TTK m.54/2" },
+      { q: "Rakibin eylemi hangi özel hâle girer?", o: ["Kötüleme", "Başkasının malları, iş ürünleri veya işletmesiyle karışıklık yaratmaya elverişli önlemler almak", "Gizli bilgiyi açıklama", "Sözleşmeyi ihlale yöneltme"], a: 1,
+        e: "Başkasının malları, iş ürünleri, faaliyetleri veya işletmesiyle karışıklık yaratmaya yönelik veya buna elverişli önlemler almak dürüstlük kuralına aykırı davranış örneğidir.", r: "TTK m.55/1-a-4" },
+      { q: "Müvekkil hangi davaları açabilir?", o: ["Yalnızca tazminat", "Fiilin haksız olup olmadığının tespiti, men'i, maddi durumun ortadan kaldırılması ve kusur varsa tazminat", "Yalnızca ceza şikâyeti", "Yalnızca tespit"], a: 1,
+        e: "Haksız rekabet yüzünden zarar gören veya zarar tehlikesiyle karşılaşan kişi; tespit, men, maddi durumun ortadan kaldırılması, yanlış veya yanıltıcı beyanların düzeltilmesi ve kusur varsa zarar ve ziyanın tazminini isteyebilir.", r: "TTK m.56/1" },
+      { q: "Tazminat istemi için ayrıca hangi koşul aranır?", o: ["Hiçbir koşul", "Davalının kusuru", "Davalının iflası", "Ürünlerin tamamen aynı olması"], a: 1,
+        e: "Tespit, men ve ortadan kaldırma davaları kusur aramaz; zarar ve ziyanın tazmini ise kusur varsa istenebilir.", r: "TTK m.56/1-d" },
+      { q: "Dava sürerken satışların devam etmesini durdurmak için ne istenebilir?", o: ["Hiçbir şey", "İhtiyati tedbir", "İhtiyati haciz", "Tespit davası kesinleşmeden hiçbir önlem yok"], a: 1,
+        e: "Davacının istemi üzerine mahkeme, mevcut durumun korunmasına, haksız rekabetin önlenmesine ve maddi durumun ortadan kaldırılmasına yönelik ihtiyati tedbirlere karar verebilir.", r: "TTK m.61" }
+    ]
+  },
+  {
+    id: "t4", b: "ticaret", title: "Islak Kartonlar", court: "Konya 2. Asliye Ticaret Mahkemesi", esas: "Dava öncesi", role: "Alıcı vekili", zorluk: 2,
+    intro: "Müvekkil Anadolu Gıda A.Ş., Mavi Ambalaj Ltd. Şti.'den 50.000 adet karton koli satın aldı. Teslim 2 Ekim 2026 Cuma günü yapıldı. Kolilerin bir kısmının ıslak olduğu teslim sırasında açıkça görülüyordu; geri kalanlarda ise dayanıksızlık ancak üretim hattında kullanılırken anlaşıldı.",
+    evidence: [
+      ["İrsaliye", "02.10.2026; teslim alan depo sorumlusu."],
+      ["Depo fotoğrafları", "Teslim günü çekilmiş; 4 palet ıslak."],
+      ["Üretim raporu", "09.10.2026: kolilerin %30'u yük altında yırtıldı."]
+    ],
+    steps: [
+      { q: "Teslim sırasında açıkça görülen ıslaklık satıcıya ne zamana kadar ihbar edilmeliydi?", o: ["8 gün", "2 gün", "1 ay", "Süre yok"], a: 1,
+        e: "Ticari satışta malın ayıplı olduğu teslim sırasında açıkça belli ise alıcı iki gün içinde durumu satıcıya ihbar etmek zorundadır.", r: "TTK m.23/1-c" },
+      { q: "Açıkça belli olmayan dayanıksızlık için süre nedir?", o: ["2 gün", "Teslimden itibaren 8 gün içinde inceleme ve ayıp çıkarsa ihbar", "2 yıl", "30 gün"], a: 1,
+        e: "Ayıp açıkça belli değilse alıcı malları teslim aldığı tarihten itibaren sekiz gün içinde incelemek veya incelettirmek ve ayıp ortaya çıkarsa durumu satıcıya ihbar etmekle yükümlüdür. Bu sürelerde ihbar yapılmazsa mal kabul edilmiş sayılır.", r: "TTK m.23/1-c" },
+      { q: "İhbar hangi şekilde yapılmalıdır?", o: ["Telefonla", "Noter, taahhütlü mektup, telgraf veya güvenli elektronik imzalı KEP ile", "WhatsApp mesajı yeterli", "Sözlü olarak depo sorumlusuna"], a: 1,
+        e: "Tacirler arasında diğer tarafı temerrüde düşürmeye, sözleşmeyi feshe veya ondan dönmeye yönelik ihbarlar noter, taahhütlü mektup, telgraf veya güvenli elektronik imzalı KEP yoluyla yapılır. İspat açısından bu şekillere uyulmalıdır.", r: "TTK m.18/3" },
+      { q: "Satıcı bedeli iade etmekte temerrüde düşerse hangi faiz istenebilir?", o: ["Kanuni faiz", "Avans faizi", "Faiz istenemez", "Mevduat faizi"], a: 1,
+        e: "Ticari işlerde temerrüt faizi, sözleşmede daha yüksek bir oran yoksa TCMB'nin kısa vadeli avans işlemlerine uyguladığı faiz oranıdır.", r: "3095 s. K. m.2/2" },
+      { q: "Her iki taraf tacir ve satış işletmeleriyle ilgili. Dava hangi mahkemede görülür?", o: ["Asliye hukuk", "Asliye ticaret", "Sulh hukuk", "Tüketici mahkemesi"], a: 1,
+        e: "Her iki tarafın ticari işletmesiyle ilgili hususlardan doğan hukuk davaları ticari davadır ve asliye ticaret mahkemesinde görülür. Para alacağı talebinde önce arabulucuya başvurmak dava şartıdır.", r: "TTK m.4/1, m.5/1, m.5/A" }
+    ]
+  }
+);
+
+QUICK.push(
+  // İCRA VE İFLAS
+  { id: "qe13", b: "icra", q: "Haciz ihbarnamesi tebliğ edilen üçüncü kişi borcu inkâr etmek için ne yapmalıdır?", o: ["Hiçbir şey", "Tebliğden itibaren 7 gün içinde icra dairesine itiraz", "30 gün içinde dava", "Yalnızca borçluya bildirim"], a: 1, e: "Kendisine haciz ihbarnamesi tebliğ edilen üçüncü kişi, yedi gün içinde malın elinde olmadığını veya borcun bulunmadığını icra dairesine bildirmek zorundadır; aksi hâlde mal elinde veya borç zimmetinde sayılır.", r: "İİK m.89/1" },
+  { id: "qe14", b: "icra", q: "İlamlı takipte icra emrine karşı borcun ödendiği itirazı nereye ve hangi sürede yapılır?", o: ["İcra dairesine, 3 gün", "İcra mahkemesine, icra emrinin tebliğinden itibaren 7 gün", "Bölge adliye mahkemesine, 15 gün", "Asliye hukuka, 1 ay"], a: 1, e: "İlamlı takipte borçlu, ilamdan sonra borcun ödendiğini veya ertelendiğini ya da zamanaşımına uğradığını icra emrinin tebliğinden itibaren yedi gün içinde icra mahkemesine bildirebilir.", r: "İİK m.33/1" },
+  { id: "qe15", b: "icra", q: "Ödeme emrine itiraz etmeyen ve ödemeyen borçlu ne yapmakla yükümlüdür?", o: ["Hiçbir şey", "Ödeme süresi içinde mal beyanında bulunmak", "İflas başvurusu", "Teminat yatırmak"], a: 1, e: "Ödeme emrine itiraz etmeyen ve ödemeyen borçlu, ödeme süresi içinde kanuna uygun şekilde mal beyanında bulunmakla yükümlüdür.", r: "İİK m.74/1" },
+  { id: "qe16", b: "icra", q: "Mal beyanında bulunmayan borçluya hangi yaptırım uygulanır?", o: ["Hiçbiri", "Şikâyet üzerine 3 aya kadar tazyik hapsi", "2 yıl hapis", "Adli para cezası"], a: 1, e: "Kanuna uygun şekilde mal beyanında bulunmayan borçlu, alacaklının şikâyeti üzerine üç aya kadar tazyik hapsi ile cezalandırılır.", r: "İİK m.337/1" },
+  { id: "qe17", b: "icra", q: "Aşağıdakilerden hangisi doğrudan (takipsiz) iflas sebebidir?", o: ["Tek bir faturanın gecikmesi", "Borçlunun ödemelerini tatil etmesi", "Borçlunun şirket merkezini taşıması", "Vergi borcu bulunması"], a: 1, e: "İflasa tabi borçlunun ödemelerini tatil etmesi, önceden takip yapılmaksızın iflas istemeye imkân veren doğrudan iflas sebeplerindendir.", r: "İİK m.177" },
+  { id: "qe18", b: "icra", q: "Konkordatoda geçici mühlet süresi ne kadardır?", o: ["1 ay", "3 ay; talep hâlinde 2 ay uzatılabilir", "1 yıl", "6 ay"], a: 1, e: "Mahkeme konkordato talebi üzerine üç aylık geçici mühlet verir; gerekirse bu süre iki ay uzatılabilir.", r: "İİK m.287/1" },
+  { id: "qe19", b: "icra", q: "Konkordatoda kesin mühlet süresi ne kadardır?", o: ["3 ay", "1 yıl; karmaşık durumlarda 6 ay daha uzatılabilir", "2 yıl", "Süresiz"], a: 1, e: "Konkordatonun başarıya ulaşabileceği anlaşılırsa borçluya bir yıllık kesin mühlet verilir; özellikle karmaşık durumlarda mahkeme bu süreyi altı ay daha uzatabilir.", r: "İİK m.289/1" },
+  { id: "qe20", b: "icra", q: "Para alacağı için takipte yetkili icra dairesi nasıl belirlenir?", o: ["Alacaklının ikametgâhı", "HMK'nın yetkiye ilişkin hükümleri kıyasen uygulanarak", "Her zaman Ankara icra daireleri", "Borçlunun doğum yeri"], a: 1, e: "Para veya teminat verilmesi için takip yapılacak yer, Hukuk Muhakemeleri Kanunu'nun yetkiye ilişkin hükümleri kıyasen uygulanarak belirlenir.", r: "İİK m.50/1" },
+  // TİCARET
+  { id: "qt13", b: "ticaret", q: "Tacir, başkası için yaptığı ticari işler karşılığında ücret isteyebilir mi?", o: ["Hayır, açıkça kararlaştırılmadıkça", "Evet; uygun bir ücret isteyebilir", "Yalnızca yazılı sözleşme varsa", "Yalnızca kamu kurumlarından"], a: 1, e: "Ticari işletmesiyle ilgili olarak başkası için iş gören veya hizmet veren tacir, kararlaştırılmamış olsa bile uygun bir ücret isteyebilir.", r: "TTK m.20/1" },
+  { id: "qt14", b: "ticaret", q: "Ticari defterler kaç yıl saklanmalıdır?", o: ["3 yıl", "5 yıl", "10 yıl", "20 yıl"], a: 2, e: "Her tacir ticari defterlerini, envanterleri, açılış bilançolarını ve diğer belgeleri on yıl süreyle saklamakla yükümlüdür.", r: "TTK m.82" },
+  { id: "qt15", b: "ticaret", q: "Limited şirket tek ortakla kurulabilir mi?", o: ["Hayır, en az 2 ortak gerekir", "Evet; bir veya daha fazla gerçek veya tüzel kişi tarafından kurulabilir", "Yalnızca tüzel kişi ortakla", "En az 5 ortak gerekir"], a: 1, e: "Limited şirket, bir veya daha fazla gerçek veya tüzel kişi tarafından bir ticaret unvanı altında kurulur.", r: "TTK m.573/1" },
+  { id: "qt16", b: "ticaret", q: "Limited şirkette en az bir ortağın yönetim ve temsil yetkisi bulunması zorunlu mu?", o: ["Hayır", "Evet", "Yalnızca sermaye 1 milyon TL'yi aşarsa", "Yalnızca tek ortaklı şirkette"], a: 1, e: "Yönetim ve temsil ortak olmayan üçüncü kişilere de verilebilir; ancak en az bir ortağın şirketi yönetim hakkının ve temsil yetkisinin bulunması şarttır.", r: "TTK m.623/1" },
+  { id: "qt17", b: "ticaret", q: "Anonim şirketin yönetim kurulu en az kaç kişiden oluşur?", o: ["1", "3", "5", "7"], a: 0, e: "Anonim şirketin, esas sözleşmeyle atanan veya genel kurulca seçilen bir veya daha fazla kişiden oluşan bir yönetim kurulu bulunur.", r: "TTK m.359/1" },
+  { id: "qt18", b: "ticaret", q: "Bononun zorunlu unsurlarından biri hangisidir?", o: ["Kefil imzası", "Senet metninde \"bono\" veya \"emre muharrer senet\" kelimesi", "Noter onayı", "Faiz oranı"], a: 1, e: "Bono, senet metninde \"bono\" veya \"emre muharrer senet\" kelimesini ve senedin düzenlendiği dilde içermelidir; kayıtsız şartsız ödeme vaadi, vade, ödeme yeri, lehtar, düzenleme tarihi ve yeri ile düzenleyenin imzası da zorunludur.", r: "TTK m.776/1" },
+  { id: "qt19", b: "ticaret", q: "Ticari defter tutma yükümlülüğü kime aittir?", o: ["Yalnızca anonim şirketlere", "Her tacire", "Yalnızca ihracatçılara", "Yalnızca bankalara"], a: 1, e: "Her tacir, ticari defterleri tutmak ve defterlerinde ticari işlemleriyle ticari işletmesinin iktisadi ve mali durumunu açıkça görülebilir bir şekilde ortaya koymak zorundadır.", r: "TTK m.64/1" },
+  { id: "qt20", b: "ticaret", q: "Ticari işletme nedir?", o: ["Her türlü kazanç faaliyeti", "Esnaf işletmesi sınırını aşan düzeyde gelir hedefleyen faaliyetlerin devamlı ve bağımsız yürütüldüğü işletme", "Yalnızca fabrika", "Yalnızca şirketler"], a: 1, e: "Ticari işletme, esnaf işletmesi için öngörülen sınırı aşan düzeyde gelir sağlamayı hedef tutan faaliyetlerin devamlı ve bağımsız şekilde yürütüldüğü işletmedir.", r: "TTK m.11/1" }
+);
+
 // ===== Yasal metinler (sürüm 2.0 · sade). Ayrıntılı KVKK sürümü dokümanda arşivde; sunuculu sürüme geçince geri gelecek. =====
 const LEGAL_VERSION = { notice: '2.1', terms: '2.0' };
 const LEGAL = [
@@ -1734,6 +1860,67 @@ function rgCardHTML() {
   </section>`;
 }
 
+// Kariyer istatistikleri: alan ve kanun bazında isabet
+const LAW_NAMES = { 'TMK': 'Türk Medenî Kanunu', 'TBK': 'Türk Borçlar Kanunu', 'TCK': 'Türk Ceza Kanunu', 'CMK': 'Ceza Muhakemesi Kanunu', 'İş K.': 'İş Kanunu', 'İYUK': 'İdari Yargılama Usulü K.', 'İİK': 'İcra ve İflas Kanunu', 'TTK': 'Türk Ticaret Kanunu', 'AY': 'Anayasa', 'HMK': 'Hukuk Muhakemeleri K.', '657 s. K.': 'Devlet Memurları K. (657)', '1475 s. K.': 'Kıdem tazminatı (1475)', '7036 s. K.': 'İş Mahkemeleri K. (7036)', '6284 s. K.': 'Ailenin Korunması K. (6284)', '6502 s. K.': 'Tüketicinin Korunması K. (6502)', '4483 s. K.': 'Memurların Yargılanması K. (4483)', '2942 s. K.': 'Kamulaştırma K. (2942)' };
+function lawKey(r) {
+  const first = String(r || '').split('·')[0].trim();
+  const mm = /^(.*?)\s+m\.\s*/.exec(first);
+  if (mm) return mm[1].replace(/\s*\(.*$/, '').trim();
+  if (/^Yargıtay/.test(first)) return 'Yargıtay içtihadı';
+  if (/^Danıştay/.test(first)) return 'Danıştay içtihadı';
+  if (/^(AYM|Anayasa)/.test(first)) return 'AYM kararları';
+  return 'Diğer';
+}
+const lawName = k => LAW_NAMES[k] || k;
+function statMark(it, ok) {
+  if (!S.me) return;
+  const st = S.me.st || (S.me.st = { b: {}, l: {} });
+  const add = (o, k) => { const e = o[k] || (o[k] = { a: 0, c: 0 }); e.a++; if (ok) e.c++; };
+  add(st.b, it.b); add(st.l, lawKey(it.r));
+}
+const pct = e => e && e.a ? Math.round(e.c / e.a * 100) : 0;
+
+// Günlük hatırlatma (yalnızca Android uygulaması): önümüzdeki 14 gün için yerel bildirim
+const REM_TIMES = ['09:00', '13:00', '20:00', '21:30'];
+const LN = () => { const C = window.Capacitor; return APP && C && C.Plugins && C.Plugins.LocalNotifications ? C.Plugins.LocalNotifications : null; };
+async function scheduleReminders() {
+  const ln = LN(); if (!ln) return;
+  try {
+    await ln.cancel({ notifications: Array.from({ length: 14 }, (_, i) => ({ id: 7001 + i })) });
+    if (!prefs.rem || S.guest || !S.me) return;
+    const [h, mi] = prefs.rem.split(':').map(Number), st = dailyState(), now = new Date(), list = [];
+    for (let k = 0; k < 14; k++) {
+      const d = new Date(); d.setDate(d.getDate() + k); d.setHours(h, mi, 0, 0);
+      if (d <= now || (k === 0 && st.done)) continue;
+      const streak = k === 0 ? st.streak : k === 1 && st.done ? st.streak : 0;
+      list.push({ id: 7001 + k, title: 'Celse · Günün dosyası',
+        body: streak > 0 ? `${streak} günlük serin var. Bugünün dosyasını kapat, seriyi sürdür.` : 'Yeni günün dosyası hazır; birkaç dakikanı alır.',
+        schedule: { at: d, allowWhileIdle: true }, smallIcon: 'ic_stat_celse', iconColor: '#8E1B30' });
+    }
+    if (list.length) await ln.schedule({ notifications: list });
+  } catch (e) { /* bildirim izni yoksa sessizce geç */ }
+}
+async function setReminder(t, errEl) {
+  const ln = LN(); if (!ln) return;
+  if (t) {
+    try {
+      let p = await ln.checkPermissions();
+      if (p.display !== 'granted') p = await ln.requestPermissions();
+      if (p.display !== 'granted') { if (errEl) errEl.textContent = 'Bildirim izni verilmedi. Telefonun Ayarlar → Uygulamalar → Celse → Bildirimler bölümünden açabilirsin.'; return false; }
+    } catch (e) { if (errEl) errEl.textContent = 'Bildirim ayarlanamadı.'; return false; }
+  }
+  prefs.rem = t || null; ls.set('celse.prefs', prefs);
+  await scheduleReminders();
+  return true;
+}
+function reminderHTML() {
+  if (!LN() || S.guest) return '';
+  return `<section class="panel"><h3>Günlük hatırlatma</h3>
+    <p class="note" style="margin:0">Günün dosyasını kaçırmaman için seçtiğin saatte telefonuna bildirim gelir. O günün dosyasını bitirdiysen bildirim gelmez. İnternet gerekmez.</p>
+    ${segHTML('rem', prefs.rem || 'off', [['off', 'Kapalı'], ...REM_TIMES.map(t => [t, t])])}
+    <div class="err" id="remerr"></div></section>`;
+}
+
 // Süreler modu: süre soran ve şıklarında süre bulunan hızlı sorular
 const DUR_RE = /\d+\s*(gün|iş günü|ay|yıl|hafta|saat)\b|\b(bir|iki|üç|altı|yedi|on|otuz)\s+(gün|ay|yıl|hafta)\b/i;
 const SURE_EXTRA = ['qe5'];
@@ -1865,7 +2052,8 @@ function bindGuest() { document.querySelectorAll('[data-exitguest]').forEach(b =
 
 function enter() {
   $('#tabs').hidden = false; paintChip();
-  loadRG(); paintRGDot();
+  loadRG(); paintRGDot(); scheduleReminders();
+  const lt = document.querySelector('[data-tab=ligler]'); if (lt) lt.textContent = (S.local || S.guest) ? 'Kariyer' : 'Ligler';
   document.querySelector('[data-tab=yonetim]').hidden = !S.isOwner || S.guest;
   if (needsConsent()) { renderConsent(); return; }
   render();
@@ -1916,7 +2104,6 @@ function renderCases() {
   const list = CASES.filter(c => c.b === S.branch);
   const best = S.me.cases || {};
   app.innerHTML = `<div class="stack">
-    ${S.local && !S.guest ? (APP ? '<div class="banner">Puanların bu cihazda saklanıyor. Ortak lig ve düello bir sonraki sürümde.</div>' : '<div class="banner">Yerel moddasın: puanların yalnızca bu tarayıcıda tutulur ve skor tablosuna gitmez.</div>') : ''}
     ${!S.local && !S.canWrite ? '<div class="banner">Görüntüleme erişimin var; oynayabilirsin ama puanın kaydedilmez. Sayfa sahibinden "Katkıda bulunan" erişimi iste.</div>' : ''}
     ${guestBanner()}
     ${S.guest ? '' : banBanner()}
@@ -2015,7 +2202,7 @@ function mix(it, seed) {
   return { ...it, o: perm.map(i => it.o[i]), a: perm.indexOf(it.a) };
 }
 function startGame(mode, items, extra = {}) {
-  const seed = extra.duelCode || String(Math.random());
+  const seed = extra.duelCode || extra.seed || String(Math.random());
   items = items.map(it => mix(it, seed));
   S.game = { mode, items, idx: 0, score: 0, streak: 0, maxStreak: 0, correct: 0, log: [], times: [], fast: 0, repeats: 0, started: Date.now(), byBranch: Object.fromEntries(BKEYS.map(k => [k, 0])), ...extra };
   renderQuestion();
@@ -2024,9 +2211,9 @@ function startGame(mode, items, extra = {}) {
 function renderQuestion() {
   const g = S.game, it = g.items[g.idx], T = qSecs(it.t);
   const c = g.caseObj || (it.cid ? CASES.find(x => x.id === it.cid) : null);
-  const modeName = { review: 'Hata defteri', sure: 'Süreler' }[g.mode] || 'Hızlı duruşma';
+  const modeName = { review: 'Hata defteri', sure: 'Süreler', pp: 'Düello · ' + (g.ppName || '') }[g.mode] || 'Hızlı duruşma';
   app.innerHTML = `<div class="stack">
-    <div class="hud"><span class="step">${g.mode === 'case' ? 'Karar' : 'Soru'} ${g.idx + 1}/${g.items.length} · ${BR[it.b]}</span>
+    <div class="hud"><span class="step">${g.mode === 'pp' ? esc(g.ppName) + ' · ' : ''}${g.mode === 'case' ? 'Karar' : 'Soru'} ${g.idx + 1}/${g.items.length} · ${BR[it.b]}</span>
       ${g.streak > 1 ? `<span class="streak">${g.streak} seri</span>` : ''}<span class="score">${fmt(g.score)}</span></div>
     ${c ? `<details class="file"><summary>Dosyayı göster · ${esc(c.title)}</summary><div class="inner"><p style="margin:0">${esc(c.intro)}</p>${c.evidence.map(([k, v]) => `<div><b>${esc(k)}:</b> ${esc(v)}</div>`).join('')}</div></details>` : ''}
     <section class="stage">
@@ -2060,14 +2247,14 @@ function answer(i) {
   const ok = i === it.a;
   const fast = i >= 0 && ms < FAST_MS;
   const recent = (S.me.recent || {})[it.id];
-  const repeat = g.mode !== 'case' && recent && Date.now() - recent < REPEAT_MS;
+  const repeat = g.mode !== 'case' && g.mode !== 'pp' && recent && Date.now() - recent < REPEAT_MS;
   let pts = 0;
   if (ok) {
     g.streak++; g.maxStreak = Math.max(g.maxStreak, g.streak); g.correct++;
     pts = fast ? 100 : 100 + Math.ceil(frac * 15) * 10 + Math.min(100, 20 * (g.streak - 1));
     if (repeat) pts = Math.round(pts / 2);
   } else g.streak = 0;
-  nbMark(it, ok);
+  if (!(g.mode === 'pp' && g.ppPlayer === 2)) { nbMark(it, ok); statMark(it, ok); }
   if (i >= 0) g.times.push(Math.round(ms));
   if (fast) g.fast++;
   if (repeat) g.repeats++;
@@ -2105,6 +2292,7 @@ document.addEventListener('keydown', e => {
 
 function finish() {
   const g = S.game; stopTimer();
+  if (g.mode === 'pp') return finishPP(g);
   const m = S.me, beforeTier = tierOf(m.total);
   if (g.mode === 'case' && g.correct === g.items.length) { g.score += 100; g.byBranch[g.caseObj.b] += 100; g.perfect = true; }
   // Teorik üst sınır: bunu aşan bir sonuç bellekte değiştirilmiş demektir
@@ -2127,6 +2315,7 @@ function finish() {
       award[g.caseObj.b] += g.dailyBonus;
       m.daily = { last: dayKey(), streak, best: Math.max(dl.best || 0, streak) };
       g.dailyStreak = streak;
+      setTimeout(scheduleReminders, 0);
     }
   }
   // Günlük sınır
@@ -2184,7 +2373,7 @@ function renderResult(g, gained, promo) {
       <div id="duelbox"></div>
       <div class="actions">
         ${g.mode === 'case' ? '<button class="btn" id="again">Yeni dosya</button>' : g.mode === 'quick' ? '<button class="btn" id="again">Tekrar oyna</button>' : g.mode === 'duel' ? '<button class="btn" id="again">Düellolar</button>' : '<button class="btn" id="again">Çalışmaya dön</button>'}
-        <button class="btn ghost" id="toleague">Ligleri gör</button>
+        <button class="btn ghost" id="toleague">${(S.local || S.guest) ? 'Kariyerim' : 'Ligleri gör'}</button>
       </div>
     </section></div>`;
   S.game = null;
@@ -2224,10 +2413,12 @@ function renderStudy() {
         ${segHTML('sb', sb, [['karisik', 'Karışık'], ...bks.map(k => [k, BR[k]])])}
         <button class="btn" id="sgo" style="align-self:flex-start">Süre turunu başlat <span style="font-weight:400;opacity:.8">· ${poolN} soru havuzu</span></button>
       </section>
+      ${reminderHTML()}
     </div>
     ${timeSetHTML()}
   </div>`;
   $('#nbgo').addEventListener('click', startReview);
+  if ($('#rem')) bindSeg('rem', async k => { const ok = await setReminder(k === 'off' ? null : k, $('#remerr')); if (ok !== false) renderStudy(); });
   bindSeg('sb', k => { S.sbranch = k; renderStudy(); });
   $('#sgo').addEventListener('click', () => startGame('sure', shuffle(surePool.filter(q => sb === 'karisik' || q.b === sb)).slice(0, QUICK_N)));
   bindTimeSet(renderStudy); bindGuest();
@@ -2253,8 +2444,91 @@ function renderGazette() {
   if (RG.state !== 'ok') loadRG();
 }
 
+// ---------- Kariyer ----------
+function renderCareer() {
+  const m = S.me, ti = tierOf(m.total), st = m.st || { b: {}, l: {} };
+  const acc = m.answered ? Math.round(m.correct / m.answered * 100) : 0;
+  const dl = m.daily || {};
+  const cls = p => p >= 75 ? 'hi' : p >= 50 ? 'mid' : '';
+  const laws = Object.entries(st.l).filter(([k, e]) => e.a >= 3 && k !== 'Diğer');
+  const weak = laws.slice().sort((a, b) => pct(a[1]) - pct(b[1]) || b[1].a - a[1].a).filter(([, e]) => pct(e) < 80).slice(0, 3);
+  const strong = laws.slice().sort((a, b) => pct(b[1]) - pct(a[1]) || b[1].a - a[1].a).filter(([, e]) => pct(e) >= 70).slice(0, 3);
+  const qFor = k => QUICK.filter(q => lawKey(q.r) === k);
+  const topicHTML = (list, practice) => list.map(([k, e]) => `<div class="topic"><span><b>${esc(lawName(k))}</b><small>%${pct(e)} isabet · ${e.c}/${e.a} doğru</small></span>${practice && qFor(k).length >= 3 ? `<button class="btn sm ghost" data-law="${esc(k)}">Bu konudan çalış</button>` : ''}</div>`).join('');
+  app.innerHTML = `<div class="stack">${guestBanner()}
+    <div><span class="eyebrow">Kariyer</span><h2 style="font-size:28px">Stajyerlikten Yargıtay'a</h2>
+      <p class="muted" style="margin:6px 0 0;max-width:64ch">Puanın rütbeni belirler. Aşağıda hangi alanda ve hangi kanunda güçlü olduğunu, nereye çalışman gerektiğini görürsün. Bu bilgiler yalnızca bu cihazda tutulur.</p></div>
+    <div class="ladder">${TIERS.map((t, i) => `<div class="${i === ti ? 'me' : ''}"><b>${esc(t.ad)}</b><span>${fmt(t.min)}+ puan</span></div>`).join('')}</div>
+    <section class="panel"><div class="nbcount"><div><b>${fmt(m.total)}</b><span>toplam puan</span></div><div><b>%${acc}</b><span>genel isabet</span></div><div><b>${fmt(m.answered || 0)}</b><span>cevaplanan soru</span></div><div><b>${m.bestStreak || 0}</b><span>en uzun doğru serisi</span></div><div><b>${dl.best || 0}</b><span>en uzun günlük seri</span></div></div></section>
+    <section class="panel"><h3 style="font-family:var(--f-display);font-size:21px;margin:0">Alanlara göre isabet</h3>
+      <div class="bars">${BKEYS.map(k => { const e = st.b[k]; const p = pct(e); return `<div class="bar-row"><span>${esc(BR[k])}</span><span class="tr"><i class="${cls(p)}" style="width:${e && e.a ? Math.max(p, 3) : 0}%"></i></span><span>${e && e.a ? '%' + p + ' · ' + e.a + ' soru' : '—'}</span></div>`; }).join('')}</div></section>
+    <section class="panel"><h3 style="font-family:var(--f-display);font-size:21px;margin:0">Güçlendirmen gereken konular</h3>
+      ${weak.length ? `<div class="topics">${topicHTML(weak, true)}</div>` : '<p class="note" style="margin:0">En az 3 soru cevapladığın kanunlar burada görünür. Biraz daha oyna, zayıf noktalarını birlikte bulalım.</p>'}</section>
+    ${strong.length ? `<section class="panel"><h3 style="font-family:var(--f-display);font-size:21px;margin:0">Güçlü olduğun konular</h3><div class="topics">${topicHTML(strong, false)}</div></section>` : ''}
+    ${nbAll().length ? `<div class="nbstrip"><span>Hata defterinde <b>${nbAll().length}</b> soru var${nbDue().length ? ', ' + nbDue().length + ' tanesi şimdi tekrar edilebilir' : ''}.</span><button class="btn sm" id="tostudy">Çalış</button></div>` : ''}
+  </div>`;
+  document.querySelectorAll('[data-law]').forEach(b => b.addEventListener('click', () => startGame('quick', shuffle(qFor(b.dataset.law)).slice(0, QUICK_N))));
+  if ($('#tostudy')) $('#tostudy').addEventListener('click', () => { S.tab = 'calis'; render(); });
+  bindGuest();
+}
+
+// ---------- Aynı telefonda düello ----------
+function renderLocalDuel() {
+  const pp = S.ppSetup || (S.ppSetup = { n1: S.guest ? 'Oyuncu 1' : S.me.name, n2: 'Oyuncu 2', b: 'karisik' });
+  app.innerHTML = `<div class="stack">
+    <div><span class="eyebrow">Düello</span><h2 style="font-size:28px">Aynı telefonda iki avukat</h2>
+      <p class="muted" style="margin:6px 0 0;max-width:62ch">İnternet gerekmez. Önce birinci oyuncu ${DUEL_N} soruyu cevaplar, sonra telefonu rakibine verir. Rakip aynı soruları aynı şık sırasıyla cevaplar; yüksek skor kazanır. Düello puanları lige eklenmez.</p></div>
+    <section class="panel">
+      <div class="ppnames"><label>1. oyuncu<input class="txt" id="pp1" maxlength="18" value="${esc(pp.n1)}"></label><label>2. oyuncu<input class="txt" id="pp2" maxlength="18" value="${esc(pp.n2)}"></label></div>
+      ${segHTML('ppb', pp.b, [['karisik', 'Karışık'], ...Object.entries(BR).map(([k, v]) => [k, v])])}
+      <div class="err" id="pperr"></div>
+      <button class="btn" id="ppgo" style="align-self:flex-start">Düelloyu başlat</button>
+    </section>
+    ${timeSetHTML()}
+  </div>`;
+  const save = () => { pp.n1 = $('#pp1').value.trim(); pp.n2 = $('#pp2').value.trim(); };
+  bindSeg('ppb', k => { save(); pp.b = k; renderLocalDuel(); });
+  bindTimeSet(() => { save(); renderLocalDuel(); });
+  $('#ppgo').addEventListener('click', () => {
+    save();
+    if (!pp.n1 || !pp.n2) { $('#pperr').textContent = 'İki oyuncunun da adını yaz.'; return; }
+    if (badName(pp.n1) || badName(pp.n2)) { $('#pperr').textContent = 'Bu adlardan biri uygun değil; başka bir ad seç.'; return; }
+    startPP();
+  });
+}
+function startPP() {
+  const pp = S.ppSetup;
+  const pool = QUICK.filter(q => pp.b === 'karisik' || q.b === pp.b);
+  S.pp = { names: [pp.n1, pp.n2], items: shuffle(pool).slice(0, DUEL_N), seed: String(Math.random()), res: [] };
+  startGame('pp', S.pp.items, { seed: S.pp.seed, ppPlayer: 1, ppName: pp.n1 });
+}
+function finishPP(g) {
+  const P = S.pp; S.game = null;
+  P.res.push({ score: g.score, correct: g.correct, ms: g.times.reduce((x, y) => x + y, 0), log: g.log });
+  if (g.ppPlayer === 1) {
+    app.innerHTML = `<div class="handoff"><span class="eyebrow">Düello · 1. tur bitti</span><h2>Telefonu ${esc(P.names[1])}'e ver</h2>
+      <p class="muted" style="margin:0;max-width:44ch">${esc(P.names[0])}'in skoru gizli. ${esc(P.names[1])}, hazır olduğunda başla; aynı ${P.items.length} soru seni bekliyor.</p>
+      <button class="btn" id="pp2go">Hazırım, başlat</button></div>`;
+    $('#pp2go').addEventListener('click', () => startGame('pp', P.items, { seed: P.seed, ppPlayer: 2, ppName: P.names[1] }));
+    return;
+  }
+  const [a, b] = P.res;
+  const w = a.score !== b.score ? (a.score > b.score ? 0 : 1) : a.correct !== b.correct ? (a.correct > b.correct ? 0 : 1) : a.ms !== b.ms ? (a.ms < b.ms ? 0 : 1) : -1;
+  app.innerHTML = `<div class="stack"><section class="result">
+    <span class="eyebrow">Düello · HÜKÜM</span>
+    <h2>${w < 0 ? 'Berabere' : esc(P.names[w]) + ' kazandı'}</h2>
+    <div class="ppres">${[0, 1].map(i => `<div class="${w === i ? 'win' : ''}"><span class="note">${esc(P.names[i])}</span><b>${fmt(P.res[i].score)}</b><span class="note">${P.res[i].correct}/${P.items.length} doğru · ${(P.res[i].ms / 1000).toFixed(1)} sn</span></div>`).join('')}</div>
+    <div class="recap">${P.items.map((it, k) => `<div><span style="white-space:nowrap">${a.log[k].ok ? '<span class="y">✓</span>' : '<span class="n">✗</span>'}&nbsp;${b.log[k].ok ? '<span class="y">✓</span>' : '<span class="n">✗</span>'}</span><span>${esc(it.q)}</span><span></span></div>`).join('')}</div>
+    <p class="note" style="margin:0">Her satırdaki ilk işaret ${esc(P.names[0])}, ikincisi ${esc(P.names[1])} içindir. Düello puanları lige eklenmez.</p>
+    <div class="actions"><button class="btn" id="pprev">Rövanş</button><button class="btn ghost" id="ppout">Düellodan çık</button></div>
+  </section></div>`;
+  $('#pprev').addEventListener('click', () => { const s = S.ppSetup; [s.n1, s.n2] = [s.n2, s.n1]; startPP(); });
+  $('#ppout').addEventListener('click', () => { S.pp = null; S.tab = 'duello'; render(); });
+}
+
 // ---------- Ligler ----------
 function renderLeagues() {
+  if (S.local || S.guest) return renderCareer();
   const me = S.me, myTier = tierOf(me.total), wk = weekKey();
   const boards = [['lig', TIERS[myTier].ad + ' Ligi · bu hafta'], ['genel', 'Genel'], ...BKEYS.map(k => [k, BR[k] + ' Ligi'])];
   let rows = S.players.filter(p => !S.bans[p.id]), key = 'total', col = 'Toplam';
@@ -2491,10 +2765,7 @@ const myDuels = () => ls.get('celse.duels', []);
 function rememberDuel(code) { const l = myDuels().filter(c => c !== code); l.unshift(code); ls.set('celse.duels', l.slice(0, 8)); }
 
 function renderDuel() {
-  if (S.guest) {
-    app.innerHTML = `<div class="stack"><div><span class="eyebrow">Düello</span><h2 style="font-size:28px">Aynı sorular, iki rakip</h2></div>${guestBanner()}<p class="muted" style="margin:0">Düello, iki oyuncunun skorlarını karşılaştırmak için kayıt gerektirir.</p></div>`;
-    bindGuest(); return;
-  }
+  if (S.guest || S.local) return renderLocalDuel();
   if (S.local || !S.canWrite) {
     app.innerHTML = `<div class="stack"><div><span class="eyebrow">Düello</span><h2 style="font-size:28px">Aynı dosya, iki avukat</h2></div>
       <div class="banner">${APP ? 'Düello, ortak lig ile birlikte bir sonraki sürümde gelecek.' : 'Düello için ortak arenaya yazma erişimi gerekiyor. ' + (S.local ? 'Bu görünüm yerel modda çalışıyor.' : 'Sayfa sahibinden "Katkıda bulunan" erişimi iste.')}</div></div>`;
